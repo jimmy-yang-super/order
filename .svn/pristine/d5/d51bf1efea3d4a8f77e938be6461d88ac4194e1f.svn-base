@@ -1,0 +1,63 @@
+<!-- 整理归档 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+				<th >产权主体：</th>
+				<td >$!{chanQuanType}</td>
+			</tr>
+			<tr>
+				<th >营业执照正本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{businessLicense1}" /></td>
+				<th >营业执照副本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{businessLicense2}" /></td>
+			</tr>
+			<tr>
+				<th>登记基本信息表：</th>
+				<td><input type="hidden" name="taskInfoImg" value="${regBasicInfoTable}" /></td>
+				<th>章程：</th>
+				<td><input type="hidden" name="taskInfoImg" value="${constitutionFile}" /></td>
+			</tr>
+			<tr>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${checkNamePic}" /></td>
+				#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{legalPerson.get('idPicIds')}"  /></td>
+				#end			
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		if(!WF.validate()){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		WF.submitTask();
+		WF.taskFinish();
+	});
+});
+
+</script>

@@ -1,0 +1,50 @@
+<!-- 刻章材料归档 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >产权主体：</th>
+				<td >$!{reginAddress.getChanqzt()}</td>
+				<th >注册地址：</th>
+				<td >$!{iszhucdz}</td>
+			</tr>
+			<tr>
+				<th >申请方式：</th>
+				<td >$!{applyMethod}</td>
+				<th >档案位置编号：</th>
+				<td >$!{createArchiveID}</td>
+			</tr>
+			<tr>
+				<th >存档人：</th>
+				<td >$!{WFUtils.getAssgineeByProcessInstanceIdAndTaskDefId($taskInfo.getProcessInstanceId(), "CarvedChapter")}</td>
+				<th >存档内容：</th>
+				<td >营业执照副本原件、公章、法定代表人人名章、发票章、合同章、财务章</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">确认存放</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		
+		/**** 确认存放 *****************************/
+		// 点击 - 确认存放
+		$(".b1").click(function() {
+			
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			// 调用流程接口
+			WF.submitTask("111", "&CarvedChapterDataStatus=2");
+		});
+	});
+</script>

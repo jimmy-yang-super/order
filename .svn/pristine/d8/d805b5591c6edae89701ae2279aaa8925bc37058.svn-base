@@ -1,0 +1,80 @@
+<script type="text/javascript" src="/js/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="/js/swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="/js/swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="/js/swfupload/handlers.js"></script>
+<script type="text/javascript" src="/js/swfupload/flashChecker.js"></script>
+<script type="text/javascript">
+var upload = {
+	init: function(options){
+		
+		var fls=flashChecker();
+		if(fls.f == 0){
+			$("#"+options.button_placeholder_id).html("flash插件禁用或者未安装flash插件，请确认flash插件可用。")
+					.css({
+							display:"block",
+							"background-color": "#fff",
+							width:options.button_width || "65",
+							height:options.button_height || "29"
+						});
+			return;
+		}
+		
+		var settings = {
+			flash_url : "/js/swfupload/swfupload.swf",
+			upload_url: options.upload_url,
+			file_post_name : options.file_post_name || "fileupload",
+			post_params: options.params || {},
+			file_size_limit : options.file_size_limit || "100 MB",
+			file_types : options.file_types || "*.jpeg;*.jpg;*.gif;*.png;*.bmp;*.pdf;*.doc;*.docx;",
+			file_types_description : options.file_types_description || "文件类型不符合格式",
+			file_upload_limit : options.file_upload_limit || 100, //上传次数
+			file_queue_limit : options.file_queue_limit || 0, //上传张数限制，0为不限制
+			custom_settings : options.custom_settings || {progressTarget : "", cancelButtonId : ""},
+			debug: false,
+
+			// Button settings
+			button_placeholder_id: options.button_placeholder_id,
+			button_width: options.button_width || "65",
+			button_height: options.button_height || "29",
+			button_image_url: "/js/swfupload/blank_button.png",
+			button_text: options.button_text || "<span class=\"btn-txt\">选择文件</span>",
+			button_text_style: options.button_text_style || ".theFont { font-size: 16; }",
+			button_text_left_padding: options.button_text_left_padding || 12,
+			button_text_top_padding: options.button_text_top_padding || 3,
+			
+			button_window_mode:"transparent",
+			
+			// The event handler functions are defined in handlers.js
+			file_queued_handler : fileQueued,
+			file_queue_error_handler : function(file, errorCode, message){
+				(options.queueError || fileQueueError).apply(this, arguments);
+			},
+			file_dialog_complete_handler : function(numFilesSelected, numFilesQueued){
+				
+				(options.dialogComplete || fileDialogComplete).call(this, numFilesSelected, numFilesQueued);
+			},
+			upload_start_handler : function(file){
+				(options.start || uploadStart).apply(this, arguments);
+			},
+			upload_progress_handler : function(file, bytesComplete, bytesTotal){
+				(options.progress || uploadProgress).apply(this, arguments);
+			},
+			upload_error_handler : function(file, errorCode, message){
+				(options.error || uploadError).apply(this, arguments);
+			},
+			upload_success_handler :  function(file, serverData){
+				(options.success || uploadSuccess).apply(this, arguments);
+			},
+			upload_complete_handler : function(file){
+				(options.uploadComplete || uploadComplete).apply(this, arguments)
+			},
+			queue_complete_handler : function(){
+				(options.queueComplete || queueComplete).apply(this, arguments)
+			}
+		};
+
+		return new SWFUpload(settings);
+	}
+}
+
+</script>

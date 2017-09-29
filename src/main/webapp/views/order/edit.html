@@ -1,0 +1,1451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css">
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script src="/js/jquery.tabs.js"></script>
+<script src="/js/map.js"></script>
+<script src="/js/array.js"></script>
+<script src="/js/editorder.js"></script>
+<script type="text/javascript">
+
+var map = new Map();//key 值  value 位置
+var integerCode =1;
+$(function(){
+  $(".com_box1 li").each(function(){
+      $(this).click(function(){
+          $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+          $(this).addClass("checked1").removeClass("flow1_change");
+          integerCode = $(this).attr("value");
+          $("#yixd").val(integerCode);
+      })
+  });
+  //初始化执行
+  intmap(map);
+  integerCode = $("#yixd").val();
+  var flag = parseInt(integerCode) -1 ;
+  $("#integerCode li:eq("+flag+")").addClass("flow1_change").removeClass("checked1");
+  $("#integerCode li:eq("+flag+")").addClass("checked1").removeClass("flow1_change");
+  $("#yixd").val(integerCode);
+  var productId = $("#productId").val();
+  var orderChildinfo = $("#orderChildinfo").val();//格式：子单Id_类别Id_属性Id 多个使用“;”
+  if(orderChildinfo.length > 0){
+	  if(orderChildinfo.indexOf(";")>-1){
+		  var rm = orderChildinfo.split(";");
+		  for(var i =0;i<rm.length;i++){
+			  var tm = rm[i];
+			  initpage(tm,productId,i);
+		  }
+	  }else{
+		  initpage(orderChildinfo,productId,0);
+	  }
+  }
+  zccateinit();
+  
+  var userInfo = '$!{userInfo}';
+  initsuosgs(userInfo);
+  initEvent();
+  var city_id = $("#city_id").val();
+  var tm = "_"+city_id;
+  var tt = $('[name="nice-select2"] li[data-value="' + tm + '"]').text();
+  $('[name="nice-select2"] li[data-value="' + tm + '"]').parents('[name="nice-select2"]').find('input').val(tt);
+});
+
+function initsuosgs(suosgs){
+	if (suosgs != "") {
+		var mtp = suosgs.split("&");
+		var htmlstr = "<ul>"
+		for (var i = 0; i < mtp.length; i++) {
+			var mm = mtp[i];
+			var ttr = mm.split(",");
+			htmlstr = htmlstr+ "<li name=\"suosgs\" data-value=\""+ ttr[0] + "_" + ttr[1] + "\">"+ ttr[1] + "</li>";
+		}
+		htmlstr = htmlstr + "</ul>";
+		$("#glsuosgs").html(htmlstr);
+	}else{
+		$("#dissuosgs").val("请选择所属公司");
+		$("#hiddissuosgs").val("");
+		$("#glsuosgs").html("<ul><li data-value=\"_新建公司\" name=\"suosgs\">新建公司</li></ul>");
+	}
+}
+
+function submitForm() {
+	var phoneNum = $("#phoneNum").val();
+	if (phoneNum.length == "") {
+		alert("请输入客户手机号！！");
+		return false;
+	} else {
+		//手机号验证
+		if (!(/^1[3|4|5|7|8][0-9]\d{8}$/.test(phoneNum))) {
+			alert("输入的手机号格式不对，请核对后再次输入！！");
+			return false;
+		} else {
+			if (phoneNum.length != 11) {
+				alert("输入的手机号位数不对，请核对后再次输入！！");
+				return false;
+			}
+		}
+	}
+	// 所属公司
+ 	 var shgs = $("#dissuosgs").val();
+	if (shgs == null || shgs == "" || shgs == "请选择所属公司") {
+		alert("请输入所属公司！！");
+		return false;
+	}   
+	//获得复选框中的值
+	var cateIds = "";
+	var type = "";
+	var productId = $("#productId").val();
+	var taderReg = "";
+	var selectcount = 0;
+	
+	var qitclick = "";
+	var qittitle = "";
+	var qitcontent = "";
+	var qitprice = "";
+	var citys = new Array();
+	var areas = new Array();
+	var cfcity = false;
+	var cfarea = false;
+	$('input[name="selectProduct"]:checked').each(function() {
+		var temp = $(this).val();
+		var tp = temp.split("_");
+		var flag = tp[2];
+		if(flag == "25" && productId =="1101"){
+			qitclick ="click";
+			qittitle = $("#qitmc").val();
+			qitcontent =  $("#qitcontent").val();
+			qitprice =  $("#qitprice").val();
+		}
+		if(flag == "10" &&  productId !="1102"){
+			qitclick ="click";
+			qittitle = $("#dlqitmc").val();
+			qitcontent =  $("#dlqitcontent").val();
+			qitprice =  $("#dlqitprice").val();
+		}
+		if(flag == "17" &&  productId =="1102"){
+			qitclick ="click";
+			qittitle = $("#biangqitmc").val();
+			qitcontent =  $("#biangqitcontent").val();
+			qitprice =  $("#biangqitprice").val();
+		}
+		if(flag == "20"){
+			qitclick ="click";
+			qittitle = $("#tradeqitmc").val();
+			qitcontent =  $("#tradeqitcontent").val();
+			qitprice =  $("#tradeqitprice").val();
+		}
+		if(productId =="1101"){
+			var city = $("#zccity_"+flag).val();
+			citys.push(city);
+		    var area = $("#zccitityarea_"+flag).val();
+			areas.push(area);
+			
+		}
+				
+		if(productId =="2201"){
+			var city = $("#zccity_"+flag).val();
+			citys.push(city);
+		    var area = $("#zccitityarea_"+flag).val();
+			areas.push(area);
+		}
+        if(productId =="1102"){
+        	var city = $("#gongsadecity_"+flag).val();
+			citys.push(city);
+		    var area = $("#biangcitityarea_"+flag).val();
+			areas.push(area);
+		}
+		if(productId =="1104" || productId =="2203"){
+			var f = "";
+			if(flag !="0"){
+				f = flag;
+			}
+			var city = $("#rradecity"+f).val();
+			citys.push(city);
+		}
+        if(productId =="1105" || productId =="2202"){
+        	var city = $("#dljzcity_"+flag).val();
+			citys.push(city);
+		    var area = $("#dljzcitityarea_"+flag).val();
+			areas.push(area);
+		}
+		
+		cateIds = cateIds + tp[1] + "_" + tp[2] + ",";//多个以逗号分隔
+		if (productId != "1104" && productId !="2203") {
+			if (typeof (tp[2]) != "undefined") {
+				type = tp[2];
+			}
+		} else {
+			if (tp[2] == "5") {
+				type = "3";
+			} else {
+				taderReg = taderReg + tp[2] + ",";
+			}
+		}
+		selectcount++;
+	});
+	if(selectcount == 0){
+		alert("请至少选择一种服务！！！");
+		return;
+	}
+	if(qitclick !=""){
+		if(qittitle.length <= 0){
+			alert("请输入其他服务的名称!!!");
+			return;
+		}
+		/* if(qitcontent.length < 0){
+			alert("请输入其他服务的描述!!!");
+			return;
+		} */
+		if(qitprice.length <= 0){
+			alert("请输入其他服务的价格!!!");
+			return;
+		}
+	}
+	var tempcity = new Array();
+	for(var i = 0;i<citys.length;i++){
+		var cty = citys[i];
+		if(isNaN(cty)){
+			cty = map.get(cty);
+		}
+		if(tempcity.length >0){
+			if(!tempcity.contains(cty)){
+				cfcity = true;
+			}else{
+				tempcity.push(cty);
+			}
+		}else{
+			tempcity.push(cty);
+		}
+	}
+	
+	var temparea = new Array();
+	for(var i = 0;i<areas.length;i++){
+		var cty = areas[i];
+		if(isNaN(cty)){
+			cty = map.get(cty);
+		}
+		if(temparea.length >0){
+			if(!temparea.contains(cty)){
+				cfarea = true;
+			}else{
+				temparea.push(cty);
+			}
+		}else{
+			temparea.push(cty);
+		}
+	}
+	
+	if(cfcity){
+		if(!confirm("选择的服务中存在城市不一致，你确定提交吗？？")){
+			return false;
+		}
+	}
+    if(cfarea){
+       if(!confirm("选择的服务中存在城区不一致，你确定提交吗？？")){
+    	   return false;
+		}
+	}
+	
+	if (cateIds != "") {
+		cateIds = cateIds.substring(0, cateIds.lastIndexOf(","));
+	}
+	if (taderReg != "") {
+		taderReg = taderReg.substring(0, taderReg.lastIndexOf(","));
+	}
+	if (selectItem != "") {
+		selectItem = selectItem.substring(0, selectItem.lastIndexOf(","));
+	}
+	$("#cateIds").val(cateIds);
+	$("#taderReg").val(taderReg);
+	$("#selectItem").val(selectItem);
+	document.getElementById('myForm').submit();
+}
+function reset(backurl){
+	  window.location.href = backurl;
+}
+
+function sysnicgsmc(){
+	var gongsmc = $("#gongsmc").val();
+	if(gongsmc != ""){
+		$('input[name="selectProduct"]:checked').each(function() {
+			var temp = $(this).val();
+			var tp = temp.split("_");
+			var cateID = tp[1];
+			if(cateID == "1007"){
+				$("#zcgongsgmnb").val(gongsmc);
+			}
+            if(cateID == "1008"){
+            	$("#zcgongsgmgsmchz").val(gongsmc);
+			}
+		});
+	}
+}
+</script>
+</head> 
+
+<body>
+<div class="user_box">
+  <div class="crumbs">
+    <a class="crumb-link" href="#">您目前的位置：<span>已签订单</span></a>
+    <i class="crumb-line">></i>
+    <a class="crumb-link" href="#">订单修改页面</a>
+  </div>
+  <form action="/order/modifysubmit.html" name="myForm" id="myForm" method="post">
+  <input type="hidden" name="orderChildinfo" id="orderChildinfo" value="$!{orderChildinfo}"/>
+  <input type="hidden" name="productId" id="productId" value="$!{sorderEntity.productid}"/>
+  <input type="hidden" name="userId" id="userId" value="$!{loginEntity.userid}"/>
+  <input type="hidden" name="backpage" id ="backpage" value="$!{backpage}" />
+  
+  <input  type="hidden" name="taderReg" id="taderReg" value=""/>
+ <!--  <input type="hidden" name="type" id="type" value=""/> -->
+  <input type="hidden" name="cateIds" id="cateIds" value=""/>
+  <input type="hidden" name="selectItem" id="selectItem" value =""/>
+  <div class="edit_box range_t1">
+    <div class="e_box1">
+      <table>
+        <tr>
+          <th>手机号码</th>
+          <td><input type="text" name="phoneNum" id ="phoneNum" value="$!{loginEntity.userphone}"/></td>
+          <th>客户名称</th>
+          <td><input type="text" name="kehname" id="kehname" value="$!{loginEntity.username}"/></td>
+          <th>通讯地址</th>
+          <td><input type="text" name="tongydz" id="tongydz" value="$!{loginEntity.address}"/></td>
+        </tr>
+        <tr>
+          <th>客户来源</th>
+          <td><input type="text" name="kehchanel" id="kehchanel" value="$!{channel}" readonly="readonly"/>
+          <input type="hidden" name="kehchannl" id="kehchannl" value="$!{loginEntity.channel}"/>
+          </td>
+          <th>座机号码</th>
+          <td><input type="text" name="kehzj" id="kehzj" value="$!{loginEntity.landlinenumber}"/></td>
+          <th>电子邮件</th>
+          <td><input type="text" name="email" id ="email" value="$!{loginEntity.email}"/></td>
+        </tr>
+        #if($!{channelKey} != "" && $!{terraceOrderId} != "")
+        <tr>
+          <th>订单来源</th>
+          <td><input type="text" value="$!{channelValue}" readonly="readonly"/>
+          <input type="hidden" name="channel" id="channel" value="$!{channelKey}"/>
+          </td>
+          <th>平台订单编号</th>
+          <td><input type="text" name="terraceOrderId" id="terraceOrderId" value="$!{terraceOrderId}"/></td>
+        </tr>
+        #end
+        <tr> 
+         <th>所属公司</th>
+         <td>
+            <div class="nice-select2" name="nice-select2">
+              <input type="text" placeholder="请选择所属公司" id ="dissuosgs"  style="border:none"  readonly/>
+              <input type="hidden" name="hiddissuosgs" id="hiddissuosgs" value=""/>
+              <div id="glsuosgs"></div>
+        </div>
+          </td> 
+          <th>公司名称</th>
+          <td><input type="text" onblur="sysnicgsmc();" name="gongsmc" id="gongsmc" value="$!{gsmc}"/></td>
+        </tr>
+      </table>
+    </div>
+    ##行政许可
+    #foreach($param in ${productInfos.keySet()})
+    #if($param.pid == ${sorderEntity.productid})
+    #if($param.pname =='行政许可')
+    <div class="box_off">
+         <!--   公司注册  --> $!{param.pname}
+    </div>
+    <div class="zc_box">
+      <ul>
+      #set($par = ${productInfos.get($param)})
+      #foreach($par in ${productInfos.get($param)})
+      #foreach($sorder in $suborders)
+    <li class="li_box">
+    #if($par.cid == 5099)
+            <div class="check_box">
+          
+              <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_25');" type="checkbox" checked="true" value="$!{param.pid}_$!{par.cid}_25" name="selectProduct" id="selectProduct"/> 其他
+            
+            </div>
+            <div class="select_box in_text">
+            #foreach($xk in $xuke)
+            #if($xk.propertyid == 41)
+                <input type="text" class="w_text_m" placeholder="商品名字 最多8个字" name="qitmc" value="$!{xk.propertyval}" id ="qitmc"/>
+                #end
+                #end
+                #foreach($xk in $xuke)
+            #if($xk.propertyid == 42)
+                <input type="text" class="w_text_l" placeholder="自定义内容 最多20个字" name="qitcontent" value="$!{xk.propertyval}" id ="qitcontent"/>
+                #end
+                #end
+                <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" value="$!{subprice}" type="text" class="w_text_s" name="qitprice_25" id ="qitprice" onblur="dyqitprice('qitprice','qitprice','$!{param.pid}_$!{par.cid}_20');"/>
+                元
+            </div>
+            #end
+        </li>
+        #end
+        #end
+        </ul>
+        </div>
+    #end
+    #end
+    #end
+    
+    #foreach($param in ${productInfos.keySet()})  
+    #if($param.pid == ${sorderEntity.productid})
+    #if($param.pname =='公司注册')
+    <div class="box_off">
+         <!--   公司注册  --> $!{param.pname}
+    </div>
+    <div class="zc_box">
+      <ul>
+      #if($!{iscahngge} == 'true')
+      <li class="li_box">
+      <div style="background:#E1F2FA;width:300px;height:37px;padding:5px 0 5px 30px;">
+       <div class="check_box">选择城市：</div>
+       <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="北京" readonly/>
+                <input type="hidden" name="selectcity" id ="selectcity" value ="1"/>
+               <ul id ="city">
+                   #foreach($pe in $!changecity)
+                    <li  name="selectcity_$!{i}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                    #end
+                </ul>
+        </div></div>
+        </li>
+        <div class="clear"></div>
+        #end
+       #set ($i=0)
+       <div id ="gszcChangeCity">
+       #foreach($par in ${productInfos.get($param)})
+        #if($par.cname != '其他')
+        <li class="li_box">
+            <div class="check_box">
+              <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_$!{i}');" type="checkbox" value="$!{param.pid}_$!{par.cid}_$!{i}" name="selectProduct" id="selectProduct"/><!-- 公司注册  -->$!{par.cname}
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="$!{firstArea.name}" readonly/>
+                <input type="hidden" name="zccity_$!{i}" id ="zccity_$!{i}" value ="$!{firstArea.areaid}"/>
+               <!--  <ul id ="area">
+                   #foreach($pe in $!firstArea)
+                    <li  name="zccity_$!{i}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                    #end
+                </ul> -->
+              </div>
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="$!{dissecondArea.name}" readonly id="initzcarea_$!{i}" onclick="areaulclick('gszc','$!{i}');"/>
+                <input type="hidden" name="zccitityarea_$!{i}" id ="zccitityarea_$!{i}" value="$!{dissecondArea.areaid}"/>
+                <ul id="cityArea_$!{i}">
+                    #foreach($pe in $!secondArea)
+                  <li name="zcarea_$!{i}" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                   #end 
+                </ul>
+              </div>
+              #if($par.cid == '1002')
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+              	<input name="addresstype" value="镕辉佳特" type="text" readonly id="addresstype" />
+              	<input name="addresstypevalue" value="73" type="hidden" readonly id="addresstypevalue" />
+              	
+              	<ul>
+              	#foreach($address in $addresslist)
+              	<li name="addresstypeli" value="$!address.proid" data-value="$!{par.cid}_$!{address.proid}" tm="$!{i}">$!{address.proname}</li>
+              	#end
+              	</ul>
+              </div>
+              #end
+            #if($par.cid == '1007')
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="有限责任公司" readonly>
+                   <input type="hidden" name="zccompanytypett_$!{i}" id ="zccompanytypett_$!{i}" value="62"/>
+                <ul>
+                    #foreach($pe in $!gsnb)
+                    <li name="zccompanytype_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                   #end 
+                </ul>
+              </div>
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" class="w_text_m" placeholder="公司名称"  name="zcgongsgmnb" readonly="true" id="zcgongsgmnb" value=""/>
+               </div>
+            #elseif($par.cid == '1008')
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="一人有限公司" readonly>
+                   <input type="hidden" name="zccompanytypett_$!{i}" id ="zccompanytypett_$!{i}" value="64"/>
+                <ul>
+                    #foreach($pe in $!gsmchz)
+                    <li name="zccompanytype_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                   #end 
+                </ul>
+              </div>
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" class="w_text_m" placeholder="企业名称核准"  name="zcgongsgmgsmchz" readonly="true" id="zcgongsgmgsmchz" value=""/>
+               </div>
+            #elseif($par.cid == '1010')
+            <!-- 招商银行 -->
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                  <input type="text" value="招商银行" readonly/>
+                  <input type="hidden" name="dljzkahbank_$!{i}" id="dljzkahbank_$!{i}" value="38"/>
+                </div>
+            #elseif($par.cid != '1011' && $par.cid != '1012' && $par.cid != '1013' && $par.cid != '1014')
+            
+                <div class="nice-select2 w_select_s1" name="nice-select2">
+                   <input type="text" value="内资公司" readonly>
+                   <input type="hidden" name="zccompanytype_$!{i}" id ="zccompanytype_$!{i}" value="35"/>
+	               <ul>
+	                   #foreach($pe in $!companytype)
+	                   <li name="zccompanytypeszz_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+	                  #end 
+	               </ul>
+              </div>
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="小规模纳税人" readonly>
+                <input type="hidden" name="zcgongsgm_$!{i}" id="zcgongsgm_$!{i}" value="30"/>
+                 #if($!{sorderEntity.ordercity}== 1)
+                  <ul>
+                  #foreach($pe in $!gongsgm)
+               	   <li name="zcgongsgm_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                  #end
+                </ul> 
+                 #end
+                 </div>
+            #end
+               <!--  <ul>
+                  #foreach($pe in $!gongsgm)
+               	   <li name="zcgongsgm_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                  #end
+                </ul>  -->
+	           #if($par.cname == '代理地址')
+	           <!-- 
+	           <div class="nice-select2 w_select_s1" name="nice-select2">
+	            <input type="text" value="非销售" readonly />
+	             #foreach($pe in $!isseller)
+	             <input type="hidden" name="isseller" id ="isseller" value="$!{pe.proid}"/>
+	             #end
+	           <!--  <ul>
+	            </ul>  
+	          </div> -->
+	          #end
+            </div>
+            <div class="pri_box red">￥<span id="price_$!{i}">0</span></div>
+            <input type="hidden" name="zcprice_$!{i}" id="zcprice_$!{i}"  value=""/>
+        </li>
+        <div class="clear"></div>
+        #else
+            <li class="li_box">
+            <div class="check_box">
+              <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_25');" type="checkbox" value="$!{param.pid}_$!{par.cid}_25" name="selectProduct" id="selectProduct"/> 其他
+            </div>
+            <div class="select_box in_text">
+                <input type="text" class="w_text_m" placeholder="商品名称 最多8个字" name="qitmc" id ="qitmc"/>
+                <input type="text" class="w_text_l" placeholder="自定义内容 最多20个字" name="qitcontent" id ="qitcontent"/>
+                <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_s" name="qitprice" id ="qitprice" onblur="dyqitprice('qitprice','zcqitprice_25','$!{param.pid}_$!{par.cid}_25');"/>
+                元
+            </div>
+            <div class="pri_box gray">￥<span id="qitprice_25">0</span></div>
+        </li>
+        #end 
+         #set($i=$i+1)
+       #end  
+       </div>
+       </ul>
+    </div>
+     #end
+     #end
+  #end
+     
+  #foreach($param in ${productInfos.keySet()})  
+   #if($param.pid == ${sorderEntity.productid})   
+   #if($param.pname =='代理记账')
+   <div class="box_off">
+      财税服务
+    </div>
+
+    <div class="zc_box">
+      <ul>
+        #if($!{iscahngge} == 'true')
+      <li class="li_box">
+      <div style="background:#E1F2FA;width:300px;height:37px;padding:5px 0 5px 30px;">
+       <div class="check_box">选择城市：</div>
+       <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="北京" readonly/>
+                <input type="hidden" name="selectcity" id ="selectcity" value ="1"/>
+               <ul id ="city">
+                   #foreach($pe in $!changecity)
+                    <li  name="selectcity_$!{i}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                    #end
+                </ul>
+        </div></div>
+        </li>
+        <div class="clear"></div>
+        #end
+        
+       #set ($i=0)
+       <div id ="dljzChangeCity">
+       #foreach($par in ${productInfos.get($param)})
+        #if($par.cid == '4002'||$par.cid == '4001' || $par.cid == '10016'|| $!dlhistory.get($par.cid) == 'true')
+        
+        #if($par.cname != '其他')
+        <li class="li_box">
+            <div class="check_box">
+              #if($!dlhistory.get($par.cid) == 'true')
+              <input checked="checked" onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_$!{i}');" type="checkbox" value="$!{param.pid}_$!{par.cid}_$!{i}" name="selectProduct" id="selectProduct"/><!-- 代理记账  -->$!{par.cname}
+              #else
+               <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_$!{i}');" type="checkbox" value="$!{param.pid}_$!{par.cid}_$!{i}" name="selectProduct" id="selectProduct"/><!-- 代理记账  -->$!{par.cname}
+              #end
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="$!{firstArea.name}" readonly>
+               <input type="hidden" name="dljzcity_$!{i}" id ="dljzcity_$!{i}" value ="$!{firstArea.areaid}"/>
+               <!--  <ul>
+                   #foreach($pe in $!firstArea)
+                    <li name="dlcity_$!{i}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                    #end
+                </ul> -->
+              </div>
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="$!{dissecondArea.name}" readonly id="dljiz_${i}" onclick="areaulclick('dljz','$!{i}');"/>
+                 <input type="hidden" name="dljzcitityarea_$!{i}" id ="dljzcitityarea_$!{i}" value="$!{dissecondArea.areaid}"/>
+                <ul id="dlmz_$!{i}">
+                   #foreach($pe in $!secondArea)
+                  <li name="dlarea_$!{i}" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                   #end
+                </ul>
+              </div>
+              #if($par.cname == '代理记账')
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="12个月" readonly/>
+                <input type="hidden" name="serviceCircle_$!{i}" id="serviceCircle_$!{i}" value="33"/>
+                <ul>
+                  #foreach($pe in $!serviceCircle)
+               	   <li name="servicecircle_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                  #end
+                <!--  
+                  <li data-value="1">客户电话</li>
+                  <li data-value="2">付款状态</li>
+                  <li data-value="3">客户手机</li> -->
+                </ul>
+              </div>
+              #elseif($par.cname == '银行开户')
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                  <input type="text" value="招商银行" readonly/>
+                  <input type="hidden" name="dljzkahbank_$!{i}" id="dljzkahbank_$!{i}" value="38"/>
+                <!--  <ul>
+                   #foreach($pe in $!kahbank)
+               	   <li name="dlkahbank_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                  #end
+                  </ul>  --> 
+                </div>
+              #end
+               #if($par.cname == '代理记账'|| $par.cname == '银行开户')
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="内资公司" readonly>
+                 #foreach($pe in $!companytype)
+                   <input type="hidden" name="dljzcompanytype" id ="dljzcompanytype" value="$!{pe.proid}"/>
+                   #end
+               <!--  <ul>
+                 #foreach($pe in $!companytype)
+                   <li name="dlkahbank_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                   #end
+                </ul> -->
+              </div>
+              #end
+               #if($par.cname == '代理记账')
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="小规模纳税人" readonly/>
+                <input type="hidden" name="dljzgongsgm_$!{i}" id="dljzgongsgm_$!{i}" value="30"/>
+                #if($!{sorderEntity.ordercity}== 1)
+                <ul>
+                  #foreach($pe in $!gongsgm)
+               	   <li name="dlgongsgm_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                  #end
+                  </ul>
+                #end
+                <!--  <ul>
+                  #foreach($pe in $!gongsgm)
+               	   <li name="dlgongsgm_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+                  #end
+                </ul> -->
+              </div>
+              #end
+            </div>
+            <div class="pri_box red">￥<span id ="dlprice_$!{i}">0</span></div>
+            <input type="hidden"  name ="dljzprice_$!{i}" id ="dljzprice_$!{i}" value=""/>
+        </li>
+        <div class="clear"></div>
+         #else
+            <li class="li_box">
+            <div class="check_box">
+              <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_10');" type="checkbox" value="$!{param.pid}_$!{par.cid}_10" name="selectProduct" id="selectProduct"/> 其他
+            </div>
+            <div class="select_box in_text">
+                <input type="text" class="w_text_m" placeholder="商品名称 最多8个字" name="dlqitmc" id ="dlqitmc"/>
+                <input type="text" class="w_text_l" placeholder="自定义内容 最多20个字" name="dlqitcontent" id ="dlqitcontent"/>
+                <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_s" name="dlqitprice" id ="dlqitprice" onblur="dyqitprice('dlqitprice','dlprice_10','$!{param.pid}_$!{par.cid}_10');"/>
+                元
+            </div>
+            <div class="pri_box gray">￥<span id ="dlprice_10">0</span></div>
+        </li>
+        #end 
+         #set($i=$i+1)
+         #end
+        #end
+        
+        </div>
+           </ul>
+ </div>
+      #end  
+      #end 
+  #end  
+
+#foreach($param in ${productInfos.keySet()})    
+ #if($param.pid == ${sorderEntity.productid}) 
+   #if($param.pname =='商标注册')
+    <div class="box_off">
+      商标注册
+    </div>
+
+    <div class="zc_box">
+      <ul>
+         #foreach($par in ${productInfos.get($param)})
+          #if($par.cname != '其他')
+        <li class="li_box">
+            <div class="check_box">
+               <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_0');" type="checkbox" value="$!{param.pid}_$!{par.cid}_0" name="selectProduct" id="selectProduct"/>$!{par.cname}
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                <input type="text" value="文字商标" readonly/>
+                <input type="hidden" name="tradeOrderzc" id ="tradeOrderzc" value="27" />
+                <ul>
+                 #foreach($pe in $!tradeOrder)
+               	   <li name="zctradeOrderzc" data-value="$!{par.cid}_$!{pe.proid}_0">$!{pe.proname}</li>
+                  #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+               <input type="text" value="北京" readonly />
+               <input type="hidden" name="rradecity" id ="rradecity" value ="1"/>
+                <ul>
+                   #foreach($pe in $!firstArea)
+                    <li name="zctradercity" data-value="$!{par.cid}_$!{pe.areaid}_0">$!{pe.name}</li>
+                    #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                 <input type="text" value="朝阳区" readonly id ="mt" onclick="areaulclick('trade','');"/>
+                 <input type="hidden" name="tradecitityarea" id ="tradecitityarea" value="101"/>
+                <ul id ="mtzx">
+                    #foreach($pe in $!secondArea)
+                  <li name="tradearea" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}_0">$!{pe.name}</li>
+                   #end
+                </ul>
+              </div>
+              <div class="qu_box in_text">
+                大类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="bigsl" id="bigsl" onblur="tradecount('b',0,$!{par.cid});"/> 个
+              </div>
+              <div class="qu_box in_text">
+                新增小类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="smallsl" id="smallsl" onblur="tradecount('s',0,$!{par.cid});"/> 个
+              </div>
+            </div>
+            <div class="pri_box red">￥<span id="gstrande">0</span></div>
+            <input type="hidden" name="gstrandezc" id ="gstrandezc" value=""/>
+        </li>
+        <div class="clear"></div>
+         <li class="li_box">
+            <div class="check_box">
+               <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_1');" type="checkbox" value="$!{param.pid}_$!{par.cid}_1" name="selectProduct" id="selectProduct"/><!-- 代理记账  -->$!{par.cname}
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                <input type="text" value="文字商标" readonly/>
+                <input type="hidden" name="tradeOrderzc1" id ="tradeOrderzc1" value="27" />
+                <ul>
+                 #foreach($pe in $!tradeOrder)
+               	   <li name="zctradeOrderzc1" data-value="$!{par.cid}_$!{pe.proid}_1">$!{pe.proname}</li>
+                  #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+               <input type="text" value="北京" readonly>
+               <input type="hidden" name="rradecity1" id ="rradecity1" value ="1"/>
+                <ul>
+                   #foreach($pe in $!firstArea)
+                    <li name="zctradercity1" data-value="$!{par.cid}_$!{pe.areaid}_1">$!{pe.name}</li>
+                    #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                 <input type="text" value="朝阳区" readonly id ="mt1" onclick="areaulclick('trade','1');"/>
+                 <input type="hidden" name="tradecitityarea1" id ="tradecitityarea1" value="101"/>
+                <ul id ="mtzx1">
+                    #foreach($pe in $!secondArea)
+                  <li name="tradearea1" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}_1">$!{pe.name}</li>
+                   #end
+                </ul>
+              </div>
+              <div class="qu_box in_text">
+                大类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="bigsl1" id="bigsl1" onblur="tradecount('b',1,$!{par.cid});"/> 个
+              </div>
+              <div class="qu_box in_text">
+                 新增小类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="smallsl1" id="smallsl1" onblur="tradecount('s',1,$!{par.cid});"/> 个
+              </div>
+            </div>
+            <div class="pri_box red">￥<span id="gstrande1">0</span></div>
+            <input type="hidden" name="gstrandezc1" id ="gstrandezc1" value=""/>
+        </li>
+        <div class="clear"></div>
+              <li class="li_box">
+            <div class="check_box">
+               <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_2');" type="checkbox" value="$!{param.pid}_$!{par.cid}_2" name="selectProduct" id="selectProduct"/><!-- 代理记账  -->$!{par.cname}
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                <input type="text" value="文字商标" readonly/>
+                <input type="hidden" name="tradeOrderzc2" id ="tradeOrderzc2" value="27" />
+                <ul>
+                 #foreach($pe in $!tradeOrder)
+               	   <li name="zctradeOrderzc2" data-value="$!{par.cid}_$!{pe.proid}_2">$!{pe.proname}</li>
+                  #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+               <input type="text" value="北京" readonly>
+               <input type="hidden" name="rradecity2" id ="rradecity2" value ="1"/>
+                <ul>
+                   #foreach($pe in $!firstArea)
+                    <li name="zctradercity2" data-value="$!{par.cid}_$!{pe.areaid}_2">$!{pe.name}</li>
+                    #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                 <input type="text" value="朝阳区" readonly id ="mt2" onclick="areaulclick('trade','2');"/>
+                 <input type="hidden" name="tradecitityarea2" id ="tradecitityarea2" value="101"/>
+                <ul id ="mtzx2">
+                  #foreach($pe in $!secondArea)
+                  <li name="tradearea2" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}_2">$!{pe.name}</li>
+                   #end
+                </ul>
+              </div> 
+              <div class="qu_box in_text">
+                大类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="bigsl2" id="bigsl2" onblur="tradecount('b',2,$!{par.cid});"/> 个
+              </div>
+              <div class="qu_box in_text" style="width:120;">
+                  新增小类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="smallsl2" id="smallsl2" onblur="tradecount('s',2,$!{par.cid});"/> 个
+              </div>
+            </div>
+            <div class="pri_box red">￥<span id="gstrande2">0</span></div>
+            <input type="hidden" name="gstrandezc2" id ="gstrandezc2" value=""/>
+        </li>
+        <div class="clear"></div>
+              <li class="li_box">
+            <div class="check_box">
+               <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_3');" type="checkbox" value="$!{param.pid}_$!{par.cid}_3" name="selectProduct" id="selectProduct"/><!-- 代理记账  -->$!{par.cname}
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                <input type="text" value="文字商标" readonly/>
+                <input type="hidden" name="tradeOrderzc3" id ="tradeOrderzc3" value="27" />
+                <ul>
+                 #foreach($pe in $!tradeOrder)
+               	   <li name="zctradeOrderzc3" data-value="$!{par.cid}_$!{pe.proid}_3">$!{pe.proname}</li>
+                  #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+               <input type="text" value="北京" readonly>
+               <input type="hidden" name="rradecity3" id ="rradecity3" value ="1"/>
+                <ul>
+                   #foreach($pe in $!firstArea)
+                    <li name="zctradercity3" data-value="$!{par.cid}_$!{pe.areaid}_3">$!{pe.name}</li>
+                    #end
+                </ul>
+              </div>
+              <div class="nice-select2 w_select_ss" name="nice-select2">
+                 <input type="text" value="朝阳区" readonly id="mt3" onclick="areaulclick('trade','3');"/>
+                 <input type="hidden" name="tradecitityarea3" id ="tradecitityarea3" value="101"/>
+                <ul id ="mtzx3">
+                    #foreach($pe in $!secondArea)
+                  <li name="tradearea3" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}_3">$!{pe.name}</li>
+                   #end
+                </ul>
+              </div>
+              <div class="qu_box in_text">
+                大类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="bigsl3" id="bigsl3" onblur="tradecount('b',3,$!{par.cid});"/> 个
+              </div>
+              <div class="qu_box in_text">
+                  新增小类数量 <input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="w_text_ss" name="smallsl3" id="smallsl3" onblur="tradecount('s',3,$!{par.cid});"/> 个
+              </div>
+            </div>
+            <div class="pri_box red">￥<span id="gstrande3">0</span></div>
+            <input type="hidden" name="gstrandezc3" id ="gstrandezc3" value=""/>
+        </li>
+        <div class="clear"></div>
+         #else
+            <li class="li_box">
+            <div class="check_box">
+              <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_20');" type="checkbox" value="$!{param.pid}_$!{par.cid}_20" name="selectProduct" id="selectProduct"/> 其他
+            </div>
+            <div class="select_box in_text">
+                <input type="text" class="w_text_m" placeholder="商品名称 最多8个字" name="tradeqitmc" id ="tradeqitmc"/>
+                <input type="text" class="w_text_l" placeholder="自定义内容 最多20个字" name="tradeqitcontent" id ="tradeqitcontent"/>
+                <input type="text" class="w_text_s" name="tradeqitprice" id ="tradeqitprice" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" onblur="dyqitprice('tradeqitprice','trandeqit_20','$!{param.pid}_$!{par.cid}_20');"/>
+                元
+            </div>
+            <div class="pri_box gray">￥<span id="trandeqit_20">0</span></div>
+        </li>
+              #end 
+        #end
+          </ul>
+    </div>
+      #end  
+      #end
+  #end  
+    
+#foreach($param in ${productInfos.keySet()}) 
+ #if($param.pid == ${sorderEntity.productid})     
+   #if($param.pname =='公司变更')
+    <div class="box_off">
+      公司变更
+    </div>
+    <div class="zc_box">
+      <ul>
+       #set ($i=0)
+        #foreach($par in ${productInfos.get($param)})
+          #if($par.type !='changeOrder')
+          #if($par.cname != '其他')
+        <li class="li_box">
+            <div class="check_box4">
+                <input onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_$!{i}');" type="checkbox" value="$!{param.pid}_$!{par.cid}_$!{i}" name="selectProduct" id="selectProduct"/><!-- 代理记账  -->$!{par.cname}
+            </div>
+            <div class="select_box">
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="北京" readonly >
+               <input type="hidden" name="gongsadecity_$!{i}" id ="gongsadecity_$!{i}" value ="1"/>
+               <!--  <ul>
+                   #foreach($pe in $!firstArea)
+                      #if($pe.areaid =='1')
+                       <li name="zcbiangcity_$!{i}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                      #end
+                    #end
+                </ul> -->
+              </div>
+              
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="朝阳区" readonly id="biang_$!{i}" onclick="areaulclick('bg','$!{i}');"/>
+                <input type="hidden" name="biangcitityarea_$!{i}" id ="biangcitityarea_$!{i}" value="101"/>
+                <ul id="dlbecome_$!{i}">
+                 #foreach($pe in $!secondArea)
+                  <li name="biangarea_$!{i}" parent="${pe.parentid}" data-value="$!{par.cid}_$!{pe.areaid}">$!{pe.name}</li>
+                 #end
+                </ul>
+              </div>
+               #if($par.cid == '2005'|| $par.cid == '2006'||$par.cid == '2007'|| $par.cid == '2008'||$par.cid == '2012'|| $par.cid == '2013')
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="有限责任" readonly/>
+                <input type="hidden" name="bgqyxs_$!{i}" id="bgqyxs_$!{i}" value="72"/>
+                <!-- <ul>
+               	   <li name="qyxs_$!{i}" data-value=""></li>
+                  </ul> -->
+              </div>
+              
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                 <input type="text" value="小规模纳税人" readonly/>
+                 <input type="hidden" name="biangswgm_$!{i}" id="biangswgm_$!{i}" value="30"/>
+	                #if($!{sorderEntity.ordercity}== 1)
+	                <ul>
+	                  #foreach($pe in $!gongsgm)
+	               	   <li name="bgshuiwdm_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+	                  #end
+	                  </ul>
+	                #end
+              </div>
+              #elseif($par.cid == '2009'||$par.cid == '2010' ||$par.cid == '2011')
+              
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                 <input type="text" value="有限责任" readonly/>
+                 <input type="hidden" name="bgqyxs_$!{i}" id="bgqyxs_$!{i}" value="72"/>
+              </div>
+                
+                #if($par.cid == '2009')
+                    <div class="nice-select2 w_select_s1" name="nice-select2">
+	               <input type="text" value="增资" readonly/>
+	               <input type="hidden" name="biangqyxs_$!{i}" id="biangqyxs_$!{i}" value="66"/>
+	                 <ul>
+	                 #foreach($pe in $!bgqyxs)
+	                   #if($pe.cateid == '2009')
+	              	   <li name="qyxs_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+	              	   #end
+	                 #end
+	                 </ul>
+	             </div>
+                
+                #elseif($par.cid == '2010')
+               
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="同区变更" readonly/>
+                <input type="hidden" name="biangqyxs_$!{i}" id="biangqyxs_$!{i}" value="68"/>
+                  <ul>
+                  #foreach($pe in $!bgqyxs)
+                    #if($pe.cateid == '2010')
+               	   <li name="qyxs_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+               	    #end
+                  #end
+                  </ul>
+              </div>
+              #else
+              <div class="nice-select2 w_select_s1" name="nice-select2">
+                <input type="text" value="法人股权转让" readonly/>
+                <input type="hidden" name="biangqyxs_$!{i}" id="biangqyxs_$!{i}" value="70"/>
+                  <ul>
+                  #foreach($pe in $!bgqyxs)
+                    #if($pe.cateid == '2011')
+               	   <li name="qyxs_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+               	    #end
+                  #end
+                  </ul>
+              </div>
+              #end
+              
+               <div class="nice-select2 w_select_s1" name="nice-select2">
+                 <input type="text" value="小规模纳税人" readonly/>
+                 <input type="hidden" name="biangswgm_$!{i}" id="biangswgm_$!{i}" value="30"/>
+	                #if($!{sorderEntity.ordercity}== 1)
+	                <ul>
+	                  #foreach($pe in $!gongsgm)
+	               	   <li name="bgshuiwdm_$!{i}" data-value="$!{par.cid}_$!{pe.proid}">$!{pe.proname}</li>
+	                  #end
+	                  </ul>
+	                #end
+              </div>
+              #end
+            </div>
+            <div class="pri_box red">￥<span id="biangprice_$!{i}">0</span></div>
+            <input type="hidden" name="biangmt_$!{i}" id ="biangmt_$!{i}" value=""/>
+        </li>
+        <div class="clear"></div>
+        #else
+            <li class="li_box">
+            <div class="check_box">
+              <input  onclick="clickcheckbox('$!{param.pid}_$!{par.cid}_17');"  type="checkbox" value="$!{param.pid}_$!{par.cid}_17" name="selectProduct" id="selectProduct"/> 其他
+            </div>
+            <div class="select_box in_text">
+                <input type="text" class="w_text_m" placeholder="商品名称 最多8个字" name="biangqitmc" id ="biangqitmc"/>
+                <input type="text" class="w_text_l" placeholder="自定义内容 最多20个字" name="biangqitcontent" id ="biangqitcontent"/>
+                <input type="text" class="w_text_s" name="biangqitprice" id ="biangqitprice" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" onblur="dyqitprice('biangqitprice','biangprice_17','$!{param.pid}_$!{par.cid}_17');"/>
+                元
+            </div>
+            <div class="pri_box gray">￥<span id="biangprice_17">0</span></div>
+        </li>
+              #end 
+        #end        
+                #set($i=$i+1)
+        #end
+         </ul>
+    </div>
+      #end  
+      #end
+  #end
+    <input type="hidden" name="sorderId" id="sorderId"  value="$!{sorderEntity.orderid}"/>
+     <input type="hidden" name="city_id" id="city_id"  value="$!{sorderEntity.ordercity}"/>
+    <div class="tj_box">
+      <div class="tj_con1">
+        <p>订单编号：$!{sorderEntity.orderid}</p>
+        <p>订单时间：$!{xiadsj}</p>
+      </div>
+      <div class="tj_con2">
+        <input type="hidden" name="yingfjesub" id="yingfjesub" value="$!{sorderEntity.totalmoney}"/>
+        <p>订单金额：<span class="red">￥<span id ="orderprice">$!{sorderEntity.totalmoney}</span></span></p> 
+        <!--<p>优惠券：<span class="red">-￥0.00</span></p>  $!{sorderEntity.youhje}  -->
+        <!-- 添加优惠信息 duxf -->
+        #if($!{userCoupon})
+        	<p>$!{userCoupon.couponsname}：<span class="red">-￥$!{userCoupon.price}</span></p>
+        #end
+        <p class="fact_t">应付金额：<span class="red">￥<span id="yingfje">$!{sorderEntity.paymoneycount}</span></span></p>
+          <input type="hidden" name="yingfpaycon" id="yingfpaycon" value="$!{sorderEntity.paymoneycount}"/>
+    
+      </div>
+    </div>
+
+    <div class="yx_box">
+      <table>
+        <tr>
+          <th>意向度:</th>
+          <td colspan="3">
+            <div class="com_box1">
+            <input type="hidden" name="followEntityId" id="followEntityId" value="$!{followEntity.followid}"/>
+             <input type="hidden" name="yixd" id ="yixd" value ="$!{followEntity.intentcode}"/>
+              <ul id ="integerCode">
+                <li class="flow1_change" value="1"><p>低</p></li>
+                <li class="flow1_change" value="2"><p>中</p></li>
+                <li class="flow1_change" value="3"><p>高</p></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th valign="top" style="padding-top:5px">备注:</th>
+          <td colspan="3"><textarea class="d_area_l" name="beiz" id="beiz" cols="500" rows="15"></textarea></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="edit_btn">
+      <div class="dd_btn_box">
+        <span class="dd_qr_btn" onclick="submitForm();">确认</span>
+        <span class="dd_qx_btn" onclick="reset('$!{backpage}');">取消</span>
+      </div> 
+    </div>
+  </div>
+</form>
+</div>      
+</body>
+<script>
+/* $("li[name='addresstypeli']").each(function(){
+	var o = $(this);
+	o.click(function(e){
+		var v = o.attr("value")+"";
+		var cateid = "1002";
+		var tm = o.attr("tm")+"";
+		dynact("1002",v,tm,$("#zccitityarea_"+tm).val());
+		$("#addresstype").text(o.text());
+		$("#addresstypevalue").val(v);
+		e.stopPropagation();
+	});
+}); */
+function areaulclick(type,tm){
+	var dataVal ="1";
+	if(type =="bg"){
+		dataVal = $("#gongsadecity_"+tm).val();
+		if(isNaN(dataVal)){
+			dataVal = map.get(dataVal);
+		}
+	  dynacarea("dlbecome_"+tm,dataVal,'biang_'+tm,'biangcitityarea_'+tm);
+	}
+	if(type == "gszc" ){
+	  dataVal = $("#zccity_"+tm).val();
+	  if(isNaN(dataVal)){
+			dataVal = map.get(dataVal);
+		}
+	  dynacarea("cityArea_"+tm,dataVal,'initzcarea_'+tm,'zccitityarea_'+tm);
+	}
+	if(type == "dljz"){
+		dataVal = $("#dljzcity_"+tm).val();
+		if(isNaN(dataVal)){
+			dataVal = map.get(dataVal);
+		}
+		dynacarea("dlmz_"+tm,dataVal,'dljiz_'+tm,'dljzcitityarea_'+tm);
+	}
+	if(type == "trade"){
+		dataVal = $("#rradecity"+tm).val();
+		if(isNaN(dataVal)){
+			dataVal = map.get(dataVal);
+		}
+		dynacarea("mtzx"+tm,dataVal,'mt'+tm,'tradecitityarea'+tm);
+	}
+}
+function dynacarea(field,dataVal,initdisplay,initval){
+	if($("#"+field+" li[parent = "+dataVal+"]").is(':hidden')){
+		$("#"+field+" li[parent = "+dataVal+"]").show();
+		var text =$("#"+field+" li[parent = "+dataVal+"]:first").text();
+		var val = $("#"+field+" li[parent = "+dataVal+"]:first").attr("data-value").split("_")[1];
+		$("#"+initdisplay).val(text);
+		$("#"+initval).val(val);
+	}
+	$("#"+field+" li[parent != "+dataVal+"]").hide();
+}
+
+function changgeCity(dataVal){
+	var productId = $("#productId").val();
+	if(productId == "1101"){
+		if(dataVal == "2"){
+			productId = "2201";
+		}
+	}
+	if(productId == "2201"){
+		if(dataVal == "1"){
+			productId = "1101";
+		}
+	}
+	if(productId == "1105"){
+		if(dataVal == "2"){
+			productId = "2202";
+		}
+	}
+	if(productId == "2202"){
+		if(dataVal == "1"){
+			productId = "1105";
+		}
+	}
+	//赋值新的值
+	$("#productId").val(productId);
+	jQuery.ajax({
+		url : '/order/changeCity',
+		type : "post",
+		data : {
+			"productId" : productId,
+			"city" : dataVal
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(productId == "1101" || productId =="2201"){
+				$("#gszcChangeCity").html(data);
+			}else{
+				$("#dljzChangeCity").html(data);
+			}
+			initEvent();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	});
+    $("#yingfjesub").val("0");
+    $("#yingfpaycon").val("0");
+    $("#orderprice").text("0.0");
+    $("#yingfje").text("0.0");
+}
+
+var selectItem ="";//类别ID_属性Id 多个以","分割
+function initEvent(){
+	$('[name="nice-select2"]').click(function(e){
+		  $('[name="nice-select2"]').find('ul').hide();
+		  $(this).find('ul').show();
+		  e.stopPropagation();
+		});
+		$('[name="nice-select2"] li').hover(function(e){
+		  $(this).toggleClass('on');
+		  e.stopPropagation();
+		});
+		$('[name="nice-select2"] li').click(function(e){
+		  var val = $(this).text();
+		  var dataVal = $(this).attr("data-value");
+		  $(this).parents('[name="nice-select2"]').find('input').val(val);
+		  $('[name="nice-select2"] ul').hide();
+		  e.stopPropagation();
+		  selectItem = selectItem + dataVal+",";
+		  var cateId ="";
+		  var divide = $(this).attr("name");
+		  //添加所属公司
+		  if(divide =="suosgs"){
+			  var tm  = dataVal.split("_");
+			  var buId = tm[0];
+			  var bmc = tm[1];
+			  $("#hiddissuosgs").val(buId);
+			  if(buId !="" && bmc.indexOf("的公司")==-1){
+				  $("#gongsmc").val(bmc);
+			  }else{
+				  $("#gongsmc").val("");
+			  }
+		  }
+		  if(dataVal.indexOf("_")>-1){
+			  var tmp = dataVal.split("_");
+			  dataVal = tmp[1];
+			  cateId =tmp[0];
+		  }
+
+		  if(divide.indexOf("selectcity")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#selectcity").val(dataVal);
+			  //切换城市
+			  changgeCity(dataVal);
+		  }
+		  
+		  if(divide.indexOf("zccity")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#zccity_"+tm).val(dataVal);
+			  //公司注册同步价格
+			  var cityVal = $("#zccity_"+tm).val();
+			  //公司注册同步价格
+			  dynacarea("cityArea_"+tm,dataVal,'initzcarea_'+tm,'zccitityarea_'+tm);
+			  var dt =  $("#zccitityarea_"+tm).val();
+			  dynact(cateId,dt,tm,cityVal);
+		  }
+		  
+		  if(divide.indexOf("zccompanytype")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#zccompanytypett_"+tm).val(dataVal);
+		  }
+		  
+		  if(divide.indexOf("zcarea")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#zccitityarea_"+tm).val(dataVal);
+			  var cityVal = $("#zccity_"+tm).val();
+			  //公司注册同步价格
+			  if(cateId == "1007"){
+				  cityVal = dataVal;
+			  }
+			  dynact(cateId,dataVal,tm,cityVal);
+		  }
+		  if(divide.indexOf("zcgongsgm")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#zcgongsgm_"+tm).val(dataVal);
+		  }
+		  
+		  if(divide.indexOf("dlcity")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#dljzcity_"+tm).val(dataVal);
+			  dynacarea("dlmz_"+tm,dataVal,'dljiz_'+tm,'dljzcitityarea_'+tm);
+			  var city = $("#dljzcitityarea_"+tm).val();
+			  dynact(cateId,city,tm,dataVal);
+		  }
+		  if(divide.indexOf("dlarea")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#dljzcitityarea_"+tm).val(dataVal);
+			  
+			  var cityVal = $("#dljzcity_"+tm).val();
+			  //代理记账同步价格
+			  dynact(cateId,dataVal,tm,cityVal);
+			 // dynact(cateId,dataVal,tm,dataVal);
+		  }
+		  if(divide.indexOf("servicecircle")>-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#serviceCircle_"+tm).val(dataVal);
+		      var cityVal = $("#dljzcity_"+tm).val();
+			  //代理记账同步价格
+			  var tmd = $("#dljzcitityarea_"+tm).val();
+			  dynact(cateId,tmd,tm,cityVal);
+		  }
+		  if(divide.indexOf("dlkahbank") > -1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#dljzkahbank_"+tm).val(dataVal);
+		  }
+		  if(divide.indexOf("dlgongsgm") > -1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#dljzgongsgm_"+tm).val(dataVal);
+			  var cityVal = $("#dljzcity_"+tm).val();
+			  var datav =  $("#dljzcitityarea_"+tm).val();
+			  //代理记账同步价格
+			  dynact(cateId,datav,tm,cityVal);
+		  }
+		  
+		  if(divide == "zctradeOrderzc"){
+			  $("#tradeOrderzc").val(dataVal);
+			  var cityVal = $("#rradecity").val();
+			  //商标同步价格
+			  dynact(cateId,dataVal,0,cityVal);
+		  }
+		  if(divide == "zctradercity"){
+			  $("#rradecity").val(dataVal);
+			  dynacarea("mtzx",dataVal,'mt','tradecitityarea');
+			  
+			  dynact(cateId,dataVal,0,dataVal);
+		  }
+		  
+		  if(divide == "tradearea"){
+			  $("#tradecitityarea").val(dataVal);
+		  }
+		  if(divide == "zctradeOrderzc1"){
+			  $("#tradeOrderzc1").val(dataVal);
+			  var cityVal = $("#rradecity1").val();
+			  //商标同步价格
+			  dynact(cateId,dataVal,1,cityVal);
+		  }
+		  
+		  if(divide == "zctradercity1"){
+			  $("#rradecity1").val(dataVal);
+			  dynacarea("mtzx1",dataVal,'mt1','tradecitityarea1');
+			  dynact(cateId,dataVal,1,dataVal);
+		  }
+		  if(divide == "tradearea1"){
+			  $("#tradecitityarea1").val(dataVal);
+		  }
+		  
+		  if(divide == "zctradeOrderzc2"){
+			  $("#tradeOrderzc2").val(dataVal);
+			  var cityVal = $("#rradecity2").val();
+			  //商标同步价格
+			  dynact(cateId,dataVal,2,cityVal);
+		  }
+		  if(divide == "zctradercity2"){
+			  $("#rradecity2").val(dataVal);
+			  dynacarea("mtzx2",dataVal,'mt2','tradecitityarea2');
+			  dynact(cateId,dataVal,2,dataVal);
+		  }
+		  
+		  if(divide == "tradearea2"){
+			  $("#tradecitityarea2").val(dataVal);
+		  }
+		  if(divide == "zctradeOrderzc3"){
+			  $("#tradeOrderzc3").val(dataVal);
+			  var cityVal = $("#rradecity3").val();
+			  //商标同步价格
+			  dynact(cateId,dataVal,3,cityVal);
+		  }
+		  
+		  if(divide == "zctradercity3"){
+			  $("#rradecity3").val(dataVal);
+			  dynacarea("mtzx3",dataVal,'mt2','tradecitityarea3');
+			  dynact(cateId,dataVal,3,dataVal);
+		  }
+		  if(divide == "tradearea3"){
+			  $("#tradecitityarea3").val(dataVal);
+		  }
+
+		  if(divide.indexOf("zcbiangcity") >-1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#gongsadecity_"+tm).val(dataVal);
+			  dynacarea("dlbecome_"+tm,dataVal,'biang_'+tm,'biangcitityarea_'+tm);
+		  }
+		  if(divide.indexOf("biangarea") > -1){
+			  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#biangcitityarea_"+tm).val(dataVal);
+			  var cityVal = $("#gongsadecity_"+tm).val();
+			  //公司变更同步价格
+			  biangyw(cateId,dataVal,tm,cityVal);
+		  } 
+		  
+         if(divide.indexOf("bgshuiwdm") > -1){
+        	  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#biangswgm_"+tm).val(dataVal);
+         }
+      	 if(divide.indexOf("qyxs") > -1){
+      		  var t = divide.split("_");
+			  var tm = t[1];
+			  $("#biangqyxs_"+tm).val(dataVal);
+			  
+			  var cityVal = $("#gongsadecity_"+tm).val();
+			  var dataVal1 = $("#biangcitityarea_"+tm).val();
+			  //公司变更同步价格
+			  biangyw(cateId,dataVal1,tm,cityVal);
+      	 }
+             if(divide.indexOf("zccompanytypeszz_") > -1){
+            	 $("#zccompanytype_"+tm).val(dataVal);
+            	 var t = divide.split("_");
+   			     var tm = t[1];
+            	 if(cateId == "1003"){
+        			  var cityVal = $("#zccity_"+tm).val();
+        			  var dt =  $("#zccitityarea_"+tm).val();
+       			      dynact(cateId,dt,tm,cityVal);
+            	 }
+             }
+             if(divide == "addresstypeli"){
+            	 var o = $(this);
+            	 var v = o.attr("value")+"";
+         		var cateid = "1002";
+         		var tm = o.attr("tm")+"";
+         		dynact("1002",v,tm,$("#zccitityarea_"+tm).val());
+         		$("#addresstype").text(o.text());
+         		$("#addresstypevalue").val(v);
+         		e.stopPropagation();
+             }
+		});
+}
+initEvent();
+$(document).click(function(){
+  $('[name="nice-select2"] ul').hide();
+});
+</script>
+</html>
+ 

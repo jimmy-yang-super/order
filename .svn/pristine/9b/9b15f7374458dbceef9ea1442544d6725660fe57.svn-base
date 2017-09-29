@@ -1,0 +1,27 @@
+        <div class="cd-popup cd-box2" role="alert"> 
+            <div class="cd-popup-container box_400">
+            	
+                <div class="con_box">
+                    <p class="goon">确定提交吗？</p>
+                    #if($!{sourceType} == "WF")
+                    <script type="text/javascript" src="/js/wf/task-detail.js"></script>
+                    <p class="btn">
+                        <a class="btn1">确定</a>
+                        <a href="javascript:void(0);" class="btn2">暂不</a>
+                    </p>
+                    #else
+                    <p class="btn">
+                        <a href="/enterprise/emp/edit?orderId=$!{orderId}#if($!{sourceType} == "AE")&sourceType=1#end" class="btn1">确定</a>
+                        <a href="javascript:void(0);" class="btn2">暂不</a>
+                    </p>
+                    #end
+                    
+                </div>
+            </div> 
+        </div> 
+        <div class="control_area">
+        	#if($!{sourceType} != "AE")
+			<a href="javascript:void(0);" class="next pop_box2" >提交</a>
+			#end
+			<a href="javascript:void(0);" class="save" >暂存</a>
+		</div>

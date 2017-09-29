@@ -1,0 +1,14 @@
+
+#if($!{onePage} != "true")
+<div class="step1_box">
+	#set($aclass = 0)
+	#set($index = 1)
+	#foreach($businessEntity in $businessList)
+		<a class="s$aclass$index" href="/enterprise/emp/edit/$!{businessEntity.getBusinessKey()}?orderId=$!{orderId}&morePage=true&sourceType=1">$!{businessEntity.getBusinessName()}</a>
+		#if($!{businessKey} == $!{businessEntity.getBusinessKey()} && $!{aclass} == 0)
+			#set($aclass = "")
+		#end
+		#set($index = $index + 1)
+	#end
+</div>
+#end

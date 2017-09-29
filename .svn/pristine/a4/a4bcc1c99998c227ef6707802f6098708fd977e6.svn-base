@@ -1,0 +1,87 @@
+<div class="dd_box2" id="fzlistdiv"><!-- 选择律师层 -->
+      <div class="container">
+        <ul class="tabs_nei">
+            <div class="active" name="fzcitydiv" value="1"><a href="javascript:void(0);">北京 </a></div>
+            <div name="fzcitydiv" value="2"><a href="javascript:void(0);">深圳</a></div>
+        </ul>
+        <div class="clear"></div>
+        <div class="tab_container">
+            <div id="tab1" class="tab_content" style="display: block;">
+              <div class="c_lowyer1">
+                 <div class="low_box1" name="fwlist" value="1">
+                  <ul>
+                  #foreach($ev in $fzlist)
+                   #if($ev.cityid == 1)
+                    <li class="low_change1" val="$!ev.empid" name="fwli"><p>$!{ev.realname}</p></li>
+					#end
+					#end
+                  </ul>
+
+                </div>
+                <div class="low_box1" name="fwlist" value="2" style="display:none">
+                <ul>
+                  #foreach($ev in $fzlist)
+                  #if($ev.cityid == 2)
+                    <li class="low_change1" val="$!ev.empid" name="fwli"><p>$!ev.realname</p></li>
+                    #end
+					#end
+                  </ul>
+                </div>
+                
+                <div class="clear"></div>
+              </div>
+            </div>
+            
+            <div class="dd_btn_box">
+              <span class="dd_qr_btn" id="lzbutton">确认</span>
+              <span class="dd_qx_btn" id="cancelbutton">取消</span>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+    var fwid = 0;
+    $("div[name='fzcitydiv']").each(function(){
+    	var o = $(this);
+    	o.click(function(){
+    		$("div[name='fzcitydiv']").removeClass("active");
+    		o.addClass("active");
+    		$("div[name='fwlist']").hide();
+    		var v = o.attr("value");
+    		$("div[name='fwlist'][value='"+v+"']").show();
+    		
+    	});
+    });
+    $("li[name='fwli']").each(function(){
+        $(this).click(function(){
+            $(".low_box1 li").addClass("flow1_change").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+            fwid = $(this).attr("val");
+            
+        })
+    });
+    var i=0;
+    $("#lzbutton").click(function(){
+    	if(i==0){
+    		i++;
+	    	//$(this).attr("disabled","disabled");
+	    	var url = "/action/lzorder/"+fwid+"/"+lzorderid;
+	        $.ajax({url:url,
+	        		dataType:"json",
+	        		success:function(data){
+	        			if(data.res == "ok"){
+	        				alert("流转成功！");
+	        				window.location.reload();
+	        			}else{
+	        				alert("流转失败！"+data.msg+",请稍后再试！");
+	        			}
+	        }});
+    	}else{
+    		alert("请不要点击太频繁!");
+    	}
+    });
+    $("#cancelbutton").click(function(){
+    	$("#fwlistdiv").hide();
+    	$(".ceng_box1").hide();
+    });
+    </script>

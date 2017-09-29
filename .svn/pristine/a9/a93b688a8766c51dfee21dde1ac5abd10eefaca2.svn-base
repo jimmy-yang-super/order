@@ -1,0 +1,294 @@
+  <div class="order_tab" id="order_tab">
+    <table >
+        #set($size =$!{serverNameList.size()} - 1 )
+        <tr>
+          #foreach($foo in [0..$size] )
+          	<th width="11%" $!{serverNameList.get($foo).get("classTH")} >$!{serverNameList.get($foo).get("servername")}</th>
+          #end
+        </tr>
+        <tr>
+          #foreach($foo in [0..$size] )
+          	<td><h3 $!{serverNameList.get($foo).get("classTR")}>$!{serverNameList.get($foo).get("serverstate")}</h3><p>$!{serverNameList.get($foo).get("realname")}<br>$!{serverNameList.get($foo).get("time")}</p></td>
+          #end
+        </tr>
+      </table> 
+  </div>
+  #if($!{order.orderstate} != "3" )
+  	 <!-- 周期性节点列表 -->
+  #if($!{cycleActionsList.size()} > 0)
+	  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+		<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+	    <div class="flow1_main">
+	      <div class="ystep1"></div>
+	      <div class="flow1_box">
+	        <ul>
+	        	<!-- 服务周期为3个月时 -->
+	        	#if($!{propertid} == 3)
+	        		#if($!{serviceProcessCount} > 0)
+			          	#if($!{currentQ} == 0)
+			          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+				          	<li><span>第1期</span><br><span class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+				          	<li><span>第2期</span></li>
+				          	<li><span>第3期</span></li>
+				        #elseif($!{currentQ} ==  1)
+			          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+				          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+				          	<li><span>第2期</span><br><span class="done_btn" actionid="1134"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+				          	<li><span>第3期</span></li>
+				        #elseif($!{currentQ} ==  2)
+			          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+				          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+				          	<li><span>第2期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+				          	<li><span>第3期</span><br><span class="done_btn" actionid="1135"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+				        #elseif($!{currentQ} ==  3)
+			          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+				          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+				          	<li><span>第2期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+				          	<li><span>第3期</span><br>$!{overMVOList.get(2).optime}<br>$!{overMVOList.get(2).optionName}</li>
+			          	#end
+	        		#else
+			          	<li><span>开始服务</span><br><span class="done_btn" actionid="1132"  onclick="cycleServiceProceSumit(this)">开始服务</span></li>
+			          	<li><span>第1期</span><br><span style="display: none;" class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+			          	<li><span>第2期</span></li>
+			          	<li><span>第3期</span></li>
+	        		#end
+	        	#else
+	        	  	<!-- 为超过三期的贷记的情况时 -->
+	        		#if($!{serviceProcessCount} > 0)
+	        			#if($!{overMVOList.size()} > 0)
+	        				#if($!{currentQ} == 1)
+				          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+					          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+					          	<li><span>第2期</span><br><span class="done_btn" actionid="1134"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+					          	<li><span>第3期</span></li>
+	        				#else
+	        					#if($!{overM} == 0)
+	        						#set($qi_2 = $!{dangqinQ} - 1)
+	        						#set($qi_1 = $!{dangqinQ} - 2)
+					          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+						          	<li><span>第$!{qi_1}期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+						          	<li><span>第$!{qi_2}期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+						          	<li><span>第$!{dangqinQ}期</span><br>$!{overMVOList.get(2).optime}<br>$!{overMVOList.get(2).optionName}</li>
+	        					#else
+	        						#if($!{overM} == 1)
+		        						#set($qi_1 = $!{dangqinQ} - 1)
+		        						#set($qi_3 = $!{dangqinQ} + 1)
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第$!{qi_1}期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+							          	<li><span>第$!{dangqinQ}期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+							          	<li><span>第$!{qi_3}期</span><br><span class="done_btn" actionid="1135"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+	        						#else
+		        						#set($qi_2 = $!{dangqinQ} + 1)
+		        						#set($qi_3 = $!{dangqinQ} + 2)
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第$!{dangqinQ}期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+							          	<li><span>第$!{qi_2}期</span><br><span class="done_btn" actionid="1134"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+							          	<li><span>第$!{qi_3}期</span></li>
+	        						#end
+	        					#end
+	        				#end
+	        			#else
+			          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+				          	<li><span>第1期</span><br><span class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+				          	<li><span>第2期</span></li>
+				          	<li><span>第3期</span></li>
+	        			#end
+	        		#else
+			          	<li><span>开始服务</span><br><span class="done_btn" actionid="1132"  onclick="cycleServiceProceSumit(this)">开始服务</span></li>
+			          	<li><span>第1期</span><br><span style="display: none;" class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+			          	<li><span>第2期</span></li>
+			          	<li><span>第3期</span></li>
+	        		#end
+	        	#end
+	        </ul>
+	      </div>
+	    </div>
+	  </div>
+  #end
+
+  
+<!-------------- 此处为动态的数据 START -------------------------->
+  <div class="order_d_box">
+    <div class="d_box1">
+      <p class="d_title">订单详情</p>
+      <div class="d_con_box">
+        <p>订单金额：<span class="red">￥$!{order.totalmoney}</span></p>
+      <!-- <p>优惠券：<span class="red">-￥200.00</span></p> -->
+       #if($!{userCoupon})
+       	<p>$!{userCoupon.couponsname}：<span class="red">-￥$!{userCoupon.price}</span></p>
+       #end
+        <p>应收金额：<span class="red">￥$!{order.paymoneycount}</span></p>
+        <p>预付金额：<span class="green">￥$!{order.prepaidamount}</span></p>
+	        #set($weikuan=$!{order.paymoneycount}-$!{order.prepaidamount})
+        <p class="w_total">尾款：<span class="red">￥$!{weikuan}</span></p>
+      </div>
+    </div>
+    <div class="d_box2" id="d_box2">
+      <table>
+        <tr>
+          <th width="12%">服务名称</th>
+          <th width="25%">服务内容</th>
+          <th width="12%">状态</th>
+          <th width="12%">价格</th>
+          <th width="15%">操作</th>
+          <th width="33%">日志</th>
+        </tr>
+        #foreach($childOrder in $!{childOrderList})
+        <tr>
+          <td>$!{childOrder.serverName} <input type="hidden" name="coid" value="$!{childOrder.coid}" />
+          <input type="hidden" name="parentorderid" value="$!{order.orderid}" /></td>
+          <td>$!{childOrder.serverContent}</td>
+          <td><span class="green">$!{childOrder.state}</span></td>
+          <td>￥$!{childOrder.price}</td>
+          <td>
+            #if($!{childOrder.logInfo} == "" )
+          		<span class="d_Btn" onclick="orderChildOver(this)" >完成</span>
+          		#if($!{childOrder.serverName} == "银行开户")
+          			<br/><br/><span class="d_Btn" onclick="uncallsendmessage($!{order.orderid},'bankopen')" >银行开户短信</span>
+          		#end
+            #else
+          		<span>完成</span>
+            #end
+          </td>
+          <td><span name="loginfo">$!{childOrder.logInfo}</span></td>
+        </tr>
+        #end
+      </table>  
+    </div>
+  </div>
+<script type="text/javascript">
+
+//根据jQuery选择器找到需要加载ystep的容器
+//loadStep 方法可以初始化ystep
+$(".ystep1").loadStep({
+//ystep的外观大小
+//可选值：small,large
+size: "large",
+//ystep配色方案
+//可选值：green,blue
+color: "blue",
+//ystep中包含的步骤
+steps: [{},{},{},{}]
+});
+
+if($!{serviceProcessCount} > 0){
+	if($!{overMVOList.size()} > 0){
+		if($!{currentQ} == 1){
+			$(".ystep1").setStep(3);
+		}else{
+			if($!{overM} == 0){
+				$(".ystep1").setStep(4);
+			}else if($!{overM} == 1){
+				$(".ystep1").setStep(4);
+			}else {
+				$(".ystep1").setStep(3);
+			}
+		}
+	}else{
+		$(".ystep1").setStep(2);
+	}
+}else{
+	$(".ystep1").setStep(0);
+}
+
+
+
+//点击周期性流程节点时 args 当前对象
+function cycleServiceProceSumit(args){
+	
+	if(confirm("确认此操作吗？")){
+		var actionid = $(args).attr("actionid");
+		var orderid = $(args).parent().parent().parent().parent().parent().find("input[name='orderid']").val();  
+		var url = "/action/servicestep/"+orderid+"/"+actionid;
+		$.ajax({url:url,
+			dataType:"json",
+			success:function(data){
+				if(data.res == "ok"){
+					setCycelMystep(args,data.infoUser,data.infoTime);
+				}else{
+					alert("更新失败！"+data.msg);
+				}
+			}
+			});
+	}
+}
+
+
+//设置周期性节点
+function setCycelMystep(args,user,time){ 
+	if(confirm("确认此操作吗？")){
+		var actionid = $(args).attr("actionid");
+		if(actionid == "1132"){
+			$(".ystep1").setStep(2);
+			var nextBody = $(args).parent().next();  //获得下一个节点的对象
+			nextBody.find(".done_btn").css("display","");  //点击完成节点后显示按钮
+		}else if(actionid == "1133"){
+			$(".ystep1").setStep(3);
+		}else if(actionid == "1134"){
+			$(".ystep1").setStep(4);
+		}else if(actionid == "1135"){
+			$(".ystep1").setStep(4);
+		}
+		
+		$(args).parent().find("span:first").addClass("done");
+		$(args).parent().append(time+"<br/>"+user);
+		$(args).parent().find(".done_btn").remove();
+	}
+	
+}
+
+
+/***
+ * 点击订单详情table中完成按钮触发事件
+ */
+function orderChildOver(args){
+	if(confirm("确认此操作吗？")){
+		$(args).removeClass().removeAttr("onclick");
+		$(args).parent().parent().find("span.green").html("服务完成");
+		
+		var orderid = $(args).parent().parent().find("input[name='coid']").val();
+		var parentorderid = $(args).parent().parent().find("input[name='parentorderid']").val();
+		var url = "/action/servstate/"+parentorderid+"/"+orderid;
+		$.ajax({url:url,
+			dataType:"json",
+			success:function(data){
+				if(data.res == "ok"){
+					alert("更新成功！");
+					$(args).parent().parent().find("span[name='loginfo']").html(data.msg);
+				}else{
+					alert("更新失败！"+data.msg);
+				}
+			}});
+	}
+	
+	
+	
+}
+//点击代理地址和银行开户发送短信
+function uncallsendmessage(orderid,messagetype){
+	
+	if(messagetype=="bankopen"){
+		msg = "小微已为您提交银行开户申请，招商银行将于近日向公司法人致电进行公司信息核实，请保持手机畅通并如实反馈公司信息。若法人未接电话或未如实反馈公司信息，银行将不予开户。预计银行将于15个工作日完成资料审查。";
+	}
+	if(confirm("确定要发送以下信息给客户？【"+msg+"】")){
+		$.ajax({
+	        type: "POST", // 用POST方式传输  
+	        dataType: "json", // 数据格式:JSON  
+	        url: "/order/uncallsendmessage/"+orderid, // 目标地址   
+	        data: {"message":messagetype},
+	        success: function (data){
+	        	if(data.msg == "success"){
+	            	alert("发送成功!");	
+	        	}else{
+	        		alert("发送失败!")
+	        	}
+	        }  
+		});
+	}
+}
+</script>
+<!--------------- 此处为动态的数据 END ---------------------->
+  #end
+ 
+ 
+             

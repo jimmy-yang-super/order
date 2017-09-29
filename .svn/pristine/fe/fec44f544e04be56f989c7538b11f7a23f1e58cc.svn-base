@@ -1,0 +1,78 @@
+<!--质检二次提交申请 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>注册地址：</th>
+				<td>$!{iszhucdz}</td>
+				<th>产权主体：</th>
+				<td>$!{reginAddress.getChanqzt()}</td>
+			</tr>
+			<tr>
+				<th>申请方式：</th>
+				<td>$!{applyMethod}</td>
+				<th >质检核查单档案状态</th>
+				<td >$!{DicUtils.getDicDataValue("archiveDataStatus", $ShuangXiangSubmitCheckOrderDataStatus, "未提取")}</td>
+			</tr>
+			#if($diZhiHeChaDanActivity && $!{diZhiHeChaDanActivity} == "3")
+			<tr>
+				<th>现场递交申请退回原因：</th>
+				<td>$!{localApplyTuiHuiReason}</td>
+				<th>现场递交申请退回描述：</th>
+				<td>$!{localApplyTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($diZhiHeChaDanActivity && $!{diZhiHeChaDanActivity} == "2")
+			<tr>
+				<th>取得全部证照 退回原因：</th>
+				<td>$!{quDeQuanBuZhengZhaoTuiHuiReason}</td>
+				<th>取得全部证照 退回描述：</th>
+				<td>$!{quDeQuanBuZhengZhaoTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($diZhiHeChaDanActivity && $!{diZhiHeChaDanActivity} == "1")
+			<tr>
+				<th>领取营业执照 退回原因：</th>
+				<td>$!{lingQuYingYeZhiZhaoTuiHuiReason}</td>
+				<th>领取营业执照 退回描述：</th>
+				<td>$!{lingQuYingYeZhiZhaoTuiHuiRemark}</td>
+			</tr>
+			#end
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 完成
+	$(".b1").click(function(){
+		// 在提取和存储完成后才能点击完成
+		var ShuangXiangSubmitCheckOrderDataStatus = WF.getVariableByName("ShuangXiangSubmitCheckOrderDataStatus");
+		if(ShuangXiangSubmitCheckOrderDataStatus == "1"){
+			// 已提取
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			WF.submitTask("111", "&ShuangXiangSubmitCheckOrderDataStatus=0");
+		}else{
+			// 未提取
+			alert("档案组未确认相关材料已提取，请到档案组提取档案。");
+		}
+
+	});
+});
+
+</script>

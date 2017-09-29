@@ -1,0 +1,88 @@
+<style>
+.btn1{color: #5ba8d7;height: 25px;line-height: 25px;margin: 0 15px;border:1px solid #ddd; display: block;float: left; width: 115px; text-align: center; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+</style>
+<div class="zy_r_box">
+	<p class="title">企业信息</p>
+	<table>
+		<tr>
+			<th width="100px">企业名称：</th>
+			<td>$!{name}</td>
+		</tr>
+		<tr>
+			<th>组织形式：</th>
+			<td>$!{organizationType}</td>
+		</tr>
+		<tr>
+			#if($!{addressTypeKey} == "2")<th>自有地址：</th>
+			#elseif($!{addressTypeKey} == "1")<th>代理地址：</th>
+			#else <th>注册地址：</th> #end
+			<td>$!{addressFormat}</td>
+		</tr>
+		<tr>
+			<th>产权主体：</th>
+			<td>$!{chanQuanType}</td>
+		</tr>
+		<tr>
+			<th>经营范围：</th>
+			<td>$!{operatingRange}</td>
+		</tr>
+		
+		#set($roleList = $EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson'))
+       	#if($roleList == [])
+			#set($roleList= ['1'])
+       	#end
+        #foreach($legalPerson in $roleList)
+		<tr>
+			<th>法定代表人姓名：</th>
+			<td>$!{legalPerson.get("name")}</td>
+		</tr>
+		<tr>
+			<th>法定代表人电话：</th>
+			<td>$!{legalPerson.get("phoneNum")}</td>
+		</tr>
+		#end
+		
+	    #set($roleList = $EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'finance'))
+       	#if($roleList == [])
+			#set($roleList= ['1'])
+       	#end
+        #foreach($finance in $roleList)
+		<tr>
+			<th>财务负责人姓名：</th>
+			<td>$!{finance.get("name")}</td>
+		</tr>
+		<tr>
+			<th>财务负责人电话：</th>
+			<td>$!{finance.get("phoneNum")}</td>
+		</tr>
+		#end
+		
+		#set($roleList = $EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'contacts'))
+       	#if($roleList == [])
+			#set($roleList= ['1'])
+       	#end
+        #foreach($contacts in $roleList)
+		<tr>
+			<th>企业联系人姓名：</th>
+			<td>$!{contacts.get("name")}</td>
+		</tr>
+		<tr>
+			<th>企业联系人电话：</th>
+			<td>$!{contacts.get("phoneNum")}</td>
+		</tr>
+		#end
+		
+		
+	</table>
+	<div class="zy_btn">
+		<a class="btn1" >查看企业详情</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	$(".btn1").click(function(){
+		var url = "/enterprise/business/show/"+enterpriseId;
+		window.open(url,'','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ', top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+	});
+});
+</script>

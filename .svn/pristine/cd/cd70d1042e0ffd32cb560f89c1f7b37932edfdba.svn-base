@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+function suform(){
+	var code = $("#validatecode").val();
+	if(code == null || code == ""){
+		alert("请输入验证码!!!");
+		return;
+	}
+	jQuery.ajax({
+		url : '/order/grapRemoateDate',
+		type : "post",
+		data : $('#myForm').serialize(),
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !=""){
+				if(data == "true"){
+				  alert("远程数据导入成功!!");
+				}else{
+				  alert(data);
+				}
+			}else{
+				  alert("操作成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	});
+}
+
+</script>
+
+<body>
+<form action="/order/grapRemoateDate" method="post" name="myForm" id="myForm">
+<input type="hidden" name="sessionid" value="$!{sessionId}">
+<input type="hidden" name="isSource" value="$!{isSource}" />
+验证码：<input name="validatecode" id="validatecode" type="text">
+<div>$!{errorMsg}</div>
+<div><img  src="$!{valipath}"></div>
+
+<input type="button" value="提交" onclick="suform();">
+
+</form>
+
+
+</body>
+</html>

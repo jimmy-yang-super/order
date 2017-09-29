@@ -1,0 +1,123 @@
+<div class="ck_box" id="ckdiv" style="display:none"><!-- 催款弹出层 -->
+     <form id="myForm" action="/order/addFriendLink" method="post">
+      <table>
+        <tbody>
+				<tr>
+					<th>所属页面:</th>
+					<td>
+						<div class="nice-select" name="nice-selectsk"
+							style="margin-left: 0px;">
+							<input type="text" value="首页" disable="true" name="showinput" id="paychannelshowinput" />
+						     <input type="hidden" id="includepage" name="includepage" value="1" />
+							<ul style="display: none;">
+								<li data-value="1" class="">首页</li>
+								<li data-value="2" class="">公司注册</li>
+								<li data-value="3" class="">代理记账</li>
+								<li data-value="4" class="">商标注册</li>
+								<li data-value="5">公司注册预约</li>
+                                <li data-value="6">代理记账预约</li>
+                                <li data-value="7">商标注册预约</li>
+                                <li data-value="8">小微说首页</li>
+                                <li data-value="9">小微说栏目页</li>
+                                <!-- 新的 -->
+                                <li data-value="11">新官网首页 </li>
+                                <li data-value="12">产品列表页 </li>
+                                <li data-value="21">资讯站首页 </li>
+                                <li data-value="22">文章一级分类 </li>
+                                <li data-value="23">文章二级分类 </li>
+                                <li data-value="24">问答首页</li>
+                                <li data-value="25">问答一级分类 </li>
+                                
+							</ul>
+						</div>
+					</td>
+				</tr>
+				<tr>
+          <th>关键词:</th>
+          <td><input type="text" class="w_text_s" name="keyword" id="keyword"/></td>
+          <td><input type="text" style="display:none" name="friendLinkid" id="friendLinkid" /></td>
+        </tr>
+        <tr>
+          <th>链接地址:</th>
+          <td><input type="text" class="w_text_s" name="lur" id="lur" /></td>
+        </tr>
+      </tbody></table>
+      <div class="btn_box">
+        <span class="qr_btn" name="cksubmitbutton">确认</span>
+        <span class="qx_btn" name="ckcancelbutton">取消</span>
+      </div>
+      </form>
+    </div>
+    <script>
+    $("#sdkxtext").blur(function(){
+    	jstotal();
+    });
+    $("#sxftext").blur(function(){
+    	jstotal();
+    });
+    var jstotal = function(){
+    	var p = $("#sdkxtext").val();
+    	var f = $("#sxftext").val();
+    	var t = parseFloat(p) + parseFloat(f);
+    	$("#hjtext").val(t);
+    	$("#paytotal").text(t);
+    }
+    $("span[name='ckcancelbutton']").click(function(){
+    	cenghide();
+    	$("#ckdiv").hide();
+    });
+    $("span[name='cksubmitbutton']").click(function(){
+    
+    	var keyword = $("#keyword").val();
+    	var lur = $("#lur").val();
+    	if(keyword == ""){
+    		alert("请输入关键词!!");
+    		return false;
+    	}
+    	if(lur == ""){
+    		alert("请输入链接地址!!!");
+    		return false;
+    	}else{
+    	       var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
+    	           + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
+    	           + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+    	           + "|" // 允许IP和DOMAIN（域名）
+    	           + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
+    	           + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
+    	           + "[a-z]{2,6})" // first level domain- .com or .museum
+    	           + "(:[0-9]{1,4})?" // 端口- :80
+    	           + "((/?)|" // a slash isn't required if there is no file name
+    	           + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+    	           var re=new RegExp(strRegex);
+    	           if (re.test(strRegex)){
+    	        	   alert("请输入合法的链接地址！！");
+    	    			return false;
+    	           }
+    	}
+         document.getElementById('myForm').submit();
+    });
+    $('[name="nice-selectsk"]').click(function(e){
+    	  $('[name="nice-selectsk"]').find('ul').hide();
+    	  $(this).find('ul').show();
+    	  e.stopPropagation();
+    	});
+    	$('[name="nice-selectsk"] li').hover(function(e){
+    	  $(this).toggleClass('on');
+    	  e.stopPropagation();
+    	});
+    	$('[name="nice-selectsk"] li').click(function(e){
+    	  var val = $(this).text();
+    	  var dataVal = $(this).attr("data-value");
+    	  
+    	  $("#paychannelshowinput").val(val);
+    	  $("#includepage").val(dataVal);
+    	  $('[name="nice-selectsk"] ul').hide();
+    	  e.stopPropagation();
+    	  // alert("中文值是："+val);
+    	  // alert("数字值是："+dataVal);
+    	  //alert($(this).parents('[name="nice-selectsk"]').find('input').val());
+    	});
+    	$(document).click(function(){
+    	  $('[name="nice-selectsk"] ul').hide();
+    	});
+    </script>

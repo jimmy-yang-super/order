@@ -1,0 +1,64 @@
+<style>
+.btn1{color: #5ba8d7;height: 25px;line-height: 25px;margin: 0 15px;border:1px solid #ddd; display: block;float: left; width: 115px; text-align: center; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+</style>
+<div class="zy_r_box">
+	<p class="title">企业信息</p>
+	<table>
+		<tr>
+			<th width="100px">企业名称：</th>
+			<td>$!{name}</td>
+		</tr>
+		<tr>
+			<th>组织形式：</th>
+			<td>$!{organizationType}</td>
+		</tr>
+		<tr>
+			#if($!{addressTypeKey} == "2")<th>自有地址：</th>#end
+			#if($!{addressTypeKey} == "1")<th>代理地址：</th>#end
+			<td>$!{addressFormat}</td>
+		</tr>
+		<tr>
+			<th>产权主体：</th>
+			<td>$!{chanQuanType}</td>
+		</tr>
+		<tr>
+			<th>经营范围：</th>
+			<td>$!{operatingRange}</td>
+		</tr>
+
+		#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+		<tr>
+			<th>法定代表人姓名：</th>
+			<td>$!{legalPerson.getName()}</td>
+		</tr>
+		<tr>
+			<th>法定代表人电话：</th>
+			<td>$!{legalPerson.getPhoneNum()}</td>
+		</tr>
+		#end
+		
+		#foreach($finance in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'finance')})
+		<tr>
+			<th>财务负责人姓名：</th>
+			<td>$!{finance.getName()}</td>
+		</tr>
+		<tr>
+			<th>财务负责人电话：</th>
+			<td>$!{finance.getPhoneNum()}</td>
+		</tr>
+		#end
+		
+		#foreach($contacts in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'contacts')})
+		<tr>
+			<th>企业联系人姓名：</th>
+			<td>$!{contacts.getName()}</td>
+		</tr>
+		<tr>
+			<th>企业联系人电话：</th>
+			<td>$!{contacts.getPhoneNum()}</td>
+		</tr>
+		#end
+		
+		
+	</table>
+</div>

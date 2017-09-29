@@ -1,0 +1,457 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link href="/css/enterprise/reg_ht.css" type="text/css"  rel="stylesheet"/>
+<link href="/css/enterprise/box.css" type="text/css" rel="stylesheet"  />
+<script type="text/javascript" src="/js/common/jx.validate.js"></script>
+<script type="text/javascript" src="/js/enterprise/common/box.js"></script> 
+<script type="text/javascript" src="/js/enterprise/common/slider.js"></script>
+<script type="text/javascript" src="/js/enterprise/common/show.js"></script> 
+<script type="text/javascript" src="/js/json2.js"></script> 
+</head>
+
+<body>
+<div class="main_con">
+		#foreach($businessInfo in $businessList)
+		
+		#if($!{businessInfo.getBusinessKey()} == "heMing")
+        <div class="tab_box">
+            <div class="list1">
+                <p class="tit_box">
+                    <span class="title">$!{businessInfo.getBusinessName()}信息</span>
+                    <span class="line"></span>
+                </p>
+                <div class="tab_con1">
+                    <table>
+                        <tr>
+                            <th>注册城市和区域</th>
+                            <td>$!{DicUtils.getAreaDataById("$!{cityId}")}，$!{DicUtils.getAreaDataById("$!{areaId}")}</td>
+                        </tr>
+                        <tr>
+                            <th>公司名称</th>
+                            <td>$!{name}</td>
+                        </tr>
+                         <!-- 未核名 -->
+                        #if($!{checkNameStatusKey} == 2)
+                        <tr>
+                            <th>备选字号</th>
+                            <td>$!{readyCheckNames1} $!{readyCheckNames2} $!{readyCheckNames3} $!{readyCheckNames4}</td>
+                        </tr>
+                        #end
+                        <!-- 已核名 -->
+                        #if($!{checkNameStatusKey} == 1)
+                        <tr>
+                            <th>核名账号</th>
+                            <td>$!{checkAccount}</td>
+                        </tr>
+                        <tr>
+                            <th>核名密码</th>
+                            <td>$!{checkPassword}</td>
+                        </tr>
+                        #end
+                    </table>
+                </div>
+            </div>
+        </div>
+        #end
+        
+        #if($!{businessInfo.getBusinessKey()} == "mainInfo")
+        <div class="tab_box">
+            <div class="list1">
+                <p class="tit_box">
+                    <span class="title">$!{businessInfo.getBusinessName()}信息</span>
+                    <span class="line"></span>
+                </p>
+                <div class="tab_con1">
+                    <table>
+                        <tr>
+                            <th>注册城市和区域</th>
+                            <td>$!{DicUtils.getAreaDataById("$!{cityId}")}，$!{DicUtils.getAreaDataById("$!{areaId}")}</td>
+                        </tr>
+                        <tr>
+                            <th>公司名称</th>
+                            <td>$!{name}</td>
+                        </tr>
+                        <tr>
+                            <th>注册资本</th>
+                            <td>$!{regCapital}万</td>
+                        </tr>
+                        <tr>
+                            <th>注册地址</th>
+                            <td>$!{addressFormat}</td>
+                        </tr>
+                        <tr>
+                            <th>经营范围</th>
+                            <td>$!{operatingRange}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        #end
+        
+        #if($!{businessInfo.getBusinessKey()} == "zhuCe")
+		<div class="tab_box">
+            <div class="list1">
+                <p class="tit_box">
+                    <span class="title">$!{businessInfo.getBusinessName()}</span>
+                    <span class="line"></span>
+                </p>
+                <div class="tab_con2">
+                    <table>
+                        <tr>
+                            <th>注册资本</th>
+                            <td>$!{regCapital}万</td>
+                        </tr>
+                        
+                        #if( $!{addressTypeKey} == 1)
+                        <tr>
+                            <th>实际办公地址</th>
+                            <td>$!{officeAddress}</td>
+                        </tr>
+                        #end
+                        
+                        <tr>
+                            <th>经营范围</th>
+                            <td>$!{operatingRange}</td>
+                        </tr>
+                         <tr>
+                            <th>电子邮箱</th>
+                            <td>$!{addresseeEmail}</td>
+                        </tr>
+                        <tr>
+                            <th>企业固定电话</th>
+                            <td>$!{fixedPhone}</td>
+                        </tr>
+                         #if($!{sourceType} == "AE" || $!{sourceType} == "WF")
+                         <tr>
+                            <th>申请方式</th>
+                            <td>$!{applyMethod}</td>
+                        </tr>
+                         #end
+                    </table>
+                </div>
+                
+                
+	            <div class="tab_con6">
+	                <table>
+	             		<tr>
+                            <th>快递地址</th>
+                            <td>$!{addresseeAddress}</td>
+
+                            <th>收件人姓名</th>
+                            <td>$!{addressee}</td>
+                        </tr>
+                        <tr>
+                            <th>收件人联系电话</th>
+                            <td>$!{addresseeContactNumber}</td>
+							<th>邮政编码</th>
+                            <td>$!{zipCode}</td>
+                        </tr>
+	                </table>
+	            </div>
+            </div>
+        </div>
+		#end
+		
+		#if($!{businessInfo.getBusinessKey()} == "zhuCe" || $!{businessInfo.getBusinessKey()} == "mainInfo")
+		
+		#if($!{sourceType} == "AE" || $!{sourceType} == "WF")
+	    <!-- 地址信息 -->
+	   	<div class="tab_box">
+	        <div class="list1">
+	            <p class="tit_box">
+	                <span class="title">企业$!{addressType}信息</span>
+	                <span class="line"></span>
+	            </p>
+	            <div class="tab_con6">
+	                #set($addressInfo = $!{EnterpriseUtils.getAddressDataByEnterpriseId("$!{enterpriseId}")})
+	                <table>
+	                	#if( $!{addressTypeKey} == 1)
+	                     <tr>
+	                        <th >地址合作商</th>
+	                        <td >$!{addressInfo.get("addressPartner")}</td>
+	                        <th >地址区域</th>
+	                        <td >$!{addressInfo.get("addressArea")}</td>
+	                    </tr>
+	                    #end
+	                    
+	                    <tr>
+	                        <th >地址</th>
+	                        <td >$!{addressInfo.get("addressFormat")}</td>
+	                        <th >所属街乡</th>
+	                        <td >$!{addressInfo.get("theStreets")}</td>
+	                    </tr>
+	                   <tr>
+	                        <th >邮政编码</th>
+	                        <td >$!{addressInfo.get("zipCode")}</td>
+							<th >产权主体</th>
+	                        <td >$!{addressInfo.get("chanQuanType")}</td>
+	                    </tr>
+	                   <tr>
+	                        <th >产权人/产权单位</th>
+	                        <td >$!{addressInfo.get("theOwnerName")}</td>
+							<th >计算机代码/身份证号</th>
+	                        <td >$!{addressInfo.get("theOwnerCode")}</td>
+	                    </tr>
+	                   <tr>
+	                        <th >房屋规划用途</th>
+	                        <td >$!{addressInfo.get("planApp")}</td>
+							<th >住所获取方式</th>
+	                        <td >$!{addressInfo.get("getWay")}</td>
+	                    </tr>
+	                   <tr>
+	                        <th >租赁/使用年限</th>
+	                        <td >$!{addressInfo.get("useAge")} #if($addressInfo.get("useAge"))年#end</td>
+							<th >租赁/使用面积</th>
+	                        <td >$!{addressInfo.get("useArea")}  #if($addressInfo.get("useArea"))平方米#end</td>
+	                    </tr>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+	    #end
+        <div class="tab_box">
+            <div class="list1">
+                <p class="tit_box">
+                    <span class="title">股东</span>
+                    <span class="line"></span>
+                </p>
+                <div class="tab_con4">
+                    <p>自然人股东</p>
+                    <table>
+                        <tr>
+                            <th width="150px">姓名</th>
+                            <th width="150px">联系电话</th>
+                            <th width="200px">身份证号</th>
+                            <th width="100px">出资额，万元</th>
+                            <th width="200px">证件附件</th>
+                        </tr>
+                        #foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                        <tr>
+                            <td>$!{naturalPartner.get("name")}</td>
+                            <td>$!{naturalPartner.get("phoneNum")}</td>
+                            <td>$!{naturalPartner.get("idNum")}</td>
+                            <td>$!{naturalPartner.get("capitalSize")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{naturalPartner.get("idPicIds")}" >预览</a><a href="/file/download/$!{naturalPartner.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                	</table>
+                </div>
+                 <div class="tab_con4">
+                    <p>法人股东</p>
+                    <table>
+                        <tr>
+                            <th width="250px">公司名称</th>
+                            <th width="150px">法定代表人</th>
+                            <th width="150px">营业执照号码</th>
+                            <th width="100px">出资额，万元</th>
+                            <th width="200px">证件附件</th>
+                        </tr>
+                        #foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                        <tr>
+                            <td>$!{legalPartner.get("name")}</td>
+                            <td>$!{legalPartner.get("legalPerson")}</td>
+                            <td>$!{legalPartner.get("businessLicenseNum")}</td>
+                            <td>$!{legalPartner.get("capitalSize")}万</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{legalPartner.get("businessLicense2")}" >预览</a><a href="/file/download/$!{legalPartner.get("businessLicense2")}" >下载</a></td>
+                        </tr>
+                        #end
+                	</table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab_box">
+            <div class="list1">
+                <p class="tit_box">
+                    <span class="title">主要人员</span>
+                    <span class="line"></span>
+                </p>
+                <div class="tab_con4">
+                    
+                    <table>
+                        <tr>
+                            <th width="190px">职位</th>
+                            <th width="120px">姓名</th>
+                            <th width="150px">电话</th>
+                            <th width="200px">身份证号</th>
+                            <th width="340px">证件附件</th>
+                        </tr>
+                        #if($!{frameworkType} == "1")
+                        <!-- 简易架构 -->
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'directorManager-S')})
+                        <tr>
+                            <td>执行董事#if($!{EnterpriseUtils.isLegalPerson("$!{enterpriseId}", "directorManager-S")})，法人#end</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'manager-S')})
+                        <tr>
+                            <td>经理#if($!{EnterpriseUtils.isLegalPerson("$!{enterpriseId}", "manager-S")})，法人#end</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'supervisor-S')})
+                        <tr>
+                            <td>监事</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+
+                        #else
+                        <!-- 复杂架构 -->
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'directorManager')})
+                        <tr>
+                            <td>董事长#if($!{EnterpriseUtils.isLegalPerson("$!{enterpriseId}", "directorManager")})，法人#end</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'secondDirectorManager')})
+                        <tr>
+                            <td>副董事长</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'director')})
+                        <tr>
+                            <td>董事</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'manager')})
+                        <tr>
+                            <td>经理#if($!{EnterpriseUtils.isLegalPerson("$!{enterpriseId}", "manager")})，法人#end</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'supervisorChairman')})
+                        <tr>
+                            <td>监事会主席</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                       #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'supervisor')})
+                        <tr>
+                            <td>监事</td>
+                            <td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                        #end
+                        #foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'finance')})
+                        <tr>
+                            <td>财务负责人</td>
+                           	<td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                      	#end
+						#foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'contacts')})
+						<tr>
+                            <td>企业联系人</td>
+                           	<td>$!{roleInfo.get("name")}</td>
+                            <td>$!{roleInfo.get("phoneNum")}</td>
+                            <td>$!{roleInfo.get("idNum")}</td>
+                            <td><a href="javascript:void(0);" class="pop_box" data-fileIds="$!{roleInfo.get("idPicIds")}" >预览</a><a href="/file/download/$!{roleInfo.get("idPicIds")}" >下载</a></td>
+                        </tr>
+                        #end
+                    </table>
+                        
+                </div>
+                
+                <div class="tab_con5">
+                     <div class="tab2">
+                        <table>
+                            <tr>
+                                <th width="200px">职工总人数</th>
+                                <th width="200px">本地人数</th>
+                                <th width="200px">外地人数</th>
+                                <th width="200px">女性人数</th>
+                            </tr>
+                            <tr>
+                                <td>$!{staffTotalNum}</td>
+                                <td>$!{staffLocalNum}</td>
+                                <td>$!{staffOutNum}</td>
+                                <td>$!{staffFemaleNum}</td>
+                            </tr>
+                        </table>
+                     </div> 
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        #end
+        
+        
+       	#if($!{businessInfo.getBusinessKey()} == "yinHangKH")
+		<div class="tab_box">
+            <div class="list1">
+                <p class="tit_box">
+                    <span class="title">$!{businessInfo.getBusinessName()}信息</span>
+                    <span class="line"></span>
+                </p>
+                <div class="tab_con5">
+                    <div class="tab1">
+                        <table>
+                            <tr>
+                                <th width="300px">职位</th>
+                                <th width="200px">姓名</th>
+                                <th width="300px">电话</th>
+                            </tr>
+                       		#foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'ukey1')})
+                            <tr>
+                                <td>ukey管理人员一</td>
+                                <td>$!{roleInfo.get("name")}</td>
+                                <td>$!{roleInfo.get("phoneNum")}</td>
+                            </tr>
+                        	#end
+							#foreach($roleInfo in $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'ukey2')})
+							<tr>
+                                <td>ukey管理人员二</td>
+                                <td>$!{roleInfo.get("name")}</td>
+                                <td>$!{roleInfo.get("phoneNum")}</td>
+                            </tr>
+                            #end
+                        </table>
+                     </div>
+                </div>
+            </div>
+        </div>
+        #end
+        
+        #end
+    </div>
+</body>
+</html>

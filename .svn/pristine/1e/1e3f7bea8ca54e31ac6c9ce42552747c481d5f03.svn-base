@@ -1,0 +1,1729 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>企业信息维护</title>
+    <link rel="stylesheet" href="/css/reset.css" type="text/css"/>
+   <!--  <link rel="stylesheet" href="/css/style_1.css" type="text/css"/> -->
+     <link rel="stylesheet" href="/css/style_ht.css" type="text/css"/>
+   <!--  <script type="text/javascript" src="/js/jquery-1.11.0.js"></script> -->
+   <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+   <script type="text/javascript" src="/js/jquery.upload/jquery.ui.widget.js"></script>
+   <script type="text/javascript" src="/js/jquery.upload/jquery.fileupload.js"></script>
+   <script type="text/javascript" src="/js/map.js"></script>
+   <script type="text/javascript" src="/js/jyfwinit.js"></script>
+   <script type="text/javascript" src="/js/style.js"></script>
+   <script type="text/javascript" src="/js/business.js"></script>
+   <script type="text/javascript" src="/js/filecommon.js"></script>
+</head>
+<script type="text/javascript">
+var beixcount = 1;
+var map = new Map();
+$(document).ready(
+ function(){   
+    $("#theButton").click(
+	function (){
+	beixcount++;
+	if(beixcount > 8){
+		alert("输入的备选名称不能超过八个！！！");
+		return false;
+	}
+    var $txt = $("<input type='text' name='beixmc"+beixcount+"' id='beixmc"+beixcount+"' value='' size='20' style='margin:0 1.5% 10px 0' />");
+	   $("#div1").append($txt);
+	})
+	
+	   $(':checkbox[name=zhuyyw]').each(function(){ 
+	        $(this).click(function(){ 
+	            if($(this).attr('checked')){ 
+	                $(':checkbox[name=zhuyyw]').removeAttr('checked'); 
+	                $(this).attr('checked','checked'); 
+	            } 
+	        }); 
+	    }); 
+    
+    jyfwinit(map);
+    inituploa();
+	})
+  function inituploa(){
+		var kehId= $("#kehId_"+flag).val();
+		var kehname= $("#kehname_"+flag).val();
+		$("[name='fileupload']").each(function(index, element){
+			$(element).fileupload({
+		        url: "/file/upload?test=1",
+		        dataType: 'json',
+		        done: function (e, data) {
+		        	// 上传成功
+	                alert(data.result.fileId);
+		        	//保存信息
+		        	saveFileattach(kehId,data.result.fileId);
+		        }
+		    });
+	});
+	}
+function savegsmc(){
+	var orderid = $("#orderid").val();
+	var type =$("#addgsmc").val();
+	var comptype =$("input[name='comptype']:checked").val();
+	var gongsmc = $("#gongsmc").val();
+	var pattern=/^[\u4e00-\u9fa5]+$/; 
+	if(gongsmc == null || gongsmc ==""){
+		alert("请输入公司名称！！");
+		return false;
+	}else{
+		//验证必须为汉字
+		 if (!pattern.test(gongsmc))
+		 { 
+		    alert("输入公司名称必须为汉字。"); 
+		    return false; 
+		 }
+	}
+	var beixmc ="";
+	for(var i =1 ;i<=beixcount;i++){
+		if($("#beixmc"+i).val() != null && $("#beixmc"+i).val() !=""){
+			 if (!pattern.test($("#beixmc"+i).val()))
+			 { 
+			    alert("输入公司备选名称必须为汉字。"); 
+			    return false; 
+			 }
+			beixmc = beixmc +$("#beixmc"+i).val()+"&";
+		}
+	}
+	if (beixmc != "") {
+		beixmc = beixmc.substring(0, beixmc.lastIndexOf("&"));
+	}
+	var zuczb = $("#zuczb").val();
+	var busid = $("#busid").val();
+	if(zuczb == null || zuczb ==""){
+		alert("请输入公司注册资本！！");
+		return false;
+	}else{
+		var type1="^\\d+$" ; 
+	    var re   =   new   RegExp(type1); 
+		if(zuczb.match(re)==null){
+			alert("输入的公司注册资本必须为整数！！");
+			return false;
+		}
+	}
+	 jQuery.ajax({
+		url : '/order/addBusinessinfo',
+		type : "post",
+		data : {
+			"type" : type,
+			"comptype" : comptype,
+			"gongsmc" : gongsmc,
+			"beixmc" : beixmc,
+			"zuczb" : zuczb,
+			"orderid":orderid,
+			"busid":busid
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !="" && data !="0"){
+				$("#busid").val(data);
+				 alert("保存成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	}); 
+}
+function saveaddress(){
+	var orderid = $("#orderid").val();
+	var busid = $("#busid").val();
+	var ishaveadd =$("input[name='ishaveaddress']:checked").val();
+	if(ishaveadd =="0"){
+		//自有地址
+		ziydz(orderid,busid);
+	}
+	if(ishaveadd =="1"){
+		//代理地址
+		dldz(orderid,busid);
+	}
+}
+function ziydz(orderid,busid){
+	var city = $("#city").find("option:selected").val();
+    var area = $("#area").find("option:selected").val();
+    
+    var ishaveaddress ="0";
+    var ziydz = $("#ziydz").val();
+    if(ziydz == null || ziydz ==""){
+    	alert("请输入自有地址！！");
+    	return false;
+    }else{
+    	var len = ziydz.length;
+    	if(len >50){
+    		alert("输入的自有地址最多为50个数字或字符串！");
+    		return false;
+    	}
+    }
+    var suosjx = $("#suosjx").val();
+    var chanpzt = $("#chanpzt").val();
+    var chanqr2dw = $("#chanqr2dw").find("option:selected").val();
+    var fangwghyt = $("#fangwghyt").find("option:selected").val();
+    var zhushqfs = $("#zhushqfs").find("option:selected").val();
+    var zulnf =  $("#zulnf").val();
+    var type="^\\d+$" ; 
+    if(zulnf != null && zulnf !=""){
+	    var re   =   new   RegExp(type); 
+		if(zulnf.match(re)==null){
+			alert("输入的租赁/使用年限必须为整数！！");
+			return false;
+		}
+    }
+    var zulmj =  $("#zulmj").val();
+    if(zulmj != null && zulmj !=""){
+	    var re   =   new   RegExp(type); 
+		if(zulmj.match(re)==null){
+			alert("输入的租赁/拼租面积必须为整数！！");
+			return false;
+		}
+    }
+    var chuzjscode =$("#chuzjscode").val();
+    var re= /^[1-9][0-9]{5}$/;
+    var postcode = $("#postcode").val();
+    if(postcode != null && postcode !=""){
+        if(!re.test(postcode)){
+	       	 alert("请输入正确合法的邮编！！");
+	       	 return false;
+        }
+   }
+    var type = $("#type").val();
+    
+    var shijdz = $("#shijdz").val();
+    var kuaitddz = $("#kuaitddz").val();
+    var shoujr = $("#shoujr").val();
+    if(shoujr != null && shoujr !=""){
+    	var pattern=/^[\u4e00-\u9fa5]+$/; 
+    	 if (!pattern.test(shoujr))
+		 { 
+		    alert("输入的收件人必须为汉字。"); 
+		    return false; 
+		 }
+    }
+    var phone = $("#phone").val();
+    if(phone.length > 0){
+		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(phone))){
+			alert("输入的联系电话有误！！");
+			return false; 
+		}else{
+			if(phone.length != 11){
+				alert("请输入联系电话有误！！");
+				return false;
+			}
+		} 
+	}
+    var ptcode = $("#ptcode").val();
+    if(ptcode != null && ptcode !=""){
+         if(!re.test(ptcode)){
+        	 alert("请输入正确合法的邮编！！");
+        	 return false;
+         }
+    }
+	 jQuery.ajax({
+		url : '/order/addBusinessinfo',
+		type : "post",
+		data : {
+			"type" : type,
+			"city" : city,
+			"area" : area,
+			"ishaveaddress":ishaveaddress,
+			"ziydz":ziydz,
+			"suosjx":suosjx,
+			"chanpzt":chanpzt,
+			"chanqr2dw":chanqr2dw,
+			"fangwghyt":fangwghyt,
+			"zhushqfs":zhushqfs,
+			"zulnf":zulnf,
+			"zulmj":zulmj,
+			"chuzjscode":chuzjscode,
+			"postcode":postcode,
+			"orderid":orderid,
+			"busid":busid,
+			"shijdz":shijdz,
+			"kuaitddz":kuaitddz,
+			"shoujr":shoujr,
+			"ptcode":ptcode,
+			"phone":phone
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !="" && data !="0"){
+				$("#busid").val(data);
+				 alert("保存成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	}); 
+}
+function dldz(orderid,busid){
+	var city = $("#city").find("option:selected").val();
+    var area = $("#area").find("option:selected").val();
+    
+    var ishaveaddress ="1";
+    var dizhzs = $("#dzhzs").find("option:selected").val();
+    var dzlx = $("#dzlx").find("option:selected").val();
+    
+    var pcode = $("#pcode").val();
+    var dldz = $("#dldz").val()+$("#fangjh").val();
+    var dlsuosjx = $("#dlsuosjx").val();
+    var dlchaqzt = $("#dlchaqzt").val();
+    var dlfangwgh = $("#dlfangwgh").val();
+    var dlmj = $("#dlmj").val();
+    var dlchanqr2dw = $("#dlchanqr2dw").val();
+    var dlzhussynx = $("#dlzhussynx").val();
+    var dlzhuchqfs = $("#dlzhuchqfs").val();
+    var dlchuzcode = $("#dlchuzcode").val();
+    var type = $("#type").val();
+    
+    var shijdz = $("#shijdz").val();
+    var kuaitddz = $("#kuaitddz").val();
+    var shoujr = $("#shoujr").val();
+    if(shoujr != null && shoujr !=""){
+    	var pattern=/^[\u4e00-\u9fa5]+$/; 
+    	 if (!pattern.test(shoujr))
+		 { 
+		    alert("输入的收件人必须为汉字。"); 
+		    return false; 
+		 }
+    }
+    var phone = $("#phone").val();
+    if(phone.length > 0){
+		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(phone))){
+			alert("输入的联系电话有误！！");
+			return false; 
+		}else{
+			if(phone.length != 11){
+				alert("请输入联系电话有误！！");
+				return false;
+			}
+		} 
+	}
+    var ptcode = $("#ptcode").val();
+    if(ptcode != null && ptcode !=""){
+        if(!re.test(ptcode)){
+       	 alert("请输入正确合法的邮编！！");
+       	 return false;
+        }
+   }
+	jQuery.ajax({
+		url : '/order/addBusinessinfo',
+		type : "post",
+		data : {
+			"type" : type,
+			"city" : city,
+			"area" : area,
+			"ishaveaddress":ishaveaddress,
+			
+			"dizhzs":dizhzs,
+			"dzlx":dzlx,
+			
+			"ziydz":dldz,
+			"suosjx":dlsuosjx,
+			"chanpzt":dlchaqzt,
+			
+			"chanqr2dw":dlchanqr2dw,
+			
+			"fangwghyt":dlfangwgh,
+			
+			"zhushqfs":dlzhuchqfs,
+			"zulnf":dlzhussynx,
+			"zulmj":dlmj,
+			"chuzjscode":dlchuzcode,
+			"postcode":pcode,
+			
+			"orderid":orderid,
+			"busid":busid,
+			"shijdz":shijdz,
+			"kuaitddz":kuaitddz,
+			"shoujr":shoujr,
+			"ptcode":ptcode,
+			"phone":phone
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !="" && data !="0"){
+				$("#busid").val(data);
+				 alert("保存成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	});
+}
+
+function saveHangy(){
+	var orderid = $("#orderid").val();
+	var busid = $("#busid").val();
+	
+	var hangylx = "";
+	$("input:checkbox[name='hangylx']:checked").each(function() {
+		hangylx = hangylx + $(this).val() +"&"; 
+	});
+	if (hangylx != "") {
+		hangylx = hangylx.substring(0, hangylx.lastIndexOf("&"));
+	}
+	var zhuyyw = "";
+	$("input:checkbox[name='zhuyyw']:checked").each(function() {
+		zhuyyw = zhuyyw + $(this).val()+"&"; 
+	});
+	if (zhuyyw != "") {
+		zhuyyw = zhuyyw.substring(0, zhuyyw.lastIndexOf("&"));
+	}
+	var qityw ="";
+	//$("input:checkbox[name='qityw']:checked").each(function() {
+	//	qityw = qityw + $(this).val()+"&"; 
+	//});
+	
+	$(".bgBlue").each(function() {
+		qityw = qityw + $(this).attr("bindValue")+"&"; 
+	});
+	
+	if (qityw != "") {
+		qityw = qityw.substring(0, qityw.lastIndexOf("&"));
+	}
+	if(hangylx ==""){
+		alert("请选择行业类型!!");
+		return false;
+	}
+	var orderid = $("#orderid").val();
+	var busid = $("#busid").val();
+	
+	var type = $("#addjingyfw").val();
+	//保存
+	jQuery.ajax({
+		url : '/order/addBusinessother',
+		type : "post",
+		data : {
+			"type" : type,
+			"orderid":orderid,
+			"busid":busid,
+			"hangylx":hangylx,
+			"zhuyyw":zhuyyw,
+			"qityw":qityw
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !="" && data !="0"){
+				$("#busid").val(data);
+				 alert("保存成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	});
+}
+
+function saveotherInfo(){
+    var gsxtcount = $("#gsxtcount").val();
+    var password = $("#password").val();
+    if(gsxtcount == null || gsxtcount ==""){
+        alert("输入的工商系统账号不能为空！！");
+        return false;
+    }
+    if(password == null || password == ""){
+    	 alert("输入的工商账号密码不能为空！！");
+         return false;
+    }
+    var shenqfs =$("input[name='shenqfs']:checked").val();
+    var mingchzwh = $("#mingchzwh").val();
+    var hemgszh = $("#hemgszh").val();
+    //核名工商账号
+    if(hemgszh == null || hemgszh ==""){
+    	alert("请输入核名工商账号！！！");
+    	return false;
+    }
+    var hempassword = $("#hempassword").val();
+    if(hempassword == null || hempassword ==""){
+    	alert("请输入核名工商账号密码！！！");
+    	return false;
+    }
+    //网登工商账号
+    var wangdgszh = $("#wangdgszh").val();
+    if(wangdgszh == null || wangdgszh ==""){
+    	alert("请输入网登工商账号！！！");
+    	return false;
+    }
+    var wangdmm = $("#wangdmm").val();
+    if(wangdmm == null || wangdmm ==""){
+    	alert("请输入网登工商账号密码！！！");
+    	return false;
+    }
+    
+    var type= $("#addotherinfo").val();
+    
+    var orderid = $("#orderid").val();
+	var busid = $("#busid").val();
+   	jQuery.ajax({
+		url : '/order/addBusinessother',
+		type : "post",
+		data : {
+			"type" : type,
+			"orderid":orderid,
+			"busid":busid,
+			"gsxtcount":gsxtcount,
+			"password":password,
+			"mingchzwh":mingchzwh,
+			"hemgszh":hemgszh,
+			"hempassword":hempassword,
+			"wangdgszh":wangdgszh,
+			"wangdmm":wangdmm
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !="" && data !="0"){
+				$("#busid").val(data);
+				 alert("保存成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	}); 
+}
+
+/*判断输入是否为合法的电话号码，匹配固定电话或小灵通*/
+
+function isphone(inpurStr)
+{
+     var partten = /^0(([1,2]\d)|([3-9]\d{2}))\d{7,8}$/;
+     if(!partten.test(inpurStr))
+     {
+          return true;
+     }
+}
+
+function isok(str)
+{    
+	if(""==str)
+	{    
+	     return false;    
+	}    
+	if(str.length!=15&&str.length!=18)
+	{//身份证长度不正确    
+	    return false;    
+	}    
+	if(str.length==15)
+	{    
+		if(!isNumber(str))
+		{    
+		  return false;    
+		}    
+	}
+	else
+	{
+		var str1 = str.substring(0,17);    
+		var str2 = str.substring(17,18);    
+		var alpha = "X0123456789";    
+		if(!isNumber(str1)||alpha.indexOf(str2)==-1)
+		{    
+		    return false;    
+		}    
+	}    
+	return true;    
+} 
+function isNumber( s ){
+	var regu = "^[0-9]+$"; 
+	var re = new RegExp(regu); 
+	if (s.search(re) != -1) {
+		return true;
+       } else { 
+    	return false; 
+    	}
+ } 
+function savegsyginfo(){
+    var type =$("#addgsyginfo").val();
+    var qiylxr = $("#qiylxr").val();
+    if(qiylxr == null || qiylxr ==""){
+    	alert("请输入企业联系人！");
+    	return false;
+    }
+     var qiylxrphone = $("#qiylxrphone").val();
+     if(qiylxrphone.length > 0){
+ 		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(qiylxrphone))){
+ 			alert("输入的企业联系人的手机号有误！！");
+ 			return false; 
+ 		}else{
+ 			if(qiylxrphone.length != 11){
+ 				alert("请输入企业联系人的手机号有误！！");
+ 				return false;
+ 			}
+ 		} 
+ 	}
+     var guddh = $("#guddh").val();
+     if(guddh != null && guddh != ""){
+    	 if(isphone(guddh)){
+    		 alert("输入的固定电话格式有误！！");
+    		 return false;
+    	 }
+     }
+     var email = $("#email").val();
+     if(email != null && email !=""){
+    	 var pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;  
+         if (!pattern.test(email)) {  
+            alert("请输入正确的邮箱地址。");  
+             return false;  
+        }  
+     }
+
+     var re= /^[1-9][0-9]{5}$/;
+     var postcode = $("#qiypostcode").val();
+     if(postcode != null && postcode !=""){
+         if(!re.test(postcode)){
+        	 alert("请输入正确合法的邮编！！");
+        	 return false;
+         }
+    }
+     var zhigcount = $("#zhigcount").val();
+     var bendrs = $("#bendrs").val();
+     var waidrs = $("#waidrs").val();
+     var nvxrw = $("#nvxrw").val();
+     var type="^\\d+$" ; 
+	   var re   =   new   RegExp(type); 
+	   var sumzhig = 0;
+	   var bcon = 0;
+	   var wcon = 0;
+	   var nvrw = 0;
+	   if(zhigcount != null && zhigcount !=""){
+		   zhigcount = zhigcount.trim();
+	    	if(zhigcount.match(re)==null){
+				alert("输入的职工总人数必须为整数！！");
+				return false;
+			}
+	    	sumzhig = parseInt(zhigcount);
+	    }
+	   
+	   if(bendrs != null && bendrs !=""){
+		   bendrs = bendrs.trim();
+	    	if(bendrs.match(re)==null){
+				alert("输入的本地人数必须为整数！！");
+				return false;
+			}
+	    	bcon = parseInt(bendrs);
+	    }
+	   if(waidrs != null && waidrs !=""){
+		   waidrs = waidrs.trim();
+	    	if(waidrs.match(re)==null){
+				alert("输入的外地人数必须为整数！！");
+				return false;
+			}
+	    	wcon = parseInt(waidrs);
+	    }
+	   if(nvxrw != null && nvxrw !=""){
+		   nvxrw = nvxrw.trim();
+	    	if(nvxrw.match(re)==null){
+				alert("输入的女性人数必须为整数！！");
+				return false;
+			}
+	    	nvrw = parseInt(nvxrw);
+	    }
+	  var mt = bcon + wcon;
+	  if(mt != sumzhig){
+		  alert("输入的职工数不等于本地职工数加外地职工数总和！！");
+		  return false;
+	  }
+	  if(nvrw > sumzhig){
+		  alert("输入的女性人数大于职工总人数！！");
+		  return false;
+	  }
+      var Ukey1 = $("#Ukey1").val();
+      var Ukey1phone = $("#Ukey1phone").val();
+      if(Ukey1 == null || Ukey1 ==""){
+      	alert("请输入Ukey管理员1！");
+      	return false;
+      }
+      if(Ukey1phone.length > 0){
+   		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(Ukey1phone))){
+   			alert("输入的Ukey管理员1的手机号有误！！");
+   			return false; 
+   		}else{
+   			if(Ukey1phone.length != 11){
+   				alert("请输入Ukey管理员1的手机号有误！！");
+   				return false;
+   			}
+   		} 
+   	}
+      var Ukey2 = $("#Ukey2").val();
+      var Ukey2phone = $("#Ukey2phone").val();
+      if(Ukey2 == null || Ukey2 ==""){
+        	alert("请输入Ukey管理员2！");
+        	return false;
+      }
+      if(Ukey2phone.length > 0){
+     		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(Ukey2phone))){
+     			alert("输入的Ukey管理员2的手机号有误！！");
+     			return false; 
+     		}else{
+     			if(Ukey2phone.length != 11){
+     				alert("请输入Ukey管理员2的手机号有误！！");
+     				return false;
+     			}
+     		} 
+     	}
+      var orderid = $("#orderid").val();
+  	  var busid = $("#busid").val();
+  	  
+  	jQuery.ajax({
+		url : '/order/addBusinessother',
+		type : "post",
+		data : {
+			"type" : type,
+			"orderid":orderid,
+			"busid":busid,
+			
+			"qiylxr":qiylxr,
+			"qiylxrphone":qiylxrphone,
+			"guddh":guddh,
+			"email":email,
+			"postcode":postcode,
+			"zhigcount":zhigcount,
+			"bendrs":bendrs,
+			"waidrs":waidrs,
+			"nvxrw":nvxrw,
+			"Ukey1":Ukey1,
+			"Ukey1phone":Ukey1phone,
+			"Ukey2":Ukey2,
+			"Ukey2phone":Ukey2phone
+		},
+		dataType : "text",
+		success : function(data, textStatus) {
+			if(data !="" && data !="0"){
+				$("#busid").val(data);
+				 alert("保存成功!!");
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		}
+	}); 
+}
+
+function savefardb2ds(){
+    var farzx = $("#farzx").val();
+    if(farzx == null || farzx ==""){
+       alert("请输入法定代表主席！");
+       return false;
+    }
+    
+    var phone = $("#farphone").val();
+    if(phone.length > 0){
+		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(phone))){
+			alert("输入法定代表主席手机有误！！");
+			return false; 
+		}else{
+			if(phone.length != 11){
+				alert("请输入法定代表主席手机有误！！");
+				return false;
+			}
+		} 
+	}
+    var farcard = $("#farcard").val();
+    if(farcard != null && farcard !=""){
+    	if(!isok(farcard)){
+    		alert("请输入合法的法定代表主席身份证!!");
+    		return false;
+    	}
+    }
+    var jingl = $("#jingl").val();
+     if(jingl == null || jingl ==""){
+       alert("请输入经理姓名！");
+       return false;
+    }
+     var jinglcard = $("#jinglcard").val();
+     if(jinglcard != null && jinglcard !=""){
+     	if(!isok(jinglcard)){
+     		alert("请输入合法的经理身份证!!");
+     		return false;
+     	}
+     }
+     var ty =$("#jinglphone").val();
+     if(ty.length > 0){
+ 		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(ty))){
+ 			alert("输入经理手机有误！！");
+ 			return false; 
+ 		}else{
+ 			if(ty.length != 11){
+ 				alert("请输入经理手机有误！！");
+ 				return false;
+ 			}
+ 		} 
+ 	}
+    var caiwfzr = $("#caiwfzr").val();
+     if(caiwfzr == null || caiwfzr ==""){
+       alert("请输入财务负责人！");
+       return false;
+    }
+     var caiwsfz = $("#caiwsfz").val();
+     if(caiwsfz != null && caiwsfz !=""){
+      	if(!isok(caiwsfz)){
+      		alert("请输入合法的财务负责人身份证!!");
+      		return false;
+      	}
+      }
+     var cyp = $("#caiwphone").val();
+     if(cyp.length > 0){
+  		if(!(/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/.test(cyp))){
+  			alert("输入财务负责人手机有误！！");
+  			return false; 
+  		}else{
+  			if(cyp.length != 11){
+  				alert("请输入财务负责人手机有误！！");
+  				return false;
+  			}
+  		} 
+  	}
+   //提交
+     $("#adddscount").val(addds);
+     $("#addjscount").val(addjs);
+     document.getElementById('myForm').submit();
+ }
+ 
+function savegudong(){
+    var orderid = $("#orderid").val();
+	var busid = $("#busid").val();
+    $("#addbusid").val(busid);
+    $("#addorderid").val(orderid);
+    //设置数量
+     $("#zirrgudcount").val(gudjs);
+     $("#fargudcount").val(farjs);
+     if(gudjs ==0 && farjs ==0){
+        alert("对不起，目前没有要添加的自然人股东和法人股东!!");
+        return false;
+     }
+      document.getElementById('savegudform').submit();
+ }
+ var addds = 1;
+ function adddongs(){
+	 addds++;
+	  var htmlstr = " <ul class=\"dsh_box\"> <a href=\"\" class=\"delShareholderIcon\"></a>"+
+      "<span class=\"b_i_lps_width05\"><input type=\"text\" name=\"dongsjis"+addds+"\" id=\"dongsjis"+addds+"\"/><label>董事"+addds+":</label></span>"+
+       "<span class=\"b_i_lps_width01\"><input type=\"text\" name=\"dongsjisphone"+addds+"\" id=\"dongsjisphone"+addds+"\"/><label>手机号:</label></span>"+
+       "<span class=\"b_i_lps_width04\">"+
+       "<select name=\"dongsjissex"+addds+"\" id=\"dongsjissex"+addds+"\">"+
+       "<option value=\"男\" selected=\"selected\">男</option><option value=\"女\">女</option>"+
+       "</select><label>性别:</label></span>"+
+       "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"dongsjiscard"+addds+"\" id=\"dongsjiscard"+addds+"\"/><label>身份证号:</label></span>"+
+       "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"dongsjiscarddz"+addds+"\" id=\"dongsjiscarddz"+addds+"\"/><label>身份地址:</label></span>"+
+       "</ul>";
+      $("#dsh_area").append(htmlstr);
+ }
+   var addjs = 1;
+   function addjians(){
+	   addjs++;
+	   var text = "<ul class=\"dsh_box\"><a href=\"\" class=\"delShareholderIcon\"></a>"+
+ 	  "<span class=\"b_i_lps_width05\"><input type=\"text\" name=\"jians"+addjs+"\" id=\"jians"+addjs+"\"/><label>监事"+addjs+":</label></span>"+
+      "<span class=\"b_i_lps_width01\"><input type=\"text\" name=\"jiansphone"+addjs+"\" id=\"jiansphone"+addjs+"\"/><label>手机号:</label></span>"+
+      "<span class=\"b_i_lps_width04\">"+
+      "<select name=\"jianssex"+addjs+"\" id=\"jianssex"+addjs+"\">"+
+      "<option value=\"男\">男</option><option value=\"\">女</option>"+
+         "</select> <label>性别:</label></span>"+
+	 "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"jianscard"+addjs+"\" id=\"jianscard"+addjs+"\"/><label>身份证号:</label></span>"+
+	 "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"jianscarddz"+addjs+"\" id=\"jianscarddz"+addjs+"\"/><label>身份地址:</label></span>"+
+	 "</ul>";
+    $("#jsh_area").append(text);
+   }
+   
+</script>
+<body>
+<div class="wraper clearfix">
+    <div class="wraperTitle borderBottom">
+        <!--p class="r_allSave">全部保存</p-->
+        <ul>
+            <li><a href="">您目前的位置：</a></li>
+            <li><a href="" class="colorBlue">首页 > </a></li>
+            <li><a href="">企业信息</a></li>
+        </ul>
+    </div>
+    <div style="clear: both;height: 0px;font-size: 0px;line-height: 0"></div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm" action="/order/addBusinessinfo" method="post" name="gsmcform">
+            <input type="hidden" value="addgsmc" name="addgsmc" id ="addgsmc">
+            <h3 class="nav navHover"><a ><input type="button" onclick="savegsmc();" class="save" value="保存" />公司名称</a></h3>
+            <div class="b_i_companyName">
+                <ul>
+                    <li class="radioMargin">
+                    <span><input type="radio" name="comptype" id ="comptype" value="0" checked="checked"/>普通有限公司</span>
+                    <span class="radioMarginLeft"><input type="radio" name="comptype" id ="comptype" value="1"/>一人有限公司</span>
+                    <label>公司类型：</label></li>
+                    <li><input type="text" placeholder="北京佶象" class="inputWidth01" name="gongsmc" id ="gongsmc"/><label>公司名称：</label></li>
+                    <li class="alternativeName">
+                    	<label>备选名称：</label>
+                    	<div style="float:left;width:80%"><input type="text" name="beixmc1" id="beixmc1" /><span id="div1" ></span><a class="addIocn" id="theButton" ></a></div>
+                    </li>
+                    <li><input onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"  type="text" class="inputWidth03" name="zuczb" id ="zuczb"/>　万元<label>注册资本：</label></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+         <input type="hidden" value="addgsdz" name="type" id ="type">
+            <h3 class="nav navHover"><a><input type="button" onclick="saveaddress();"  class="save" value="保存" />公司地址</a></h3>
+            <div class="b_i_companyAddress clearfix">
+                <ul class="b_i_ca_form">
+                    <li class="b_i_ca_select">
+                        <select name="city" id ="city" onchange="citychangge();">
+                          <option value="1" selected="selected">北京</option>
+                          <option value="2" >深圳</option>
+                        </select>
+                        <select name="area" id="area">
+                         #foreach($pe in $!firstArea)
+	                         #if($pe.areaid == '101')
+	                            <option value="$!{pe.areaid}" selected="selected">$!{pe.name}</option>
+	                         #else
+	                         <option value="$!{pe.areaid}">$!{pe.name}</option>
+	                         #end
+                         #end
+                        </select>
+                        <label>注册城市：</label>
+                    </li>
+                    <li class="radioMargin radioMarginBottom">
+                        <span><input type="radio" name="ishaveaddress" id="a1" value="0" checked/><label for="a1">自有地址</label></span>
+                        <span class="radioMarginLeft02" id="dyncdldz"><input value="1" type="radio" id ="a2" name="ishaveaddress"/><label for="a2">代理地址</label></span>
+                        <label>注册地址：</label>
+                    </li>
+                    <li>
+                        <div class="adressWraper">
+                            <div class="ownAdress clearfix" style="display: block" id="dyziyinfo">
+                                <ul>
+                                    <li>
+                                        <span class="spanMrgin"><input type="text" name="ziydz" id="ziydz"/><label>自有地址：</label></span>
+                                        <span><input type="text" name="suosjx" id="suosjx"/><label>所属街乡：</label></span>
+                                    </li>
+                                    <li>
+                                        <span class="spanMrgin">
+                                         <label>产权主体：</label>
+                                          <select name="chanqr2dw" id ="chanqr2dw">
+                                                  <option value="单位" selected="selected">单位</option>
+			                                      <option value="个人">个人</option>
+                                            </select>
+                                       </span>
+                                        <span>
+                                        <label>产权人/产权单位：</label>
+                                          <input type="text" name="chanpzt" id ="chanpzt"/>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="spanMrgin">
+                                         <label>房屋规划用途：</label>
+                                            <select name="fangwghyt" id ="fangwghyt">
+                                               <option value="商业" selected="selected">商业</option>
+                                               <option value="办公">办公</option>
+                                               <option value="写字楼">写字楼</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                         <label>住所获取发式：</label>
+                                            <select name="zhushqfs" id="zhushqfs">
+                                                <option value="租赁" selected="selected">租赁</option>
+                                               <option value="自有产权">自有产权</option>
+                                               <option value="无偿使用">无偿使用</option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="spanMrgin"><input type="text" class="inputWidth04" name="zulnf" id="zulnf" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" />　年<label>租赁/使用年限：</label></span>
+                                        <span><input type="text" class="inputWidth05" name="zulmj" id="zulmj" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" />　平方米<label>租赁/拼租面积：</label></span>
+                                    </li>
+                                    <li>
+                                        <span class="spanWidth01"><input type="text"class="inputWidth06" name="chuzjscode" id ="chuzjscode"/><label class="laelWidth01">出租方式计算代码/出租方身份证号：</label></span>
+                                        <span class="spanWidth02"><input type="text" class="inputWidth07" name="postcode" id ="postcode"/><label class="laelWidth02">邮编：</label></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="agentAdress" id="dyziyinfo">
+                                <ul class="agentAdressTopMsg">
+                                    <li>
+                                        <select name="dzhzs" id="dzhzs">
+                                            <option value="镕辉佳特" selected="selected">镕辉佳特</option>
+                                        </select>
+                                        <label>地址合作商：</label>
+                                    </li>
+                                    <li>
+                                        <select name="dzlx" id="dzlx">
+                                            <option value="霄云路" selected="selected">霄云路</option>
+                                            <option value="大望路">大望路</option>
+                                        </select>
+                                        <label>地址类型：</label></li>
+                                    <li>100021<label>邮编：</label>
+                                      <input name="pcode" id ="pcode" type="hidden" value="100021">
+                                    </li>
+                                </ul>
+                                <div style="clear: both;font-size: 0px;height: 0px"></div>
+                                <p class="roomNum">代理地址：北京朝阳区西大望路甲12号2号楼国家广告产业园区孵化器<input type="text" placeholder="房间号" name="fangjh" id="fangjh"/>
+                                 <input name="dldz" id ="dldz" type="hidden" value="北京朝阳区西大望路甲12号2号楼国家广告产业园区孵化器">
+                                </p>
+                                <p>所属街乡：南磨房街道大望路甲12号2号楼
+                                <input name="dlsuosjx" id ="dlsuosjx" type="hidden" value="南磨房街道大望路甲12号2号楼">
+                                </p>
+                                <div style="clear: both;font-size: 0px;height: 0px"></div>
+                                <ul class="agentAdressBottomMsg">
+                                    <li><span>产权主体：单位房 <input name="dlchaqzt" id ="dlchaqzt" type="hidden" value="单位房"></span><span>产权人/产权单位：镕辉佳特创业孵化器(北京)有限公司 <input name="dlchanqr2dw" id ="dlchanqr2dw" type="hidden" value="镕辉佳特创业孵化器(北京)有限公司"></span></li>
+                                    <li><span>房屋规划用途：办公 <input name="dlfangwgh" id ="dlfangwgh" type="hidden" value="办公"> </span><span> 住所获取方式：租赁<input name="dlzhuchqfs" id ="dlzhuchqfs" type="hidden" value="租赁"> </span></li>
+                                    <li><span>面积：5平米  <input name="dlmj" id ="dlmj" type="hidden" value="5"></span><span> 住所使用期限：1年  <input name="dlzhussynx" id ="dlzhussynx" type="hidden" value="1"></span></li>
+                                    <li>出租方计算机代码/出租方身份证号：08883453<input name="dlchuzcode" id ="dlchuzcode" type="hidden" value="08883453"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="liMarginBottom">
+                        <input type="text" class="inputWidth08" name="shijdz" id="shijdz"/>
+                        <label>实际办公地址：</label>
+                    </li>
+                    <li class="liMarginBottom">
+                        <input type="text" class="inputWidth08" name="kuaitddz" id="kuaitddz"/>
+                        <label>快递地址：</label>
+                    </li>
+                    <li>
+                        <ul class="contactCont">
+                            <li class="marginNone"><input type="text" class="inputWidth09" name="shoujr" id="shoujr"/><label>收件人：</label></li>
+                            <li class="liWidth"><input type="text" class="inputWidth10" name="phone" id="phone"/><label>联系电话：</label></li>
+                            <li><input type="text" class="inputWidth11" name="ptcode" id="ptcode"/><label>邮编：</label></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm" name ="hangyform" id ="hangyform" >
+            <input type="hidden" value="addjingyfw" name="addjingyfw" id ="addjingyfw">
+            <h3 class="nav navHover"><a><input type="button" onclick="saveHangy();" class="save" value="保存" />经营范围</a></h3>
+            <div class="b_i_operatingRangeItemWraper clearfix" id="jingyfwdis">
+			                <div class="b_i_operatingRangeItem clearfix">
+			                    <div class="b_i_operatingRangeItemTitle">
+			                        <p>行业类型：</p>
+			                    </div>
+			                    <div class="b_i_operatingRangeItemCont type_1" bindShowArea="scopeBusiness" namespace="businessType">
+			                        <span><input type="checkbox" name="hangylx" value="商业" /><label>商业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="科技推广和应用服务业" /><label>科技推广和应用服务业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="咨询服务业" /><label>咨询服务业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="专业技术服务业 "/><label>专业技术服务业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="环境与生态监测业" /><label>环境与生态监测业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="环境治理业" /><label>环境治理业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="软件和信息技术服务业" /><label>软件和信息技术服务业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="金融业" /><label>金融业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="商务服务业" /><label>商务服务业</label></span>
+			                    
+			                        <span><input type="checkbox" name="hangylx" value="房地产业" /><label>房地产业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="水利、环境和公共设施管理业" /><label>水利、环境和公共设施管理业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="动植物保护类" /><label>动植物保护类</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="租赁业" /><label>租赁业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="文化业" /><label>文化业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="体育运动业" /><label>体育运动业</label></span>
+			                         <span><input type="checkbox" name="hangylx" value="文化艺术与技能培训业" /><label>文化艺术与技能培训业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="卫生服务业" /><label>卫生服务业 </label></span>
+			                        <span><input type="checkbox" name="hangylx" value="居民服务业" /><label>居民服务业</label></span>
+			                                      
+			                        <span><input type="checkbox" name="hangylx" value="汽车装饰业" /><label>汽车装饰业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="电子产品和日用产品修理业" /><label>电子产品和日用产品修理业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="交通储运业" /><label>交通储运业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="公共设施管理业" /><label>公共设施管理业</label></span>
+			                        <span><input type="checkbox" name="hangylx" value="农业" /><label>农业 </label></span>
+			                        <span><input type="checkbox" name="hangylx" value="安全保护服务业" /><label>安全保护服务业</label></span>
+   			                        <span><input type="checkbox" name="hangylx" value="研究和试验发展业" /><label>研究和试验发展业</label></span>
+   			                        <span><input type="checkbox" name="hangylx" value="制造业" /><label>制造业</label></span>
+			                    </div>
+			                </div>
+			                <div class="b_i_operatingRangeItem clearfix">
+			                    <div class="b_i_operatingRangeItemTitle">
+			                        <p>主营业务：</p>
+			                    </div>
+			                    <div class="b_i_operatingRangeItemCont zy_box" bindShowArea="scopeBusiness" namespace="businessType" id="zhuyywcheck">
+			                        <span><input type="checkbox" name="zhuyyw" value="销售鱼苗" /><label>销售鱼苗</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售不再分装的包装种子" /><label>销售不再分装的包装种子</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="接受具有种子经营许可证的种子经营者委托代销其种子" /><label>接受具有种子经营许可证的种子经营者委托代销其种子</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售饲料" /><label>销售饲料(含销售宠物食品)</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售林木（不含种苗）" /><label>销售林木（不含种苗）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售家畜禽（不含种畜禽）" /><label>销售家畜禽（不含种畜禽）</label></span>
+                                     <span><input type="checkbox" name="zhuyyw" value="销售非国家重点保护的试验用动物" /><label>销售非国家重点保护的试验用动物</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售非国家重点保护的观赏用动物" /><label>销售非国家重点保护的观赏用动物</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售花卉" /><label>销售花卉</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售鲜花" /><label>销售鲜花</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售盆栽花" /><label>销售盆栽花</label></span>
+                                    <span><input type="checkbox" name="zhuyyw" value="销售花卉" /><label>销售花卉</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售鲜花" /><label>销售鲜花</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售盆栽花" /><label>销售盆栽花</label></span>
+
+                                    <span><input type="checkbox" name="zhuyyw" value="销售动物皮毛（不含受保护动物皮毛）" /><label>销售动物皮毛（不含受保护动物皮毛）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售纺织品、针织品" /><label>销售纺织品、针织品</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售服装"></input><label>销售服装（含 销售围巾  、销售手套  、销售袜子  、销售皮带)</label></span>
+			                        
+                                    <span><input type="checkbox" name="zhuyyw" value="销售厨房、卫生间用具" /><label>销售厨房、卫生间用具（含 销售厨房设备  、销售餐饮用具 、 销售日用器皿 、销售卫生盥洗设备及用具 、销售清洁用具）</label></span>
+                                    <span><input type="checkbox" name="zhuyyw" value="销售日用品" /><label>销售日用品</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售灯具" /><label>销售灯具</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售摄录像设备" /><label>销售摄录像设备</label></span>
+			                          <span><input type="checkbox" name="zhuyyw" value="销售家用电器" /><label>销售家用电器（含 销售电视 、 销售收录放设备 、销售音响设备 、销售理发美容电器设备 、销售家用电器配套器材 、销售厨房电器设备 、销售电动保健设备）</label></span>
+
+			                        <span><input type="checkbox" name="zhuyyw" value="销售钟表" /><label>销售钟表</label></span>
+			                          <span><input type="checkbox" name="zhuyyw" value="销售家具" /><label>销售家具</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售眼镜 " /><label>销售眼镜 </label></span>
+			                          <span><input type="checkbox" name="zhuyyw" value="销售箱包" /><label>销售箱包</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售婴儿用品" /><label>销售婴儿用品</label></span>
+			                        
+			                            <span><input type="checkbox" name="zhuyyw" value="销售文具用品" /><label>销售文具用品（含 销售笔 、 销售学生用本册 、销售文件夹袋、销售装订用品 、销售绘图用品、销售纸 、销售教学模具 、销售塑料用品 、销售绘画颜料 、销售美术辅助用品）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售体育用品及器材 " /><label>销售体育用品及器材（含 销售球类运动用品  、销售棋类运动用品、销售运动器材） </label></span>
+			                          <span><input type="checkbox" name="zhuyyw" value="销售首饰" /><label>销售首饰（含 销售珠宝  、销售金银首饰  、销售钻石  、销售珠宝翡翠）</label></span>
+
+                                    <span><input type="checkbox" name="zhuyyw" value="销售工艺品" /><label>销售工艺品（含 销售绘画作品  、销售集邮票品  、销售书法作品 、销售摄影作品 、 销售金银制品（不含银币）、销售雕刻工艺品 、销售金属工艺品 （不含银币）、销售漆器工艺品  、销售编织工艺品  、销售抽纱刺绣工艺品）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售玩具" /><label>销售玩具</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售乐器 " /><label>销售乐器 </label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售照相器材" /><label>销售照相器材（含 销售照相机  、销售胶卷 、销售相纸）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售望远镜" /><label>销售望远镜</label></span>
+			                        
+			                        <span><input type="checkbox" name="zhuyyw" value="销售矿产品" /><label>销售矿产品（经营煤炭的不得在北京地区开展实物煤交易及储运）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售煤炭 " /><label>销售煤炭(不得在北京地区开展实物煤的交易、储运活动）</label></span>
+                                    <span><input type="checkbox" name="zhuyyw" value="销售润滑油" /><label>销售润滑油</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售润滑脂" /><label>销售润滑脂</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售燃料油  " /><label>销售燃料油 </label></span>
+
+                                    <span><input type="checkbox" name="zhuyyw" value="销售非金属矿制品" /><label>销售非金属矿制品（含销售石棉  、销售云母 、销售石墨  、销售滑石 、销售玻璃纤维及制品  、销售玻璃钢及制品  、销售石素制品）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售金属材料" /><label>销售金属材料</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售钢材 " /><label>销售钢材（含 销售钢管  、销售钢板 、销售线材钢 、销售特种钢材） </label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售铜材" /><label>销售铜材（含 销售铜锭） 、销售铝材（含 销售铝锭）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售建筑材料" /><label>销售建筑材料（含 销售木材 、销售石材  、销售建筑用沙砖、销售石灰及石膏产品 、销售建筑陶瓷 、销售玻璃制品 、销售耐火材料）</label></span>
+			                        
+			                        <span><input type="checkbox" name="zhuyyw" value="销售农药" /><label>销售农药（不含危险化学品农药）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售农用薄膜 " /><label>销售农用薄膜</label></span>
+                                    <span><input type="checkbox" name="zhuyyw" value="销售沥青" /><label>销售沥青（不含煤焦沥青、硝化沥青）</label></span>
+
+                                    <span><input type="checkbox" name="zhuyyw" value="销售化工产品" /><label>销售化工产品（不含危险化学品） （含 销售油漆（不含危险化学品）、销售合成纤维 、销售塑料制品 、销售橡胶制品）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售机械设备" /><label>销售机械设备（含销售消防设备 、销售铁路运输设备  、销售航空器 、销售飞机 、销售仪器仪表 、销售水上运输设备  □ 销售压缩机 、销售锅炉 、销售原动机 、销售金属构件 、销售集装箱）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售农业机械 " /><label>销售农业机械 </label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售汽车零配件" /><label>销售汽车零配件</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售三轮摩托车" /><label>销售三轮摩托车</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售摩托车零配件" /><label>销售摩托车零配件</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售五金产品" /><label> 销售五金产品（含销售自行车 、销售电动自行车 、销售手工工具 、 销售电工工具 、销售管道配件）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售电气设备" /><label>销售电气设备（含销售电动机 、销售电力照明设备 、销售电动、风动工具）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售计算机、软件及辅助设备" /><label>销售计算机、软件及辅助设备（含销售计算机主机 、销售显示器、销售计算机外部设备、销售计算机耗材、销售微型电子办公设备）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售软件" /><label>销售软件（含 销售基础软件 、销售应用软件）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售通讯设备" /><label>投资类销售通讯设备（含销售手机 、销售对讲机）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售广播电视设备" /><label>销售广播电视设备（不含卫星电视广播地面接收设施）（含 销售广播发射设备（不含卫星电视广播地面接收设施）、 销售广播节目制作和播控设备 、销售广播转播设备（不含卫星电视广播地面接收设施）、 销售广播节目采录设备 、销售电影设备）</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="销售电子产品" /><label>销售电子产品</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="货物进出口" /><label>货物进出口</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="代理进出口" /><label>代理进出口</label></span>
+			                        <span><input type="checkbox" name="zhuyyw" value="技术进出口" /><label>技术进出口</label></span>
+			                        
+			                    </div>
+			                </div>
+			                <div class="b_i_operatingRangeItem clearfix">
+			                    <div class="b_i_operatingRangeItemTitle">
+			                        <p>其它经营业务：</p>
+			                    </div>
+			                    <div class="b_i_operatingRangeItemCont type" bindShowArea="scopeBusiness" namespace="businessType" id="qitywcheck">
+			                       <span><input type="checkbox" name="qityw" value="销售鱼苗" /><label>销售鱼苗</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售不再分装的包装种子" /><label>销售不再分装的包装种子</label></span>
+			                        <span><input type="checkbox" name="qityw" value="接受具有种子经营许可证的种子经营者委托代销其种子" /><label>接受具有种子经营许可证的种子经营者委托代销其种子</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售饲料" /><label>销售饲料(含销售宠物食品)</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售林木（不含种苗）" /><label>销售林木（不含种苗）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售家畜禽（不含种畜禽）" /><label>销售家畜禽（不含种畜禽）</label></span>
+                                     <span><input type="checkbox" name="qityw" value="销售非国家重点保护的试验用动物" /><label>销售非国家重点保护的试验用动物</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售非国家重点保护的观赏用动物" /><label>销售非国家重点保护的观赏用动物</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售花卉" /><label>销售花卉</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售鲜花" /><label>销售鲜花</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售盆栽花" /><label>销售盆栽花</label></span>
+                                    <span><input type="checkbox" name="qityw" value="销售花卉" /><label>销售花卉</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售鲜花" /><label>销售鲜花</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售盆栽花" /><label>销售盆栽花</label></span>
+
+                                    <span><input type="checkbox" name="qityw" value="销售动物皮毛（不含受保护动物皮毛）" /><label>销售动物皮毛（不含受保护动物皮毛）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售纺织品、针织品" /><label>销售纺织品、针织品</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售服装"></input><label>销售服装（含 销售围巾  、销售手套  、销售袜子  、销售皮带)</label></span>
+			                        
+                                    <span><input type="checkbox" name="qityw" value="销售厨房、卫生间用具" /><label>销售厨房、卫生间用具（含 销售厨房设备  、销售餐饮用具 、 销售日用器皿 、销售卫生盥洗设备及用具 、销售清洁用具）</label></span>
+                                    <span><input type="checkbox" name="qityw" value="销售日用品" /><label>销售日用品</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售灯具" /><label>销售灯具</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售摄录像设备" /><label>销售摄录像设备</label></span>
+			                          <span><input type="checkbox" name="qityw" value="销售家用电器" /><label>销售家用电器（含 销售电视 、 销售收录放设备 、销售音响设备 、销售理发美容电器设备 、销售家用电器配套器材 、销售厨房电器设备 、销售电动保健设备）</label></span>
+
+			                        <span><input type="checkbox" name="qityw" value="销售钟表" /><label>销售钟表</label></span>
+			                          <span><input type="checkbox" name="qityw" value="销售家具" /><label>销售家具</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售眼镜 " /><label>销售眼镜 </label></span>
+			                          <span><input type="checkbox" name="qityw" value="销售箱包" /><label>销售箱包</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售婴儿用品" /><label>销售婴儿用品</label></span>
+			                        
+			                            <span><input type="checkbox" name="qityw" value="销售文具用品" /><label>销售文具用品（含 销售笔 、 销售学生用本册 、销售文件夹袋、销售装订用品 、销售绘图用品、销售纸 、销售教学模具 、销售塑料用品 、销售绘画颜料 、销售美术辅助用品）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售体育用品及器材 " /><label>销售体育用品及器材（含 销售球类运动用品  、销售棋类运动用品、销售运动器材） </label></span>
+			                          <span><input type="checkbox" name="qityw" value="销售首饰" /><label>销售首饰（含 销售珠宝  、销售金银首饰  、销售钻石  、销售珠宝翡翠）</label></span>
+
+                                    <span><input type="checkbox" name="qityw" value="销售工艺品" /><label>销售工艺品（含 销售绘画作品  、销售集邮票品  、销售书法作品 、销售摄影作品 、 销售金银制品（不含银币）、销售雕刻工艺品 、销售金属工艺品 （不含银币）、销售漆器工艺品  、销售编织工艺品  、销售抽纱刺绣工艺品）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售玩具" /><label>销售玩具</label></span>
+			                        <span><input type="checkbox" name="zhuqitywyyw" value="销售乐器 " /><label>销售乐器 </label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售照相器材" /><label>销售照相器材（含 销售照相机  、销售胶卷 、销售相纸）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售望远镜" /><label>销售望远镜</label></span>
+			                        
+			                        <span><input type="checkbox" name="qityw" value="销售矿产品" /><label>销售矿产品（经营煤炭的不得在北京地区开展实物煤交易及储运）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售煤炭 " /><label>销售煤炭(不得在北京地区开展实物煤的交易、储运活动）</label></span>
+                                    <span><input type="checkbox" name="qityw" value="销售润滑油" /><label>销售润滑油</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售润滑脂" /><label>销售润滑脂</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售燃料油  " /><label>销售燃料油 </label></span>
+
+                                    <span><input type="checkbox" name="qityw" value="销售非金属矿制品" /><label>销售非金属矿制品（含销售石棉  、销售云母 、销售石墨  、销售滑石 、销售玻璃纤维及制品  、销售玻璃钢及制品  、销售石素制品）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售金属材料" /><label>销售金属材料</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售钢材 " /><label>销售钢材（含 销售钢管  、销售钢板 、销售线材钢 、销售特种钢材） </label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售铜材" /><label>销售铜材（含 销售铜锭） 、销售铝材（含 销售铝锭）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售建筑材料" /><label>销售建筑材料（含 销售木材 、销售石材  、销售建筑用沙砖、销售石灰及石膏产品 、销售建筑陶瓷 、销售玻璃制品 、销售耐火材料）</label></span>
+			                        
+			                        <span><input type="checkbox" name="qityw" value="销售农药" /><label>销售农药（不含危险化学品农药）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售农用薄膜 " /><label>销售农用薄膜</label></span>
+                                    <span><input type="checkbox" name="qityw" value="销售沥青" /><label>销售沥青（不含煤焦沥青、硝化沥青）</label></span>
+
+                                    <span><input type="checkbox" name="qityw" value="销售化工产品" /><label>销售化工产品（不含危险化学品） （含 销售油漆（不含危险化学品）、销售合成纤维 、销售塑料制品 、销售橡胶制品）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售机械设备" /><label>销售机械设备（含销售消防设备 、销售铁路运输设备  、销售航空器 、销售飞机 、销售仪器仪表 、销售水上运输设备  □ 销售压缩机 、销售锅炉 、销售原动机 、销售金属构件 、销售集装箱）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售农业机械 " /><label>销售农业机械 </label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售汽车零配件" /><label>销售汽车零配件</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售三轮摩托车" /><label>销售三轮摩托车</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售摩托车零配件" /><label>销售摩托车零配件</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售五金产品" /><label> 销售五金产品（含销售自行车 、销售电动自行车 、销售手工工具 、 销售电工工具 、销售管道配件）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售电气设备" /><label>销售电气设备（含销售电动机 、销售电力照明设备 、销售电动、风动工具）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售计算机、软件及辅助设备" /><label>销售计算机、软件及辅助设备（含销售计算机主机 、销售显示器、销售计算机外部设备、销售计算机耗材、销售微型电子办公设备）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售软件" /><label>销售软件（含 销售基础软件 、销售应用软件）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售通讯设备" /><label>投资类销售通讯设备（含销售手机 、销售对讲机）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售广播电视设备" /><label>销售广播电视设备（不含卫星电视广播地面接收设施）（含 销售广播发射设备（不含卫星电视广播地面接收设施）、 销售广播节目制作和播控设备 、销售广播转播设备（不含卫星电视广播地面接收设施）、 销售广播节目采录设备 、销售电影设备）</label></span>
+			                        <span><input type="checkbox" name="qityw" value="销售电子产品" /><label>销售电子产品</label></span>
+			                        <span><input type="checkbox" name="qityw" value="货物进出口" /><label>货物进出口</label></span>
+			                        <span><input type="checkbox" name="qityw" value="代理进出口" /><label>代理进出口</label></span>
+			                        <span><input type="checkbox" name="qityw" value="技术进出口" /><label>技术进出口</label></span>
+			                    </div>
+			                </div>
+                <div class="b_i_or_choiceArea clearfix">
+                     <ul id="scopeBusiness1" style="float:left;overflow:hidden">
+		
+                   </ul>
+                   <ul id="scopeBusiness" style="float:left;overflow:hidden">
+
+                   </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix" id="zirgud">
+        <form class="contentForm" name="savegudform" id="savegudform" action="/order/savegud" method="post">
+            <input name="addbusinessgudong" id ="addbusinessgudong" type="hidden" >
+            <input name="addbusid" id="addbusid" type="hidden"/>
+            <input name="addorderid" id="addorderid" type="hidden"/>
+            <input name="zirrgudcount" id="zirrgudcount" type="hidden"/>
+            <input name="fargudcount" id="fargudcount" type="hidden"/>
+             <input name="display" id="display" type="hidden" value="zirgud">
+            <h3 class="nav navHover"><a><input type="button" onclick="savegudong();" class="save" value="保存" />股东</a></h3>
+            <div>
+                <div class="b_i_shareholder clearfix" id="shareholders">
+                    <div class="naturalShareholdersCont">
+                        <a href="" class="delShareholderIcon_1"></a>
+                        <span class="n_s_inputWidth01"><input type="text" name="gudong1" id="gudong1"/><label> 股东1:</label></span>
+                        <span class="n_s_inputWidth02"><input type="text" name="chuzf1" id="chuzf1"/><label>出资方:</label></span>
+                        <span class="n_s_inputWidth03"><input type="text" name="gudIdcard1" id ="gudIdcard1"/><label>身份证号:</label></span>
+                        <span class="n_s_inputWidth04"><input type="text" name="gudIdcardaddre1" id ="gudIdcardaddre1"/><label>身份证地址:</label></span>
+                    <span class="n_s_inputWidth05">
+                        <select name="gudsex1" id ="gudsex1">
+                            <option value="男" selected="selected">男</option>
+                            <option value="女">女</option>
+                        </select>
+                        <label> 性别:</label>
+                    </span>
+                        <br/>
+                        <span class="n_s_inputWidth01"><input type="text" name="gudphone1" id ="gudphone1"/><label>手机号:</label></span>
+                    </div>
+                    <div class="corporateShareholdersCont">
+                        <a href="" class="delShareholderIcon_2"></a>
+                        <span><input type="text" name="fargud1" id="fargud1"/><label>法人股东1:</label></span>
+                        <span><input type="text" name="faryyzzh1" id ="faryyzzh1"/><label>营业执照号:</label></span>
+                        <span><input type="text" name="farchuze1" id="farchuze1" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/><label>出资额:</label></span>
+                    </div>
+                </div>
+                <p class="addBtn">
+                    <input type="button" value="添加自然人股东" onclick="addZirrgd();"/>
+                    <input type="button" value="添加法人人股东"  onclick="addfargd();"/>
+                </p>
+            </div>
+        </form>
+    </div>
+    
+    <div class="bannerItem clearfix" id="fadingdb">
+        <form class="contentForm" name="myForm" id="myForm" action="/order/saveKehinfo" method="post">
+           <input name="orderid" value="$!{orderid}" type="hidden" id ="orderid">
+            <input name="busid" type="hidden" id ="busid">
+            <input name="adddscount" id="adddscount" type="hidden">
+            <input name="addjscount" id="addjscount" type="hidden">
+            <input name="display" id="display" type="hidden" value="fadingdb">
+            <h3 class="nav"><a><input type="button" onclick="savefardb2ds();" class="save" value="保存" />法定代表人及董监高</a></h3>
+            <div class="b_i_legalPerson clearfix">
+                <div class="b_i_legalPersonstyle01">
+                    <p class="b_i_lp_leftWidth clearfix b_i_lp_leftHeight01">法定代表人：</p>
+                    <div>
+                        <div class="b_i_lps_03Right">
+                            <div class="b_i_lps_marginBottom clearfix b_i_lps_bordreBottom">
+                                <span class="b_i_lps_width05"><input type="text" name="farzx" id="farzx"/><label>法定代表人:</label></span>
+                                <span class="b_i_lps_width01"><input type="text" name="farphone" id="farphone"/><label>手机号:</label></span>
+                            <!-- <span class="b_i_lps_width04">
+                                <select name="farxw" id ="farxw">
+                                    <option value="博士">博士</option>
+                                    <option value="研究生">研究生</option>
+                                </select>
+                                <label>学历:</label>
+                            </span>
+                            <span class="b_i_lps_width01">
+                                <select name="farmm" id="farmm">
+                                    <option value="">群众</option>
+                                    <option value="">党员</option>
+                                </select>
+                                <label>党员面貌:</label>
+                            </span> -->
+                            <span class="b_i_lps_width04">
+                                <select name="farsex" id="farsex">
+                                    <option value="男">男</option>
+                                    <option value= "女">女</option>
+                                </select>
+                                <label>性别:</label>
+                            </span>
+                                <span class="b_i_lps_width03"><input type="text" name="farcard" id ="farcard"/><label>身份证号:</label></span>
+                                <span class="b_i_lps_width03"><input type="text" name="farsfdz" id ="farsfdz"/><label>身份地址:</label></span>
+                            </div>
+                        </div>
+                        <div style="clear: both;height: 0px;font-size: 0px"></div>
+                    </div>
+                </div>
+                   <ul class="b_i_ca_form">
+
+                    <li class="radioMargin1 radioMarginBottom">
+                        <span ><input type="radio"  name="ishavedongsh" value="1" checked/><label for="b2">有</label></span>
+                        <span class="radioMarginLeft02"><input type="radio" value="0"  name="ishavedongsh"/><label for="b2">无</label></span>
+                        <label>董事会：</label>
+                    </li>
+                    <li>
+                        <div class="adressWraper1">
+
+                            <div class="ownAdress" style="display: block">
+                                <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="dongshzx1" id="dongshzx1"/><label>董事会主席:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="dongshzxphone1" id="dongshzxphone1"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="dongshzxsex1" id="dongshzxsex1">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongshzxcard1" id="dongshzxcard1"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongshzxcarddz1" id="dongshzxcarddz1"/><label>身份地址:</label></span>
+                                </ul>
+                                <div id="dsh_area">
+                                <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="dongsjis1" id="dongsjis1"/><label>董事1:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="dongsjisphone1" id="dongsjisphone1"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="dongsjissex1" id="dongsjissex1">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongsjiscard1" id="dongsjiscard1"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongsjiscarddz1" id="dongsjiscarddz1"/><label>身份地址:</label></span>
+                                </ul>
+                                </div>
+                                <p class="addBtn">
+                                    <input type="button" value="添加董事会" onclick="adddongs();" id="add_dsh"/>
+                                </p>
+                            </div>
+                            
+                            <div class="ownAdress">
+                                <ul class="dsh_box">
+                                    <span class="b_i_lps_width05"><input type="text" name="zhixgongsh" id="zhixgongsh"/><label>董事会主席:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="zhixgongshphone" id="zhixgongshphone"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="zhixgongshsex" id="zhixgongshsex">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixgongshcard" id="zhixgongshcard"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixgongshcarddz" id="zhixgongshcarddz"/><label>身份地址:</label></span>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="b_i_ca_form">
+                    <li class="radioMargin2 radioMarginBottom">
+                        <span ><input type="radio" value="1"  name="ishavejiansh" checked/><label for="c1">有</label></span>
+                        <span class="radioMarginLeft02"><input type="radio" value="0" name="ishavejiansh"/><label for="c2">无</label></span>
+                        <label>监事会：</label>
+                    </li>
+                    <li>
+                        <div class="adressWraper2">
+
+                            <div class="ownAdress" style="display: block" >
+                                <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="zhixjianszx1" id="zhixjianszx1"/><label>执行主席:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="zhixjianszxphone1" id="zhixjianszxphone1"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select  name="zhixjianszxsex1" id="zhixjianszxsex1">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixjianszxcard1" id="zhixjianszxcard1"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixjianszxcarddz1" id="zhixjianszxcarddz1"/><label>身份地址:</label></span>
+                                </ul>
+                                <div id="jsh_area">
+                                <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="jians1" id="jians1"/><label>监事1:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="jiansphone1" id="jiansphone1"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="jianssex1" id="jianssex1">
+                                            <option value="">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscard1" id="jianscard1"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscarddz1" id="jianscarddz1"/><label>身份地址:</label></span>
+                                </ul>
+                                </div>
+                                <p class="addBtn">
+                                    <input type="button" value="添加监事会" onclick="addjians();" id="add_jsh"/>
+                                </p>
+                            </div>
+                            
+                            <div class="ownAdress">
+                                <ul class="dsh_box">
+                                    <span class="b_i_lps_width05"><input type="text" name="jians" id="jians"/><label>监事会主席:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="jiansphone" id="jiansphone"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="jianssex" id="jianssex">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscard" id="jianscard"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscarddz" id="jianscarddz"/><label>身份地址:</label></span>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+                
+                <div style="clear: both;height: 0;font-size: 0px"></div>
+                <div class="b_i_legalPersonstyle02">
+                    <p class="b_i_lp_leftWidth clearfix b_i_lp_leftHeight02">经理：</p>
+                    <div class="b_i_lps_03Right">
+                        <div class="b_i_lps_marginBottom clearfix">
+                            <span class="b_i_lps_width06"><input type="text" name="jingl"  id="jingl"/><label>姓名:</label></span>
+                            <span class="b_i_lps_width02"><input type="text" name="jinglphone" id ="jinglphone"/><label>手机号:</label></span>
+                            <!-- <span class="b_i_lps_width01">
+                                <select>
+                                    <option value="">博士</option>
+                                    <option value="">研究生</option>
+                                </select>
+                                <label>学历:</label>
+                            </span>
+                            <span class="b_i_lps_width01">
+                                <select>
+                                    <option value="">群众</option>
+                                    <option value="">党员</option>
+                                </select>
+                                <label>党员面貌:</label>
+                            </span> -->
+                            <span class="b_i_lps_width01">
+                                <select name="jinglsex" id="jinglsex">
+                                    <option value="男" selected="selected">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                                <label>性别:</label>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="b_i_lps_width03"><input type="text" name="jinglcard" id="jinglcard"/><label>身份证号:</label></span>
+                            <span class="b_i_lps_width03"><input type="text" name="jinglsfdz" id="jinglsfdz"/><label>身份地址:</label></span>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear: both;height: 0;font-size: 0px"></div>
+                <div class="b_i_legalPersonstyle03">
+                    <p class="b_i_lp_leftWidth clearfix b_i_lp_leftHeight03">财务负责人：</p>
+                    <div class="b_i_lps_03Right">
+                       <div>
+                           <span class="b_i_lps_width06"><input type="text" name="caiwfzr" id="caiwfzr"/><label>姓名:</label></span>
+                           <span class="b_i_lps_width02"><input type="text" name="caiwphone" id="caiwphone"/><label>手机号:</label></span>
+                           <span class="b_i_lps_width03"><input type="text" name="caiwsfz" id="caiwsfz"/><label>身份证号:</label></span>
+                           <!--  <span class="b_i_lps_width01">
+                                <select>
+                                    <option value="">群众</option>
+                                    <option value="">党员</option>
+                                </select>
+                                <label>政治面貌:</label>
+                            </span> -->
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <input name="addgsyginfo" id ="addgsyginfo" value="addgsyginfo" type="hidden">
+            <h3 class="nav navHover"><a><input type="button" onclick="savegsyginfo();" class="save" value="保存" />公司员工信息</a></h3>
+            <div class="employeeMsg clearfix">
+                <ul>
+                    <li class="lisPadding">
+                        <span><input type="text" name="qiylxr" id="qiylxr"/><label>企业联系人:</label></span>
+                        <span><input type="text" name="qiylxrphone" id="qiylxrphone"/><label>手机号:</label></span>
+                        <span><input type="text" name="guddh" id="guddh"/><label>固定电话:</label></span>
+                        <span><input type="text" name="email" id="email"/><label>邮箱地址:</label></span>
+                        <span><input type="text" name="qiypostcode" id="qiypostcode"/><label>邮编:</label></span>
+                    </li>
+                    <li class="lisPadding">
+                        <span><input type="text" name="zhigcount" id="zhigcount" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>职工总人数:</label></span>
+                        <span><input type="text" name="bendrs" id="bendrs" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>本地人数:</label></span>
+                        <span><input type="text" name="waidrs" id="waidrs" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>外地人数:</label></span>
+                        <span><input type="text" name="nvxrw" id="nvxrw" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>女性人数:</label></span>
+                    </li>
+                    <li>
+                        <span class="firstspanWidth"><input type="text" name="Ukey1" id="Ukey1"/><label>Ukey管理员1:</label></span>
+                        <span><input type="text" name="Ukey1phone" id="Ukey1phone"/><label>手机号:</label></span>
+                    </li>
+                    <li>
+                        <span class="firstspanWidth"><input type="text" name="Ukey2" id="Ukey2"/><label>Ukey管理员2:</label></span>
+                        <span><input type="text" name="Ukey2phone" id="Ukey2phone"/><label>手机号:</label></span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <input name="addotherinfo" id ="addotherinfo" value="addotherinfo" type="hidden">
+            <h3 class="nav navHover"><a><input type="button" onclick="saveotherInfo();" class="save" value="保存" />其它信息</a></h3>
+            <div class="b_i_other clearfix">
+                <ul>
+                    <li><input type="text" name="gsxtcount" id="gsxtcount"/><label>工商系统账号：</label></li>
+                    <li><input type="password" name="password" id="password"/><label class="laelWidth03">密码：</label></li>
+                </ul>
+                <div class="b_i_operatingRangeItemWraper clearfix other_add">
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>申请方式：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <span><input type="radio" name="shenqfs" value="0" /><label>双向寄递</label></span>
+                            <span><input type="radio" name="shenqfs" value="1" checked/><label>现场递交</label></span>
+                        </div>
+                    </div>
+                   <!--  <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>证照申请数量：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <span><input type="radio" name="zhengzsqsl" value="0" /><label>单证</label></span>
+                            <span><input type="radio" name="zhengzsqsl" value="1" checked/><label>多证</label></span>
+                        </div>
+                    </div>
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>客户签字方式：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <span><input type="radio" name="kehqzfs" value="0" /><label>邮寄签寄</label></span>
+                            <span><input type="radio" name="kehqzfs" value="1" checked /><label>现场签字</label></span>
+                        </div>
+                    </div>
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>是否核查地址：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <span><input type="radio" name="shifhcdz" value="0" /><label>是</label></span>
+                            <span><input type="radio" name="shifhcdz" value="1" checked/><label>否</label></span>
+                        </div>
+                    </div>
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>名称是否已核准：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <span><input  type="radio" name="mcsfhz" value="0" /><label>是</label></span>
+                            <span><input type="radio" name="mcsfhz" value="1" checked/><label>否</label></span>
+                        </div>
+                    </div>
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>是否已领取第三方协议：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <span><input type="radio" name="shiflqdsfxy" value="0" /><label>是</label></span>
+                            <span><input type="radio" name="shiflqdsfxy" value="1" checked/><label>否</label></span>
+                        </div>
+                    </div> -->
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>名称预先核准文号：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <input name="mingchzwh" id="shiflqdsfxy" type="text" class="in_text" />
+                        </div>
+                    </div>
+                </div>
+                <ul class="zh_box">
+                    <li><input name="hemgszh" id="hemgszh" type="text"/><label>核名工商账号：</label></li>
+                    <li><input type="password" name="hempassword" id="hempassword"/><label class="laelWidth03">密码：</label></li>
+                </ul>
+                <ul class="zh_box">
+                    <li><input type="text"  name="wangdgszh" id="wangdgszh"/><label>网登工商账号：</label></li>
+                    <li><input type="password"  name="wangdmm" id="wangdmm"/><label class="laelWidth03">密码：</label></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+        <div class="bannerItem clearfix">
+        <form class="contentForm" name="fileform" action="/filesupload" method="post">
+            <h3 class="nav"><a onclick="initattach()"><input type="button" class="save" value="保存" />附件资料</a></h3>
+            <div class="b_i_other clearfix"  id="initfile">
+         <!--        <div class="box1">
+                    <p class="tit">股东身份证扫描件：</p>
+                    <p class="add_box">
+                        <span class="name">股东姓名：李小苗</span>
+                        <span class="add_btn">上传证件</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">股东姓名：李小苗</td>
+                            <td class="pic">
+                                <div>身份证背面</div>
+                            </td>
+                            <td class="pic">
+                                <div>身份证背面</div>
+                            </td>
+                            <td class="rang"></td>
+                            <td class="btn"><span class="add_btn">下载</span><span class="add_btn">重新上传</span></td>
+                            <td class="del"><a><img src="/images/icon07.png"></a></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <p class="tit1">股东身份证扫描件：</p>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">营业执照正本</td>
+                            <td class="pic">
+                                <div>营业执照图</div>
+                            </td>
+                            <td class="pic">
+                            </td>
+                            <td class="rang"></td>
+                            <td class="btn"><span class="add_btn">下载</span><span class="add_btn">重新上传</span></td>
+                            <td class="del"><a ><img src="/images/icon07.png"></a></td>
+                        </tr>
+                    </table>
+                </div> -->
+            </div>
+        </form>
+    </div>
+</div>
+<div class="btn_box">
+    <a onclick="saveall();">保存</a>
+    <a onclick="saveSubmit();">提交</a>
+</div>
+<script >
+function saveall(){
+	var fbuid = $("#busid").val();
+	if(fbuid != null && fbuid !=""){
+		alert("保存成功！！");
+	}else{
+		alert("目前没有可保存的信息！！");
+	}
+}
+function saveSubmit(){
+	var fbuid = $("#busid").val();
+	if(fbuid != null && fbuid !=""){
+	 jQuery.ajax({
+			url : '/order/submitBusiness',
+			type : "post",
+			data : {
+				"fbuid" : fbuid,
+			},
+			dataType : "text",
+			success : function(data, textStatus) {
+				if(data !="false"){
+					alert("提交成功！");
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+			}
+		}); 
+	}else{
+		alert("目前没有可提交的信息！！");
+	}
+}
+    var gudjs = 1;
+    function addZirrgd(){
+    	gudjs++;
+    	var htmlstr="<div class=\"naturalShareholdersCont\"><a href=\"\" class=\"delShareholderIcon_1\"></a>"+
+    		"<span class=\"n_s_inputWidth01\"><input type=\"text\" name=\"gudong"+gudjs+"\" id=\"gudong"+gudjs+"\"/><label> 股东"+gudjs+":</label></span>"+
+    	    "<span class=\"n_s_inputWidth02\"><input type=\"text\" name=\"chuzf"+gudjs+"\" id=\"chuzf"+gudjs+"\"/><label>出资方:</label></span>"+
+    	    "<span class=\"n_s_inputWidth03\"><input type=\"text\" name=\"gudIdcard"+gudjs+"\" id =\"gudIdcard"+gudjs+"\"/><label>身份证号:</label></span>"+
+    	    "<span class=\"n_s_inputWidth04\"><input type=\"text\" name=\"gudIdcardaddre"+gudjs+"\" id =\"gudIdcardaddre"+gudjs+"\"/><label>身份证地址:</label></span>"+
+    	    "<span class=\"n_s_inputWidth05\">"+
+    	    "<select name=\"gudsex"+gudjs+"\" id =\"gudsex"+gudjs+"\"><option value=\"男\" selected=\"selected\">男</option><option value=\"女\">女</option>"+
+    	    "</select><label> 性别:</label></span><br/>"+
+    	    "<span class=\"n_s_inputWidth01\"><input type=\"text\" name=\"gudphone"+gudjs+"\" id =\"gudphone"+gudjs+"\"/><label>手机号:</label></span>"+
+    	    "</div>";
+    	$("#shareholders").append(htmlstr); 
+    }
+    
+    $('#shareholders').on('click','.delShareholderIcon_1',function(){
+        $(this).parent().remove();
+        if(gudjs == 1){
+        	  gudjs--;
+        }
+        return false;
+    })
+     $('#shareholders').on('click','.delShareholderIcon_2',function(){
+        $(this).parent().remove();
+        if(farjs == 1){
+        	farjs--;
+        }
+        return false;
+    })
+</script>
+<script>
+var flag = 1;
+var field ="";
+    var farjs = 1;
+    function addfargd(){
+    	farjs++;
+    	var htmlstr ="<div class=\"corporateShareholdersCont\">"+
+				     "<a href=\"\" class=\"delShareholderIcon_2\"></a>"+
+				     "<span><input type=\"text\" name=\"fargud"+farjs+"\" id=\"fargud"+farjs+"\"/><label>法人股东"+farjs+":</label></span>"+
+				     " <span><input type=\"text\" name=\"faryyzzh"+farjs+"\" id =\"faryyzzh"+farjs+"\"/><label>营业执照号:</label></span>"+
+				     "<span><input onblur=\"changgechuze('farchuze"+farjs+"');\" type=\"text\" name=\"farchuze"+farjs+"\" id=\"farchuze"+farjs+"\" /><label>出资额:</label></span>"+
+				     "</div>";
+	       $("#shareholders").append(htmlstr); 
+    }
+    
+    function changgechuze(div){
+    	var chuze = $("#"+div+"").val();
+    	if(chuze != null && chuze !=""){
+    		var type="^\\d+$" ; 
+		    var re   =   new   RegExp(type); 
+			if(chuze.match(re)==null){
+				alert("输入的出资额必须为整数！！");
+				 $("#"+div+"").val("");
+				return false;
+			}
+    	}
+    }
+</script>
+</body>
+ </html>

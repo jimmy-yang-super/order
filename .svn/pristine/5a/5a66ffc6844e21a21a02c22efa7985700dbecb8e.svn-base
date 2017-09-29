@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css">
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script src="/js/jquery.tabs.js"></script>
+<script src="/js/map.js"></script>
+<script src="/js/addorder.js"></script>
+<script src="/js/array.js"></script>
+<script type="text/javascript">
+var map = new Map();
+$(function(){
+  $(".com_box1 li").each(function(){
+      $(this).click(function(){
+          $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+          $(this).addClass("checked1").removeClass("flow1_change");
+          var cliclVal = $(this).attr("value");
+          $("#yixd").val(cliclVal);
+      })
+  });
+  init(map);
+  dyncArea(0);
+  //初始化
+ // dyncProduct();
+  $(".com_box1 li:last").addClass("flow1_change").removeClass("checked1");
+  $(".com_box1 li:last").addClass("checked1").removeClass("flow1_change");
+  var cliclVal =  $(".com_box1 li:last").attr("value");
+  $("#yixd").val(cliclVal);
+  //初始化
+  $("#gstype li:eq(0)").show();
+  $("#gstype li:eq(1)").hide();
+});  
+	var products = new Array();
+	$(document).ready(function($) {
+		$(".sp_box1 li").click(function() {
+			var procId = $(this).attr("parent");
+			var categoryId = $(this).attr("value");
+			var complete = procId + "_" + categoryId;
+			if ($(this).hasClass("sp_on1")) {
+				$(this).removeClass("sp_on1").addClass("sp_change1");
+				if (products.contains(complete)) {
+					products.remove(complete);
+				}
+			} else {
+				$(this).addClass("sp_on1").removeClass("sp_change1");
+				products.push(complete);
+			}
+		});
+	});
+
+
+</script>
+</head>
+
+<body>
+<div class="user_box">
+  <div class="crumbs">
+    <a class="crumb-link" href="#">您目前的位置：<span>潜在订单</span></a>
+    <i class="crumb-line">></i>
+    <a class="crumb-link" href="#">添加订单</a>
+  </div>
+  <form action="/order/addOrder.html" name="myForm" id="myForm" method="post">
+  <div class="dd_box range_t1"><!-- 订单层 -->
+    <div class="dd_con1">
+      <table>
+        <tr>
+          <th><span class="red_must">*</span>客户手机:</th>
+          <td><input type="text" class="d_text_s" name="phoneNum" id="phoneNum" onblur="validateCode()"/></td>
+        </tr>
+        <!-- 添加所属公司 -->
+         <tr>
+          <th><span class="red_must">*</span>所属公司:</th>
+          <td>
+            <div class="nice-select2 w_select_m" name="nice-select2">
+              <input type="text" value=""  placeholder="请选择所属公司" id ="dissuosgs"  readonly/>
+              <input type="hidden" name="hiddissuosgs" id="hiddissuosgs" value=""/>
+              <div id="glsuosgs"></div>
+            
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>公司名称:</th>
+          <td><input type="text" class="d_text_s" name="gongsmc" id="gongsmc" /></td>
+        </tr>
+        <tr>
+          <th><span class="red_must">*</span>客户来源:</th>
+          <td>
+            <div class="nice-select2 w_select_m" name="nice-select2">
+              <input type="text" value="请选择客户来源" id ="initchannel"  readonly/>
+              <input type="hidden" name="kehchannel" id="kehchannel" value=""/>
+              <ul>
+                <li name="channl" data-value="1_1">微信</li>
+                <li name="channl" data-value="2_1">58同城</li>
+                <!-- <li name="channl" data-value="19_1">诚信通</li> -->
+                <li name="channl" data-value="4_1">赶集网</li>
+                <li name="channl" data-value="5_1">公司官网</li>
+                <li name="channl" data-value="8_1">搜索引擎</li>
+                <li name="channl" data-value="10_1">地面推广</li>
+                <li name="channl" data-value="11_1">线下广告</li>
+                <li name="channl" data-value="12_1">线下活动</li>
+                <li name="channl" data-value="6_1">同事推荐</li>
+                <li name="channl" data-value="3_1">客户推荐</li>
+                <!-- <li name="channl" data-value="7_1">复购客户</li> -->
+                <!-- <li name="channl" data-value="9_1">大客户渠道</li> -->
+                <li name="channl" data-value="14_1">营销邮件</li>
+                <li name="channl" data-value="15_1">营销短信</li>
+                <li name="channl" data-value="16_1">360搜索</li>
+                <li name="channl" data-value="17_1">渠道合作-58</li>
+                <li name="channl" data-value="20_1">渠道合作-优办</li>
+                <li name="channl" data-value="21_1">渠道合作-点点租</li>
+                <li name="channl" data-value="22_1">渠道合作-梦想加</li>
+                <li name="channl" data-value="23_1">渠道合作-其他</li>
+                <li name="channl" data-value="24_1">渠道合作-汉美</li>
+                <li name="channl" data-value="25_1">平台成交</li>
+                <li name="channl" data-value="26_1">平台线索</li>
+                <!-- <li name="channl" data-value="18_1">孵化器</li> -->
+                <li name="channl" data-value="13_1">其他</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>客户座机:</th>
+          <td><input type="text" class="d_text_s" name="kehzj" id ="kehzj"/></td>
+        </tr>
+        <tr>
+          <th>客户姓名:</th>
+          <td><input type="text" class="d_text_s" name="kehname" id ="kehname"/></td>
+        </tr>
+        <tr>
+          <th>电子邮件:</th>
+          <td><input type="text" class="d_text_s" name="email" id ="email"/></td>
+        </tr>
+        <tr>
+          <th>通讯地址:</th>
+          <td><input type="text" class="d_text_s" name="tongxdz" id ="tongxdz"/></td>
+        </tr>
+        <tr>
+          <th>平台订单编号:</th>
+          <td><input type="text" class="d_text_s" name="terraceOrderId" id ="terraceOrderId"/></td>
+        </tr>
+      </table>
+    </div>
+    <div class="dd_con2">
+      <table>
+        <tr>
+          <th><span class="red_must">*</span>注册区域:</th>
+          <td colspan="3">
+            <div class="nice-select2 w_select_s range_r" name="nice-select2">
+              <input type="text" value="内资公司" id="nzgs" readonly/>
+              <input type="hidden" name="companytype" id ="companytype" value="35"/>
+             <ul id="gstype">
+               #foreach($pe in $!companytype)
+                 <li name="gongstype" data-value="$!{pe.proid}">$!{pe.proname}</li>
+               #end
+              </ul>
+            </div>
+            <div class="nice-select2 w_select_s range_r" name="nice-select2">
+              <input type="text" value="北京" name="cityId" readonly/>
+              <input type="hidden" name="citity" id ="citity" value ="1"/>
+              <ul id ="area">
+                #foreach($pe in $!firstArea)
+                    <li name="city" data-value="$!{pe.areaid}">$!{pe.name}</li>
+                #end
+               <!--  <li data-value="1">天津</li>
+                <li data-value="2">北京</li>
+                <li data-value="3">深圳</li> -->
+              </ul>
+            </div>
+            <div class="nice-select2 w_select_s" name="nice-select2">
+              <input type="text" value="朝阳区" readonly id="initarea" onclick="displayAerea();"/>
+              <input type="hidden" name="citityarea" id ="citityarea" value="101"/>
+              <ul id="cityArea">
+              <!--
+                <li data-value="1">朝阳区</li>
+                <li data-value="2">海淀区</li>
+                <li data-value="3">东城区</li>  -->
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th valign="top">商品信息:<br>(可多选)</th>
+          <td colspan="3">
+            <div class="sp_info">
+             <input type="hidden" name="selectProduct" id="selectProduct" />
+              <table>
+          #set ($i=0)
+		  #foreach($param in ${productInfos.keySet()})  
+		 <!--  <input name="product_$!{param.pid}" value="$!{param.pid}" type="hidden" />--> 
+		 #if($!{i} == '3' || $!{i} == '6')
+		    <tr id="$!{param.cityid}_$!{i}" style="border:none;">
+		 #else
+		    <tr id="$!{param.cityid}_$!{i}">
+		 #end 
+                  <td width="60">$!{param.pname}</td>
+                  <td>
+                    <div class="sp_box1">
+                      <ul>
+                      #if($param.pid =='1105')
+                      #foreach($par in ${productInfos.get($param)})
+                      #if($par.cid == '4001')
+                        <li class="sp_change1" parent ="$!{param.pid}" value="$!{par.cid}"><p>$!{par.cname}</p></li>
+                       #end
+                       #end
+                       #foreach($par in ${productInfos.get($param)})
+                      #if($par.cid == '10016')
+                        <li class="sp_change1" parent ="$!{param.pid}" value="$!{par.cid}"><p>$!{par.cname}</p></li>
+                       #end
+                      #end
+                      #else
+                      #foreach($par in ${productInfos.get($param)})
+                       #if($par.type !='changeOrder')
+                        <li class="sp_change1" parent ="$!{param.pid}" value="$!{par.cid}"><p>$!{par.cname}</p></li>
+                       #end
+                      #end
+                      #end
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                  #set($i=$i+1)
+		  #end  
+              </table>
+            </div>
+          </td>
+        </tr>
+        <tr></tr>
+        <tr>
+          <th valign="top" style="padding-top:5px">备注:</th>
+          <td colspan="3"><textarea class="d_area_l" name="beiz" id ="beiz"></textarea></td>
+        </tr>
+        <tr>
+          <th>意向度:</th>
+          <td colspan="3">
+            <div class="com_box1">
+            <input type="hidden" name="yixd" id ="yixd" value ="1"/>
+              <ul>
+                <li class="flow1_change" value="1"><p>低</p></li>
+                <li class="flow1_change" value="2"><p>中</p></li>
+                <li class="flow1_change" value="3"><p>高</p></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="clear"></div>
+    <div class="dd_btn_box">
+      <span class="dd_qr_btn" onclick="submitForm();">确认</span>
+      <span class="dd_qx_btn" onclick="reset('$!{backpage}');">取消</span>
+    </div>
+  </div><!-- 催款结束 -->
+</form>
+  <div class="his_box">
+    <p>该客户历史订单信息：</p>
+    <div class="add_box">
+      <table id="history">
+        <tr>                                                        
+          <th width="14%">历史订单编号</th>
+          <th width="14%">下单时间</th>
+          <th width="14%">商品类型</th>
+          <th width="14%">商品名称</th>
+          <th width="14%">订单金额</th>
+          <th width="14%">接待顾问</th>
+          <th width="16%">订单状态</th>
+        </tr>
+      </table>  
+    </div>
+  </div>
+
+</div>      
+
+</body>
+<script>
+function initEvent(){
+$('[name="nice-select2"]').click(function(e){
+  $('[name="nice-select2"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select2"] li').hover(function(e){
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select2"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+  $(this).parents('[name="nice-select2"]').find('input').val(val);
+  $('[name="nice-select2"] ul').hide();
+  e.stopPropagation();
+  var divide = $(this).attr("name");
+  if(divide =="channl"){
+	  var mt = dataVal.split("_");
+	  //表示客户来源
+	  $("#kehchannel").val(mt[0]);
+  }
+  if(divide == "city"){
+	  //表示注册区域 第一级
+	  $("#citity").val(dataVal);
+	  if(dataVal == '2'){
+		  $("#gstype li:eq(0)").show();
+		  $("#gstype li:eq(1)").show();
+	  }else{
+          $("#nzgs").val("内资公司");
+          $("#companytype").val("35");
+		  $("#gstype li:eq(0)").show();
+		  $("#gstype li:eq(1)").hide();
+	  }
+	  products = new Array();
+	  dyncArea(1);
+  }
+  if(divide == "area"){
+	  $("#citityarea").val(dataVal);
+  }
+  if(divide =="suosgs"){
+	  var tm  = dataVal.split("_");
+	  var buId = tm[0];
+	  var bmc = tm[1];
+	  $("#hiddissuosgs").val(buId);
+	  if(buId !="" && bmc.indexOf("的公司")==-1){
+		  $("#gongsmc").val(bmc);
+	  }else{
+		  $("#gongsmc").val("");
+	  }
+  }
+  if(divide =="gongstype"){
+	  $("#companytype").val(dataVal);
+	  var city = $("#citity").val();
+	  if(city == "2"){
+		  if(dataVal == '44'){
+			   $("#2_5").hide();
+			   $("#2_6").hide();
+		  }else{
+			  $("#2_5").show();
+			   $("#2_6").show();
+		  }
+	  }
+  }
+});
+}
+initEvent();
+
+$(document).click(function(){
+  $('[name="nice-select2"] ul').hide();
+});
+</script>
+</html>

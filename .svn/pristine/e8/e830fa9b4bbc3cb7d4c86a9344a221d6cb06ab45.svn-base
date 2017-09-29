@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+/*
+ * 查询企业库详情
+ */
+function openEnterpriseDetail(enterpriseId){
+    var url = "/webdata/openEnterpriseDetail/" + enterpriseId;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+/***
+ * 打开订单详情
+ */
+function openOrderDetil(orderid){
+    var url = "/webdata/openOrderDetil/" + orderid;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+/****
+ * 打开企业库操作纪录详情
+ */
+function openEnterpriseActionsDetail(orderid){
+    var url = "/webdata/monitor/task/detail/" + orderid;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+</script>
+</head>
+
+<body>
+<div class="user_box">
+		<!-- 订单信息 -->
+		<div class="user_list">
+		<table id="tab" class="order">
+			<tr>
+				<th>订单id</th>
+				<th>用户姓名</th>
+				<th>公司名称</th>
+				<th>客服</th>
+				<th>咨询顾问</th>
+				<th>服务顾问</th>
+				<th>当前操作人员</th>
+				<th>订单状态</th>
+				<th>支付状态</th>
+				<th>订单金额</th>
+				<th>签单时间</th>
+				<th>操作详情</th>
+			</tr>
+			#foreach($sorder in $!SorderList)
+			<tr>
+				<td><a href="javascript:void(0);" onclick="openOrderDetil('$!{sorder.orderid}')" target="_blank" >$!{sorder.orderid}</a></td>
+				<td>$!{sorder.username}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseDetail('$!{sorder.busid}')" target="_blank">$!{sorder.companyname}</a></td>
+				<td>$!{sorder.kefuname}</td>
+				<td>$!{sorder.empname}</td>
+				<td>$!{sorder.fwgwempname}</td>
+				<td>$!{sorder.currentempname}</td>
+				<td>$!{sorder.orderstateValue}</td>
+				<td>$!{sorder.paystateValue}</td>
+				<td>$!{sorder.totalmoney}</td>
+				<td>$!{sorder.signtimeValue}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseActionsDetail('$!{sorder.orderid}')" target="_blank" >详情</a></td>
+			</tr>
+			#end
+			#if(!$!SorderList)
+				<tr>
+					<td colspan="10" align="center">无数据</td>
+				</tr>
+			#end
+		</table>
+		</div>
+</div>
+</body>
+</html>

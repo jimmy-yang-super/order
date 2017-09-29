@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+#parse("views/enterprise/common/head.html")
+
+<body>
+<style>
+.edit_box .box1 div.pic_box{padding:10px 0px;}
+
+</style>
+<div class="main_box">
+    #parse("views/enterprise/common/top.html")
+    
+    <div class="main_con">
+    	<input id=enterpriseId type="hidden" value="$!{enterpriseId}" data-info="enterprise:main" />
+        #parse("views/enterprise/common/busNav.html")
+        <div class="info_box">
+            <p>小微律政秉承客户第一的服务理念，为客户提供专业贴心的服务，请您认真填写以下信息。</p>
+            <p>以下人员为企业在各部门的联系人或操作人。</p>
+        </div>
+        <div class="tab_box edit_box">
+			<div class="list1" id="enterpriseBaseInfo" >
+				<p class="tit_box">
+					<span class="title">公司基本信息</span> <span class="line"></span>
+				</p>
+				<div class="box1">
+					<p class="title">公司名称：</p>
+					<div class="con input">
+						<input type="text" class="w_text_250" id="name" placeholder="公司名称" data-validate="required:true;" value="$!{name}" data-info="enterprise:main" >
+					</div>
+					
+					<p class="title">营业执照号码：</p>
+					<div class="con input">
+						<input type="text" class="w_text_250" id="businessLicenseNum" placeholder="营业执照号码" data-validate="required:true;" value="$!{businessLicenseNum}" data-info="enterprise:main" >
+					</div>
+					
+					<p class="title">注册地址：</p>
+					<div class="con input">
+						<input type="text" class="w_text_250" id="addressFormat" placeholder="注册地址" data-validate="required:true;" value="$!{addressFormat}" data-info="enterprise:main" >
+					</div>
+					
+					<div id="localTaxRegTaskMethodDiv" >
+						<p class="title">地税报到途径：</p>
+						<div class="con input">
+							<input type="hidden" id="localTaxRegTaskMethod" placeholder="地税报到途径" data-validate="required:true;" data-select="none" value="$!{localTaxRegTaskMethodKey}" data-info="enterprise:main" />
+							<div class="nice-select" name="nice-select" >
+								<input type="text" value="请选择..." readonly />
+								<ul>
+									#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('localTaxRegTaskMethod')})
+									<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+									#end
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					
+				</div>
+				<div class="box1">
+					<p class="title">营业执照副本扫描件：</p>
+					<div class="con">
+						<table>
+							<tr>
+								<td>
+									<input type="hidden"  id="businessLicense2" value="$!{businessLicense2}" data-info="enterprise:main" />
+									<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="businessLicense2Div" >上传证件</a>
+								</td>
+							</tr>
+						</table>
+						<div id="businessLicense2Div" ></div>
+					</div>
+				</div>
+			</div>
+			<div class="list1">
+				<p class="tit_box">
+					<span class="title">公司主要人员信息</span> <span class="line"></span>
+				</p>
+				<div class="box1" id="partnerDiv" >
+					#set($legalPersonList = $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+					#if($legalPersonList.size() > 0)
+						#set($legalPerson = $legalPersonList[0])
+					#end
+	                <p class="title">法定代表人：</p>
+	                <div class="con" data-info="partnerInfo" data-roleType="legalPerson" data-relationId="$!{legalPerson.get('roleRelationId')}" >
+						<input type="hidden" id="id" value="$!{legalPerson.get('id')}" data-info="partnerInfo:main" />
+						<table class="partner" >
+							<tr>
+								<td class="first" >
+									<label>姓名：</label>
+									<input type="text" id="name" class="w_text_150" placeholder="姓名" data-validate="required:true;" value="$!{legalPerson.get('name')}" data-info="partnerInfo:main" />
+								</td>
+								<td class="second">
+									<label>联系电话：</label>
+		                    		<input type="text" id="phoneNum" class="w_text_150" placeholder="联系电话" data-validate="required:true;telPhone:true;" value="$!{legalPerson.get('phoneNum')}" data-info="partnerInfo:main" />
+								</td>
+							</tr>
+							<tr>
+								<td class="first" >
+				                    <label>身份证号码：</label>
+				                    <input type="text" id="idNum" class="w_text_150" placeholder="身份证号码" data-validate="required:true;identity:true;" value="$!{legalPerson.get('idNum')}" data-info="partnerInfo:main" />
+								</td>
+								<td class="second">
+								</td>
+							</tr>
+						</table>
+						<input type="hidden" id="idPicIds" value="$!{legalPerson.get('idPicIds')}" placeholder="法定代表人身份证扫描件" data-validate="required:true;" data-info="partnerInfo:main" />
+						<a class="btn" style="margin-top: 50px;" name="fileupload_btn" href="javascript:void(0);" data-display="legalPersonPersonDisplay" ></a>
+						<div id="legalPersonPersonDisplay" style="height: 80px;"></div>
+	                </div>
+					
+					#set($financeList = $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'finance')})
+					#if($financeList.size() > 0)
+						#set($finance = $financeList[0])
+					#end
+	                <p class="title">财务负责人：</p>
+	                <div class="con" data-info="partnerInfo" data-roleType="finance" data-relationId="$!{finance.get('roleRelationId')}" >
+						<input type="hidden" id="id" value="$!{finance.get('id')}" data-info="partnerInfo:main" />
+						<table class="partner" >
+							<tr>
+								<td class="first" >
+									<label>姓名：</label>
+									<input type="text" id="name" class="w_text_150" placeholder="姓名" data-validate="required:true;" value="$!{finance.get('name')}" data-info="partnerInfo:main" />
+								</td>
+								<td class="second">
+									<label>联系电话：</label>
+		                    		<input type="text" id="phoneNum" class="w_text_150" placeholder="联系电话" data-validate="required:true;telPhone:true;" value="$!{finance.get('phoneNum')}" data-info="partnerInfo:main" />
+								</td>
+							</tr>
+							<tr>
+								<td class="first" >
+				                    <label>身份证号码：</label>
+				                    <input type="text" id="idNum" class="w_text_150" placeholder="身份证号码" data-validate="required:true;identity:true;" value="$!{finance.get('idNum')}" data-info="partnerInfo:main" />
+								</td>
+								<td class="second">
+								</td>
+							</tr>
+						</table>
+						<input type="hidden" id="idPicIds" value="$!{finance.get('idPicIds')}" placeholder="财务负责人身份证扫描件" data-validate="required:true;" data-info="partnerInfo:main" />
+						<a class="btn" style="margin-top: 50px;" name="fileupload_btn" data-display="financePersonDisplay" href="javascript:void(0);" ></a>
+						<div id="financePersonDisplay" style="height: 80px;"></div>
+	                </div>
+				</div>
+			</div>
+		</div>
+    </div>
+    
+   	<!-- 保存弹出框 -->
+	 #parse("views/enterprise/common/alertConfirm.html")
+	<!-- 弹出框 -->
+</div>
+#parse("views/enterprise/common/swfupload.html")
+#parse("views/enterprise/common/foot.html")
+<script type="text/javascript" src="/js/enterprise/guoDiTax.js"></script>
+</body>
+</html>

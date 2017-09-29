@@ -1,0 +1,136 @@
+<!-- 国税报到材料归档 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+				
+				<th >地址合作商：</th>
+				<td >$!{addressPartner}</td>
+			</tr>
+			<tr>
+				<th >档案位置编号：</th>
+				<td >$!{createArchiveID}</td>
+				
+				<th ></th>
+				<td ></td>
+			</tr>
+			<tr>
+				<th >存档人：</th>
+				<td >$!{WFUtils.getAssgineeByProcessInstanceIdAndTaskDefId($taskInfo.getProcessInstanceId(), 'NationalTaxInfo')}</td>
+				<th >存档内容：</th>
+				<td >营业执照副本原件、三方协议、银行开户许可证</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		
+		var div1Id = "createArchiveDiv";
+		/****确认建档*****************************/
+		// 点击 - 确认建档
+		$(".b1").click(function() {
+			
+			WF.showDiv(div1Id);
+		});
+			
+		// 确认建档 - 取消
+		$("#" + div1Id + " .cancel").click(function() {
+			WF.closeDiv(div1Id);
+		});
+		
+		// 确认建档 - 确定
+		$("#" + div1Id + " .ok").click(function() {
+			if(!WF.validate(div1Id)){
+				return;
+			}
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			// 更新企业库
+			WF.updateCompanyInfo(div1Id, "", "1004");
+			
+			// 调用流程接口
+			WF.submitTask(div1Id, "&nationalTaxInfoDataStatus=2");
+			
+			WF.taskFinish();
+		});
+		
+		var createArchiveID = "$!{createArchiveID}";
+		if(createArchiveID != undefined && createArchiveID != ""){
+			var paiArray = createArchiveID.split("P");
+			if(paiArray.length > 0){
+				$("#createArchivePai").val(paiArray[0]);
+			}
+			if(paiArray.length == 2){
+				var guiArray = paiArray[1].split("G");
+				if(guiArray.length == 2){
+					$("#createArchiveGui").val(guiArray[0]);
+					$("#createArchiveHao").val(guiArray[1]);
+				}
+			}
+		}
+		
+		$("#createArchiveDiv").find("input[name='inputInfoOther']").keyup(function(){
+			var pai = $("#createArchivePai").val();
+			var gui = $("#createArchiveGui").val();
+			var hao = $("#createArchiveHao").val();
+			$("#createArchiveID").val(pai + "P" + gui + "G" + hao);
+		});
+	});
+</script>
+<!-- 弹出框 - 确认建档 -->
+<div id="createArchiveDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">确认建档</p>
+		<table class="t1">
+			<tr>
+				<th>排：</th>
+				<td><input id="createArchivePai" name="inputInfoOther" type="text" data-validate="number" /></td>
+			</tr>
+			<tr>
+				<th>柜：</th>
+				<td><input id="createArchiveGui" name="inputInfoOther" type="text" data-validate="number" /></td>
+			</tr>
+			<tr>
+				<th>号：</th>
+				<td><input id="createArchiveHao" name="inputInfoOther" type="text" data-validate="number" /></td>
+			</tr>
+			<tr>
+				<th>档案位置编号：</th>
+				<td><input id="createArchiveID" type="text" name="inputInfoAll" value="$!{createArchiveID}" disabled="disabled" /></td>
+			</tr>
+			<tr>
+				<th>营业执照副本：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" id="businessLicense2" name="inputInfoAll" data-info="inputInfoCompanyAttach" value="$!{businessLicense2}" />
+					<input id="fileupload" type="file" fileId="businessLicense2" name="fileupload" multiple />
+				</td>
+			</tr>
+			<tr>
+				<th>章程：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" id="constitutionFile" name="inputInfoAll" data-info="inputInfoCompanyAttach" value="$!{constitutionFile}" />
+					<input id="fileupload" type="file" fileId="constitutionFile" name="fileupload" multiple />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

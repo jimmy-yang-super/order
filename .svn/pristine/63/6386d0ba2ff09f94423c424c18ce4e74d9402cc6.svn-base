@@ -1,0 +1,61 @@
+<!-- 孵化器地税报到材料准备 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+				
+				<th >地址合作商：</th>
+				<td >$!{addressPartner}</td>
+			</tr>
+			<tr>
+				<th >营业执照副本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{businessLicense2}" /></td>
+				<th >章程：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${constitutionFile}" /></td>
+			</tr>
+			<tr>
+				
+				#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{legalPerson.get('idPicIds')}"  /></td>
+				#end
+
+				#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'finance')})
+				<th >财务负责人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{legalPerson.get('idPicIds')}"  /></td>
+				#end
+			</tr>
+			
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/**** 完成 *****************************/
+		// 点击 - 完成
+		$(".b1").click(function() {
+			
+			var localTaxFuHuaQiDataStatus = WF.getVariableByName("localTaxFuHuaQiDataStatus")
+			if(localTaxFuHuaQiDataStatus != "1"){
+				alert("档案组未确认相关材料已提取，请到档案组提取");
+				return;
+			}
+			
+			WF.submitTask();
+			WF.taskFinish();
+		});
+	});
+</script>

@@ -1,0 +1,53 @@
+<!-- 工商设立材料提取 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >产权主体：</th>
+				<td >$!{chanQuanType}</td>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+			</tr>
+			<tr>
+				<th >申请方式：</th>
+				<td >$!{applyMethod}</td>
+				<th >档案位置编号：</th>
+				<td >$!{createArchiveID}</td>
+			</tr>
+			<tr>
+				<th >提档人：</th>
+				<td >$!{WFUtils.getAssgineeByProcessInstanceIdAndTaskDefId($taskInfo.getProcessInstanceId(), "SecondCollationData")}</td>
+				<th >提取内容：</th>
+				<td >委托（委托书／指定委托书 、指派函 、注册证、小微律政营业执照）；
+					自有地址（个人／单位房屋产权证复印件、住所证明）；
+					执照（设立登记申请书、章程 、企业联系人登记表、补充信息登记表 、法人及全体股东身份复印件）、多证（企业多证联办申请表、多证联办委托书 、代理人身份证复印件 、法人身份复印件2份、章程）
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">确认提取</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/**** 确认存放 *****************************/
+		// 点击 - 确认存放
+		$(".b1").click(function() {
+			
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			// 调用流程接口
+			WF.submitTask("111", "&CollationDataStatus=1&CollationDataPickdeleteAction=2");
+			WF.taskFinish();
+		});
+	});
+</script>

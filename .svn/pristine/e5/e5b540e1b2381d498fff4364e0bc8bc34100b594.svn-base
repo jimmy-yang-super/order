@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css">
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/js/tree.js"></script>
+<script src="/js/jquery.tabs.js"></script>
+<script type="text/javascript">
+var taskId = "$!{taskInfo.getId()}";
+var enterpriseId = "$!{enterpriseId}";
+var orderId = "$!{orderid}";
+var procInstId = "$!{taskInfo.getProcessInstanceId()}";
+	$(document).ready(function($) {
+		//默认选项卡切换
+		$("#normaltab").tabso({
+			cntSelect : "#normalcon",
+			tabEvent : "click",
+			tabStyle : "normal"
+		});
+
+		$(document).ready(function() {
+			$(".tab_con").hide();
+			$("ul.tabs_s div:first").addClass("active").show();
+			$(".tab_con:first").show();
+			$("ul.tabs_s div").click(function() {
+				$("ul.tabs_s div").removeClass("active");
+				$(this).addClass("active");
+				$(".tab_con").hide();
+				var activeTab = $(this).find("a").attr("href");
+				$(activeTab).fadeIn();
+				return false;
+			});
+		});
+
+		$(function() {
+			//设置奇数行背景色
+			$(".tab_gw tr:odd").find("td").addClass("gw_odd");
+			//设置偶数行背景色
+			$(".tab_gw tr:even").find("td").addClass("gw_even");
+			// 鼠标移到的颜色
+			$(".tab_gw tr").mouseover(function() {
+				$(this).find("td").addClass("gw_mouse");
+			});
+			// 鼠标移出的颜色
+			$(".tab_gw tr").mouseout(function() {
+				$(this).find("td").removeClass("gw_mouse");
+			});
+		});
+
+	});
+</script>
+
+</head>
+
+<body>
+
+	<div class="gw_box">
+		<div class="gw_left">
+
+			<div class="dd_box2">
+				<div class="container">
+					<ul class="tabs_s">
+					
+						#set($lvProcInstIndex = 1)
+						#foreach($lvProcInst in $rocessMonitorDetailVOList)
+						
+						<div #if($lvProcInstIndex == 1) class="active" #end >
+							<a href="#tab$lvProcInstIndex">$!{lvProcInst.getProcessDefinitionName()}</a>
+						</div>
+						#set($lvProcInstIndex = $lvProcInstIndex + 1)
+						#end
+					</ul>
+					<div class="clear"></div>
+					<div class="tab_container">
+					#set($lvProcInstIndex = 1)
+					#foreach($lvProcInst in $rocessMonitorDetailVOList)
+						<div id="tab$!{lvProcInstIndex}" class="tab_con" style="display: block;">
+							<div class="gw_l_box">
+								
+								#foreach($curTask in $!{lvProcInst.getCurrentTaskList()})
+								<p class="title">当前执行的任务：$!{curTask.getName()}</p>
+								<div class="tab_box">
+									<table>
+										<tr>
+											<th width="70px">任务描述：</th>
+											<td width="260px">$!{curTask.getDescription()}</td>
+											<th width="70px">服务编号：</th>
+											<td width="100px">$!{curTask.getProcessInstanceId()}</td>
+										</tr>
+										<tr>
+											<th>责任人：</th>
+											<td>$!{curTask.getAssignee()}</td>
+											<th>任务状态：</th>
+											<td>$!{curTask.getProcessSuspensionState()}</td>
+										</tr>
+									</table>
+								</div>
+								#end
+							
+							</div>
+
+							<div class="tab_gw">
+								<p class="title">流程记录</p>
+								<table>
+									<tr>
+										<th width="10%">序号</th>
+										<th width="15%">时间</th>
+										<th width="25%">任务</th>
+										<th width="10%">操作人</th>
+										<th width="10%">操作</th>
+									</tr>
+									#set($hisTaskIndex = 1)
+									#foreach($hisTask in $!{lvProcInst.getHisTaskList()})
+									<tr>
+										<td>$hisTaskIndex</td>
+										<td>$!{simpleDateFormat.format($hisTask.getEndTime())}</td>
+										<td>$!{hisTask.getName()}</td>
+										<td>$!{hisTask.getAssignee()}</td>
+										<td>$!{hisTask.getTaskAction()}</td>
+									</tr>
+									#set($hisTaskIndex = $hisTaskIndex + 1)
+									#end
+								</table>
+							</div>
+						</div>
+					#set($lvProcInstIndex = $lvProcInstIndex + 1)
+					#end
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+		<div class="gw_right">
+			<div class="gw_r_box">
+				<!-- 企业信息 -->
+				 #parse("views/wf/common/company-info.html")
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="/js/wf/task-detail.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".b1").click(function(){
+		var processId = $(this).attr("data-processId");
+		if($(this).text() == "暂停"){
+			// 暂定流程
+			WF.suspendProcess(processId);
+		}else{
+			// 激活流程
+			WF.activateProcess(processId);
+		}
+		window.location.reload();
+	});
+	
+/* 	$(".b2").click(function(e){
+		var processId = $(this).attr("data-processId");
+		$("<div style='background-'>", { id: "taskInfoFade" }).html("<img id='i2' src='/wf/process/pic/" + processId + "' />")
+    	.css({ "position": "absolute","background-color":"silver", "left": e.pageX/2, "top": e.pageY/2 }).fadeIn()
+    	.click(function(e) {
+            $(this).fadeOut(); 
+            $(this).parent("#taskInfoFade").remove();
+            e.stopPropagation();
+        }).appendTo("body");
+    	e.stopPropagation();
+	}); */
+});
+</script>
+</html>

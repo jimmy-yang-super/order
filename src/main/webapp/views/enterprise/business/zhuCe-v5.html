@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+#parse("views/enterprise/common/head.html")
+
+</head>
+
+<body>
+	<div class="main_box">
+		#parse("views/enterprise/common/top.html")
+		
+		<div class="main_con">
+			#parse("views/enterprise/common/busNav.html")
+			<div class="info_box">
+				<p>小微律政秉承客户第一的服务理念，为客户提供专业贴心的服务，请您认真填写以下信息。</p>
+				<p>公司名称信息填写后，服务顾问会进行审核并与您确认，然后会为你的公司进行企业名称核准服务。</p>
+				<p>企业名称的核准，最终以工商局核准的结果为准，审核周期通常3-5个工作日</p>
+			</div>
+			<div class="edit_box">
+				<div class="box1" >
+	                <p class="title"></p>
+	                <div class="con">
+	                    <div class="btn_box" style="width: 630px;" >
+	                        <a class="btn" href="javascript:void(0);" onclick="addPersonPartner();">添加自然人股东</a>
+	                        <a class="btn" href="javascript:void(0);" onclick="addComPartner();">添加单位股东</a>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="box1" id="partnerDiv">
+				#foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+				<div class="box1">
+					<p class="title">自然人股东：</p>
+					<div class="con" data-info="partnerInfo" data-roleType="naturalPartner" data-relationId="$!{naturalPartner.get('roleRelationId')}"  >
+						<div class="show_box">
+							<div class="show" style="width:750px;">
+								<input type="hidden" id="id" value="$!{naturalPartner.get('id')}" data-info="partnerInfo:main" />
+								<label>姓名：</label>
+								<input type="text" class="w_text_100" placeholder="姓名" data-validate="required:true;" id="name" data-info="partnerInfo:main" value="$!{naturalPartner.get('name')}">
+								<label>联系电话：</label>
+                    			<input type="text" id="phoneNum" class="w_text_100" placeholder="联系电话" data-validate="mobilePhone:true;required:false;" value="$!{naturalPartner.get('phoneNum')}" data-info="partnerInfo:main" />
+								<label>身份证号：</label>
+								<input type="text" class="w_text_150" placeholder="身份证号" data-validate="identity:true;required:true;" id="idNum" name="idNum"  data-info="partnerInfo:main" value="$!{naturalPartner.get('idNum')}">
+								<label>出资日期：</label>
+								<input type="text" class="w_text_100" placeholder="出资日期" data-validate="required:true;" id="capitalDate" data-info="partnerInfo:ext" value="$!{naturalPartner.get('capitalDate')}">
+								<label>出资额，万元：</label>
+								<input type="text" class="w_text_100" placeholder="出资额，万元" data-validate="required:true;number:true;" id="capitalSize" name="capitalSize" value="$!{naturalPartner.get('capitalSize')}" data-info="partnerInfo:ext" >
+							</div>
+							<input type="hidden" id="idPicIds" value="$!{naturalPartner.get('idPicIds')}" placeholder="自然人股东身份证扫描件" data-validate="required:true;" data-info="partnerInfo:main" />
+							<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="$!{naturalPartner.get('id')}" ></a>
+							<span class="t3">
+								<div class="cue_ceng3">
+									<i class="angle2"><s></s></i>
+									<ul>
+										<li>
+											<p class="pic"><img src="/images/enterprise/upload/show_id.jpg"></p>
+											<p>身份证扫描件</p>
+										</li>
+									</ul>
+								</div>
+							</span>
+							<div id="$!{naturalPartner.get('id')}" ></div>
+						</div>
+					</div>
+				</div>
+				#end
+				</div>
+				<div class="box1" id="partnerDiv1" >
+				#foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+				<div class="box1">
+					<p class="title">单位股东：</p>
+					<div class="con" data-info="partnerInfo" data-roleType="legalPartner" data-relationId="$!{legalPartner.get('roleRelationId')}" >
+						<div class="show_box">
+							<div class="show" style="margin-bottom: 10px;" >
+								<input type="hidden" id="enterpriseId" value="$!{legalPartner.get('enterpriseId')}" data-info="partnerInfo:main" />
+								<label>法定代表人：</label>
+								<input type="text" class="w_text_100" placeholder="法定代表人" data-validate="required:true;"  id="legalPerson"  data-info="partnerInfo:ext" value="$!{legalPartner.get('legalPerson')}"/>
+								<label>公司名称：</label>
+								<input type="text" class="w_text_130" placeholder="公司名称" data-validate="required:true;"  id="name"  data-info="partnerInfo:main" value="$!{legalPartner.get('name')}"/>
+								<label>营业执照号码：</label>
+								<input type="text" class="w_text_100" placeholder="营业执照号码" data-validate="required:true;number:true;"  id="businessLicenseNum" data-info="partnerInfo:main" value="$!{legalPartner.get('businessLicenseNum')}"/>
+								<label>出资额，万元：</label>
+								<input type="text" class="w_text_100" placeholder="出资额,万元" data-validate="required:true;number:true;"  id="capitalSize" name="capitalSize" value="$!{legalPartner.get('capitalSize')}" data-info="partnerInfo:ext" />
+							</div>
+							<input type="hidden" id=businessLicense2 value="$!{legalPartner.get('businessLicense2')}" placeholder="单位股东营业执照副本扫描件" data-validate="required:true;" data-info="partnerInfo:main" />
+							<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="$!{legalPartner.get('id')}"  ></a>
+							<div id="$!{legalPartner.get('id')}" ></div>
+						</div>
+					</div>
+				</div>
+				#end
+				</div>
+				<div class="box1">
+					<p class="title">注册资本：</p>
+					<div class="con">
+						<input type="hidden" id="regCapital" value="$!{regCapital}" data-info="enterprise:main" />
+						<span class="red_num">#if($regCapital) $!{regCapital} #else 0 #end</span> 万元
+					</div>
+				</div>
+				
+				<div class="box1">
+					<p class="title">公司注册地址：</p>
+					<div class="con">
+						<p class="check_name">
+							<input type="hidden" id="addressType" value="$!{addressTypeKey}" data-info="enterprise:main" />
+							<span>
+								<input type="radio" name="addressTypeRadio" id="addressTypeRadio1" value="1" ><label>使用孵化器地址</label>
+							</span> 
+							<span>
+								<input type="radio" name="addressTypeRadio" id="addressTypeRadio2" value="2" ><label>使用自有地址</label>
+							</span>
+						</p>
+
+						<div class="cbox" id="addressType1Div">
+							<span class="remark">*小微律政会提供安全可靠的孵化器地址，为您注册公司所用，该地址为虚拟地址，不可用作实际办公</span>
+		                    <div class="blue_bg" id="addressInfo" style="background:none;" >
+		                        <table>
+		                        	<tr>
+										<td style="width: 600px" >
+											<label>实际办公地址：</label>
+											<input type="text" style="width: 400px;" class="w_text_350" id="officeAddress" value="$!{officeAddress}" placeholder="实际办公地址" data-validate="required:true;" data-info="enterprise:main" >
+										</td>
+									</tr>
+								</table>
+								<!-- 当AE访问时，显示如下信息 -->
+								#set($addressInfo = $!{EnterpriseUtils.getAddressDataByEnterpriseId("$!{enterpriseId}")})
+								#if($!{sourceType} == "AE" || $!{sourceType} == "WF")
+<!-- 								<table>
+									<tr>
+										<th>实际办公地址楼宇建筑照片：</th>
+										<td>
+											<input type="hidden"  id="officeAddressBuildingPic" placeholder="实际办公地址楼宇照片" value="$!{officeAddressBuildingPic}" data-info="enterprise:main" />
+											<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="officeAddressBuildingPicDiv" >上传证件</a>
+										</td>
+									</tr>
+								</table>
+								<div id="officeAddressBuildingPicDiv" ></div>
+								<table>
+									<tr>
+										<th>实际办公地址楼宇门牌照片：</th>
+										<td>
+											<input type="hidden" id="officeAddressDoorPic" placeholder="实际办公地址楼宇门牌照片" value="$!{officeAddressDoorPic}" data-info="enterprise:main" />
+											<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="officeAddressDoorPicDiv" >上传证件</a>
+										</td>
+									</tr>
+								</table>
+								<div id="officeAddressDoorPicDiv" ></div>
+								<table>
+									<tr>
+										<th>实际办公地址楼宇室内照片：</th>
+										<td>
+											<input type="hidden" id="officeAddressBuildingInteriorPic" placeholder="实际办公地址楼宇室内照片" value="$!{officeAddressBuildingInteriorPic}" data-info="enterprise:main" />
+											<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="officeAddressBuildingInteriorPicDiv" >上传证件</a>
+										</td>
+									</tr>
+								</table>
+								<div id="officeAddressBuildingInteriorPicDiv" ></div> -->
+
+								<table style="background: #f2f7fa; padding:20px;" >
+		                            <tr>
+		                                <td style="width: 450px;">
+		                                    <label>地址合作商：</label>
+		                                    <input id="addressPartnerCode" type="hidden" value="$!{addressInfo.get("addressPartnerCode")}" placeholder="地址合作商" data-validate="required:true;" data-select="none" data-info="addressInfo:main" />
+											<div class="nice-select" style="width: 250px;" name="nice-select">
+												<input type="text" style="width: 250px;" value="请选择..." readonly>
+												<ul>
+													#set($addressPartnerMap = $!{DicUtils.getAddressPartner()})
+													#foreach($addressPartnerKey in $!{addressPartnerMap.keySet()})
+													<li data-value="$!{addressPartnerKey}">$!{addressPartnerMap.get("$!{addressPartnerKey}")}</li>
+													#end
+												</ul>
+											</div>
+		                                </td>
+		                                
+		                                <td width="240px">
+		                                    <label>地址区域：</label>
+											<input id="addressTemplateId" type="hidden" value="$!{addressInfo.get("id")}" placeholder="地址区域" data-validate="required:true;" data-select="none" data-info="addressInfo:main" />
+		                                    <div class="nice-select" style="width: 120px;" name="nice-select">
+						                        <input type="text" value="请选择..." readonly>
+						                        <ul></ul>
+		                                    </div>
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td>产权主体：<span id="chanQuanType" ></span> </td>
+		                                <td>邮编：<span id="zipCode" ></span></td>
+		                            </tr>
+
+		                            <tr>
+		                                <td>房屋规划用途：<span id="planApp" ></span> </td>
+		                                <td colspan="2">住所获取方式：<span id="getWay" ></span></td>
+		                            </tr>
+		                            <tr>
+		                                <td>面积：<span id="useArea" ></span>平米  </td>
+		                                <td colspan="2">住所使用期限：<span id="useAge" ></span>年</td>
+		                            </tr>
+		                            <tr>
+		                                <td colspan="3">代理地址：<span id="addressFormat" ></span></td>
+		                            </tr>
+		                            <tr>
+		                                <td colspan="3">所属街乡：<span id="theStreets" ></span></td>
+		                            </tr>
+		                            <tr>
+		                                <td colspan="3">出租方计算机代码/出租方身份证号：<span id="theOwnerCode" ></span> </td>
+		                            </tr>
+		                            <tr>
+		                                <td colspan="1">产权人/产权单位：<span id="theOwnerName" ></span></td>
+		                            </tr>
+		                        </table>
+		                        #end
+		                        
+		                    </div>
+				            
+						</div>
+						<div class="cbox" id="addressType2Div">
+							<div class="cue_box">
+								<span class="t1">请上传您的房本图片，您将要上传的图片有：房屋平面图、房屋登记表、首页。请参考小微为您提供的示例图片。</span>
+								<span class="t2">
+									<div class="cue_ceng2">
+										<i class="angle2"><s></s></i>
+										<ul>
+											<li>
+												<p class="pic"><img src="/images/enterprise/upload/s1.png"></p>
+												<p>房屋登记表</p>
+											</li>
+											<li>
+												<p class="pic"> <img src="/images/enterprise/upload/s2.png"></p>
+												<p>首页</p>
+											</li>
+											<li>
+												<p class="pic"><img src="/images/enterprise/upload/s3.png"></p>
+												<p>房屋平面图</p>
+											</li>
+										</ul>
+									</div>
+								</span>
+							</div>
+				                           
+							<div class="e_info e_info1" >
+								<table>
+									<tr>
+										<th>请上传您的房产证：</th>
+										<td>
+											<input type="hidden" id="houseRights" placeholder="房产证扫描件" data-validate="required:true;" value="$!{houseRights}" data-info="enterprise:main" />
+											<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="houseRightsDisplay"  >上传证件</a>
+											<span class="remark">*最好上传清晰扫描件</span>
+										</td>
+									</tr>
+								</table>
+								<div id="houseRightsDisplay" ></div>
+							</div>
+							
+							
+							#if($!{sourceType} == "AE" || $!{sourceType} == "WF")
+							<!-- 当AE访问时，显示如下信息 -->
+							<div class="box1">
+				                <p class="title">&nbsp;</p>
+				                <div class="con">
+				                    <div class="blue_bg2" style="width: 730px;" id="addressInfo" >
+				                        <table>
+				                            <tr>
+				                            	<td>
+				                            		<label class="title" >地址：</label>
+				                            		<input type="text" class="w_text_180" id="addressFormat" placeholder="地址" value="$!{addressInfo.get("addressFormat")}" data-validate="required:true;" data-info="addressInfo:main" />
+				                            	</td>
+				                                <td >
+				                            		<label class="title" >所属街乡：</label>
+				                            		<input type="text" class="w_text_180" id="theStreets" placeholder="所属街乡" value="$!{addressInfo.get("theStreets")}" data-info="addressInfo:main" />
+				                            	</td>
+				                            </tr>
+				                            <tr>
+												<td>
+				                            		<label class="title" >邮政编码：</label>
+				                            		<input type="text" class="w_text_180" id="zipCode" placeholder="邮政编码" value="$!{addressInfo.get("zipCode")}" data-validate="required:false;number:true;" data-info="addressInfo:main" />
+				                            	</td>
+				                                <td>
+				                                    <label class="title" >产权主体：</label>
+				                                    <input id="chanQuanType" type="hidden" value="$!{addressInfo.get("chanQuanTypeKey")}" placeholder="产权主体" data-validate="required:true;" data-select="none" data-info="addressInfo:main" />
+													<div class="nice-select" name="nice-select">
+														<input type="text" value="请选择..." readonly />
+														<ul>
+															#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('chanQuanType')})
+															<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+															#end
+														</ul>
+													</div>
+				                                </td>
+
+				                            </tr>
+			                            	<tr>
+			                            		<td>
+				                            		<label class="title" >产权人/产权单位：</label>
+				                            		<input type="text" class="w_text_180" id="theOwnerName" value="$!{addressInfo.get("theOwnerName")}" placeholder="产权人/产权单位" data-validate="required:true;" data-info="addressInfo:main" />
+				                            	</td>
+				                            	<td>
+				                            		<label class="title">计算机代码/身份证号：</label>
+				                            		<input type="text" class="w_text_180" id="theOwnerCode" value="$!{addressInfo.get("theOwnerCode")}" placeholder="计算机代码/身份证号" data-info="addressInfo:main" />
+				                            	</td>
+				                            </tr>
+				                            <tr>
+				                                <td>
+				                                    <label class="title" >房屋规划用途：</label>
+				                                    <input id="planApp" type="hidden" value="$!{addressInfo.get("planAppKey")}" placeholder="房屋规划用途" data-validate="required:true;" data-select="none" data-info="addressInfo:main" />
+													<div class="nice-select" name="nice-select">
+														<input type="text" value="请选择..." readonly />
+														<ul>
+															#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('planApp')})
+															<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+															#end
+														</ul>
+													</div>
+				                                </td>
+				                                <td>
+				                                    <label class="title" >住所获取方式：</label>
+				                                    <input id="getWay" type="hidden" value="$!{addressInfo.get("getWayKey")}" placeholder="住所获取方式" data-validate="required:true;" data-select="none" data-info="addressInfo:main" />
+													<div class="nice-select" name="nice-select">
+														<input type="text" value="请选择..." readonly />
+														<ul>
+															#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('getWay')})
+															<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+															#end
+														</ul>
+													</div>
+				                                </td>
+				                            </tr>
+			                            	<tr>
+				                            	<td>
+				                            		<label class="title" >租赁/使用年限：</label>
+				                            		<input type="text" class="w_text_180" style="width: 100px;" id="useAge" value="$!{addressInfo.get("useAge")}" placeholder="租赁/使用年限" data-validate="required:false;number:true;" data-info="addressInfo:main" />
+				                            		（年）
+				                            	</td>
+				                                <td >
+				                            		<label class="title" >租赁/使用面积：</label>
+				                            		<input type="text" class="w_text_180" style="width: 100px;" id="useArea" value="$!{addressInfo.get("useArea")}" placeholder="租赁/使用面积" data-validate="required:true;number:true;" data-info="addressInfo:main" />
+				                            		（平米）
+				                            	</td>
+				                            </tr>
+										</table> 
+									</div>
+								</div>
+							</div>
+							#end
+							
+						</div>
+					</div>
+				</div>
+				
+				<div class="editInfo" >
+					<div class="box1" >
+						<p class="title">快递地址：</p>
+						<div class="con input">
+							<input type="text" class="w_text_250" id="addresseeAddress" value="$!{addresseeAddress}" placeholder="快递地址" data-validate="required:false;" data-info="enterprise:main" />
+						</div>
+	
+						<p class="title">收件人姓名：</p>
+						<div class="con input">
+							<input type="text" class="w_text_250" id="addressee" value="$!{addressee}" placeholder="收件人" data-info="enterprise:main" />
+						</div>
+					</div>
+					<div class="box1">
+						<p class="title">收件人联系电话：</p>
+						<div class="con input">
+							<input type="text" class="w_text_250" id="addresseeContactNumber" value="$!{addresseeContactNumber}" placeholder="联系电话" data-validate="required:false;telPhone:true;" data-info="enterprise:main" />
+						</div>
+	
+						<p class="title">电子邮箱：</p>
+						<div class="con input">
+							<input type="text" class="w_text_250" id="addresseeEmail" value="$!{addresseeEmail}" placeholder="邮箱" data-validate="required:true;email:true;" data-info="enterprise:main" />
+							<span style="color:red;">*</span>
+						</div>
+					</div>
+					<div class="box1">
+						<p class="title">企业固定电话：</p>
+						<div class="con input">
+							<input type="text" class="w_text_250" id="fixedPhone" value="$!{fixedPhone}" placeholder="固定电话" data-validate="required:true;landlindPhone:true;" data-info="enterprise:main" />
+							<span style="color:red;">*</span>
+						</div>
+	
+						<p class="title">邮政编码：</p>
+						<div class="con input">
+							<!--  -->
+							<input type="text" class="w_text_250" id="zipCode" value="$!{zipCode}" placeholder="邮政编码"data-validate="required:false;number:true;" data-info="enterprise:main" />
+						</div>
+					</div>
+					#if($!{sourceType} == "AE" || $!{sourceType} == "WF")
+					<!-- 当AE访问时，显示如下信息 -->
+					<div class="box1">
+						<p class="title">申请方式：</p>
+						<div class="con input">
+							<input id="applyMethod" type="hidden" value="$!{applyMethodKey}" placeholder="申请方式" data-validate="required:true;" data-select="none" data-info="enterprise:main" />
+							<div class="nice-select" name="nice-select" >
+								<input type="text" value="请选择..." readonly />
+								<ul>
+									#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('applyMethod')})
+									<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+									#end
+								</ul>
+							</div><span style="color:red;">*</span>
+						</div>
+					</div>
+					#end
+					
+					
+					<div class="box1">
+						<p class="title">经营范围：</p>
+						<div class="con">
+							<p class="check_name">
+								请根据您希望经营的方向，选择合适的经营范围，经营范围的核定政策时有改变，最终核定结果以登记机关核定为准</p>
+							<div class="box3">
+								<div class="search_box">
+									<span>请查找您想要的经营范围：</span> <a href="javascript:void(0);" id="operatingRangeSelectBtn" class="cx_btn pop_box1">查询</a>
+								</div>
+								<table>
+									<tr>
+										<th rowspan="2">已选：</th>
+										<td>
+											<textarea id="operatingRange" placeholder="经营范围" data-validate="required:true;" data-info="enterprise:main" >$!{operatingRange}</textarea>
+										</td>
+									</tr>
+								</table>
+							</div><span style="color:red;">*</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab_box edit_box">
+				#parse("views/enterprise/common/mainPersonSelect-v5.html")
+			</div>
+		</div>
+
+
+
+
+		<!-- 经营范围查询弹出框 -->
+		#parse("views/enterprise/common/businessAreaSelect.html")
+		<!-- 弹出框 -->
+		#parse("views/enterprise/common/alertSelectPerson.html")
+
+		<!-- 保存弹出框 -->
+		 #parse("views/enterprise/common/alertConfirm.html")
+		<!-- 弹出框 -->
+	</div>
+#parse("views/enterprise/common/swfupload.html")
+
+#parse("views/enterprise/common/foot.html")
+<script type="text/javascript" src="/js/enterprise/zhuCeV5.js"></script>
+</body>
+</html>

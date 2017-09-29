@@ -1,0 +1,55 @@
+
+<!-- 工商设立信息采集 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>订单号：</th>
+				<td>$!{taskOrderId}</td>
+				<th>咨询顾问：</th>
+				<td>$!{taskInitiator}</td>
+			</tr>
+			#if($wangDengTuiHuiReason && $!{wangDengTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "SubmitInternetApply")
+			<tr>
+				<th>网登退回原因：</th>
+				<td>$!{wangDengTuiHuiReason}</td>
+				<th>网登退回描述：</th>
+				<td>$!{wangDengTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($fuHuaQiShenQingTuiHuiReason && $!{fuHuaQiShenQingTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "FuHuaQiAddressApply")
+			<tr>
+				<th>孵化器地址申请退回原因：</th>
+				<td>$!{fuHuaQiShenQingTuiHuiReason}</td>
+				<th>孵化器地址申请退回描述：</th>
+				<td>$!{fuHuaQiShenQingTuiHuiRemark}</td>
+			</tr>
+			#end
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完善企业库信息</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	
+	// 点击完成
+	$(".b1").click(function(){
+		// 调用流程接口
+		var url = "/enterprise/emp/edit/zhuCe-v5?orderId=" + orderId + "&sourceType=2&morePage=false";
+	    window.open(url,'','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ', top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+	});
+});
+
+</script>

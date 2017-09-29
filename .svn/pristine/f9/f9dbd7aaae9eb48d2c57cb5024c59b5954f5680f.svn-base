@@ -1,0 +1,23 @@
+
+#################################################################
+
+log4j.rootLogger=INFO,FILE
+
+#CONSOLE
+#log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+#log4j.appender.CONSOLE.Threshold=INFO
+#log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+#log4j.appender.CONSOLE.layout.ConversionPattern=[%p] %d{yyyy-MM-dd HH:mm:ss S} - %m | %l%n
+ 
+#FILE
+log4j.appender.FILE=org.apache.log4j.RollingFileAppender
+log4j.appender.FILE.File=/opt/argo/business/buslog.log
+log4j.appender.FILE.Threshold=INFO  
+log4j.appender.FILE.MaxBackupIndex=20
+log4j.appender.FILE.MaxFileSize=20MB
+log4j.appender.FILE.Append=true
+log4j.appender.FILE.BufferSize=16384
+log4j.appender.FILE.ImmediateFlush=true
+log4j.appender.FILE.BufferedIO=false
+log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.FILE.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss.SSS} %t [%p] - %m%n 

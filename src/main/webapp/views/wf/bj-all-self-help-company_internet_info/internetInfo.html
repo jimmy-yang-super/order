@@ -1,0 +1,134 @@
+
+<!-- 设立登记 -->
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="210px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="220px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>客户姓名：</th>
+				<td>$!{loginEntity.username}</td>
+				<th>客户电话：</th>
+				<td>$!{loginEntity.userphone}</td>
+			</tr>
+			<tr>
+				<th>核准文号：</th>
+				<td colspan="3">$!{checkedNameCode}</td>
+			</tr>
+			<tr>
+				<th>账户名称：</th>
+				<td>$!{checkNameAccount}</td>
+				<th>账户密码：</th>
+				<td>$!{checkNamePassword}</td>
+			</tr> 
+			<tr>
+				<th>商品名称：</th>
+				<td>$!{product_other_name}</td>
+				<th>付款状态：</th>
+				<td>已付款</td>
+			</tr>
+			<tr>
+				<th>城市：</th>
+				<td>$!{DicUtils.getAreaDataById("$!{city_id}")}</td>
+				<th>区域：</th>
+				<td>$!{DicUtils.getAreaDataById("$!{area_id}")}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b2" >填写信息</a><a class="b1" >完成任务</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	//点击 提交信息
+	$(".b1").click(function(){
+		WF.showDiv("submitInternetInfoDiv");
+	});
+	
+	$(".b2").click(function(){
+		window.open("http://wsdj.baic.gov.cn:8088/");
+	});
+	
+	//查看设立登记 取消
+	$("#submitInternetInfoDiv .cancel").click(function(){
+		WF.closeDiv("submitInternetInfoDiv");
+	});
+	
+	//点击设立登记 确定
+	$("#submitInternetInfoDiv .ok").click(function(){
+		/* if(!WF.validate("submitInternetInfoDiv")){
+			return;
+		} */
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		synchronEnterpriseInfo();
+	});
+});
+
+/**同步企业库数据**/
+function synchronEnterpriseInfo(){
+	var companymc = $("#companymc").val();
+	var hemgszh = $("#hemgszh").val();
+	var hempassword = $("#hempassword").val();
+	$.ajax({
+		async:false,
+		url:'/wf/getGSSheLiInfo/'+enterpriseId,
+		method:'post',
+		data:{"companymc":companymc,"hemgszh":hemgszh,"hempassword":hempassword},
+		dataType:'json',
+		success:function(data){
+			if(data.returnFlag == "设立通过"){
+				WF.submitTask("submitInternetInfoDiv", "");
+
+				alert("任务处理成功");
+				window.opener.location.reload();
+				window.close();
+				return;
+			}else{
+				alert(data.returnFlag);
+				window.opener.location.reload();
+				window.close();
+				return;
+			}
+		},
+		error:function(){
+			alert("用户名:密码:公司名称不能为空");
+		}
+	});
+	
+}
+
+</script>
+
+<!-- 弹出框 - 设立登记信息 -->
+<div id="submitInternetInfoDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">设立登记</p>
+		<table class="t1">
+			<tr>
+				<th>公司名称：</th>
+				<td><input id="companymc" type="text" name="inputInfoAll" readonly="readonly" value="$!{name}"  /></td>
+			</tr>
+			<tr>
+				<th>设立工商账号：</th>
+				<td><input id="hemgszh"  type="text" name="inputInfoAll"  /></td>
+			</tr>
+			<tr>
+				<th>密码：</th>
+				<td>
+					<input id="hempassword"  type="text" name="inputInfoAll"  />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

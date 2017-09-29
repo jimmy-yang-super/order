@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css">
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.wz').hover(function(){
+    $('.wz').removeClass('current')
+    $(this).addClass('current')
+    $('.current .edit').show()
+    $('.current .delete').show()  
+  },function(){
+    $('.current .edit').hide()
+    $('.current .delete').hide()
+    $(this).removeClass('current')  
+    return false
+  })
+});
+$(function(){
+  //设置奇数行背景色
+  $("#tab tr:odd").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+$(function(){
+    $(".com_box1 li").each(function(){
+        $(this).click(function(){
+            $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+        })
+    });
+    $("#t3").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    });
+    $("#t4").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    });
+});
+$(document).ready(function(){
+  $("#t3").click(function(){
+    $("#show_t3").toggle();
+  });
+  $("#t4").click(function(){
+    $("#show_t4").toggle();
+  });
+})
+
+</script>
+
+</head>
+
+<body>
+<div class="user_box">
+  <div class="user_search">
+    <div class="search_bg order_w">
+
+       <div class="nice-select" name="nice-select">
+        <input type="text" value="公司名称" readonly>
+        <ul>
+          <li data-value="1">公司名称</li>
+          <li data-value="2">客户电话</li>
+          <li data-value="3">客户姓名</li>
+          <li data-value="4">合同编号</li>
+        </ul>
+      </div>
+      <input class="order_box1 rang_left" type="text" >
+      <div class="nice-select" name="nice-select">
+        <input type="text" value="付款状态" readonly>
+        <ul>
+          <li data-value="1">全部</li>
+          <li data-value="2">未付</li>
+          <li data-value="3">预付</li>
+          <li data-value="4">完款</li>
+        </ul>
+      </div>
+
+      <p class="search_btn rang_left">查询</p>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="12%">订单ID</th>
+        <th width="10%">下单时间</th>
+        <th width="10%">客户资料</th>
+        <th width="9%">接待顾问</th>
+        <th width="9%">订单类型</th>
+        <th width="8%">订单来源</th>
+        <th width="8%">应支付</th>
+        <th width="8%">尾款</th>
+        <th width="8%">付款状态</th>
+        <th width="8%">操作</th>
+        <th width="10%">操作日志</th>
+      </tr>
+      <tr>
+        <td>30334297856769<br><span class="pay">[2015]04070001</span></td>
+        <td>2015/4/2<br>10:49:11</td>
+        <td>李先生<br>13098723333<br>站酷</td>
+        <td>包立薇<br>13877722112</td>
+        <td>商标注册(朝阳)</td>
+        <td>后台</td>
+        <td>￥3000</td>
+        <td><span class="pay">￥0</span></td>
+        <td><span class="status">成功付款</span></td>
+        <td><a id="t3">详情<img src="/images/xjt.png"></a></td>
+        <td><a id="t4">操作日志<img src="/images/xjt.png"></a></td>
+      </tr>
+      <tr style="border:none">
+        <td colspan="12" style="height:0px">
+            <div class="nav">
+              <div class="box">
+                <div class="cont" id="show_t3" style="display:none"><!-- 详情 -->
+                  <ul>
+                    <li class="detail_info b_color">
+                      <p>更新时间：2015/04/03  12:16:30</p>
+                      <p>客户来源：58同城</p>
+                      <p>分派顾问：李如玉</p>
+                      <p>进展状态：正常</p>
+                      <p>订单金额：3000.0元</p>
+                      <p>预收金额：0元</p>
+                      <p>应付金额：3000.0元</p>
+                    </li>
+                  </ul>
+                </div>
+                <div class="cont" id="show_t4" style="display:none"><!-- 操作日志 -->
+                  <ul>
+                    <li class="detail_info b_color">
+                      <p>2015/04/03  12:16:30</p>
+                      <p>包丽微 确认收款1000元，其中实际到款990元，手续费10元，现金；</p>
+                      <p>备注：小微提供的每一款产品都是精心。</p>
+                    </li>
+                    <li class="detail_info b_color">
+                      <p>2015/04/03  12:16:30</p>
+                      <p>包丽微 催款一次</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+        </td>
+      </tr> 
+
+      <tr>
+        <td>30334297856769<br><span class="pay">[2015]04070001</span></td>
+        <td>2015/4/2<br>10:49:11</td>
+        <td>李先生<br>13098723333<br>站酷</td>
+        <td>包立薇<br>13877722112</td>
+        <td>商标注册(朝阳)</td>
+        <td>后台</td>
+        <td>￥3000</td>
+        <td><span class="pay">￥0</span></td>
+        <td><span class="status">成功付款</span></td>
+        <td><a id="t3">详情<img src="/images/xjt.png"></a></td>
+        <td><a id="t4">操作日志<img src="/images/xjt.png"></a></td>
+      </tr>
+      <tr>
+        <td>30334297856769<br><span class="pay">[2015]04070001</span></td>
+        <td>2015/4/2<br>10:49:11</td>
+        <td>李先生<br>13098723333<br>站酷</td>
+        <td>包立薇<br>13877722112</td>
+        <td>商标注册(朝阳)</td>
+        <td>后台</td>
+        <td>￥3000</td>
+        <td><span class="pay">￥0</span></td>
+        <td><span class="status">成功付款</span></td>
+        <td><a id="t3">详情<img src="/images/xjt.png"></a></td>
+        <td><a id="t4">操作日志<img src="/images/xjt.png"></a></td>
+      </tr>
+      <tr>
+        <td>30334297856769<br><span class="pay">[2015]04070001</span></td>
+        <td>2015/4/2<br>10:49:11</td>
+        <td>李先生<br>13098723333<br>站酷</td>
+        <td>包立薇<br>13877722112</td>
+        <td>商标注册(朝阳)</td>
+        <td>后台</td>
+        <td>￥3000</td>
+        <td><span class="pay">￥0</span></td>
+        <td><span class="status">成功付款</span></td>
+        <td><a id="t3">详情<img src="/images/xjt.png"></a></td>
+        <td><a id="t4">操作日志<img src="/images/xjt.png"></a></td>
+      </tr>
+      <tr>
+        <td>30334297856769<br><span class="pay">[2015]04070001</span></td>
+        <td>2015/4/2<br>10:49:11</td>
+        <td>李先生<br>13098723333<br>站酷</td>
+        <td>包立薇<br>13877722112</td>
+        <td>商标注册(朝阳)</td>
+        <td>后台</td>
+        <td>￥3000</td>
+        <td><span class="pay">￥0</span></td>
+        <td><span class="status">成功付款</span></td>
+        <td><a id="t3">详情<img src="/images/xjt.png"></a></td>
+        <td><a id="t4">操作日志<img src="/images/xjt.png"></a></td>
+      </tr>
+      <tr>
+        <td>30334297856769<br><span class="pay">[2015]04070001</span></td>
+        <td>2015/4/2<br>10:49:11</td>
+        <td>李先生<br>13098723333<br>站酷</td>
+        <td>包立薇<br>13877722112</td>
+        <td>商标注册(朝阳)</td>
+        <td>后台</td>
+        <td>￥3000</td>
+        <td><span class="pay">￥0</span></td>
+        <td><span class="status">成功付款</span></td>
+        <td><a id="t3">详情<img src="/images/xjt.png"></a></td>
+        <td><a id="t4">操作日志<img src="/images/xjt.png"></a></td>
+      </tr>  
+    </table>
+  </div>
+  <div class="page_turn">
+    <a href="#?page=1">[首页]</a>
+    <a href="#?page=2">[上一页]</a>
+    <a href="#?page=1">1</a>
+    <a href="#?page=2">2</a>
+    <a href="#?page=3">3</a>
+    <a href="#?page=4">4</a>
+    <a class="current" href="#?page=5">5</a>
+    <a href="#?page=6">6</a>
+    <a href="#?page=7">7</a>
+    <a href="#?page=8">8</a>
+    <a href="#?page=2">[下一页]</a>
+    <a href="#?page=2">[末页]</a>
+  </div>
+</div>
+
+</body>
+<script>
+$('[name="nice-select"]').click(function(e){
+  $('[name="nice-select"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').hover(function(e){
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+  $(this).parents('[name="nice-select"]').find('input').val(val);
+  $('[name="nice-select"] ul').hide();
+  e.stopPropagation();
+  // alert("中文值是："+val);
+  // alert("数字值是："+dataVal);
+  //alert($(this).parents('[name="nice-select"]').find('input').val());
+});
+$(document).click(function(){
+  $('[name="nice-select"] ul').hide();
+});
+</script>
+</html>

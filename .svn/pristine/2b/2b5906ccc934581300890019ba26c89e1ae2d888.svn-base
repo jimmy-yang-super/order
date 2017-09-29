@@ -1,0 +1,112 @@
+<!-- 签字材料审核 --------已删除 by zhengqianwen  -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >注册地址：</th>
+				<td >$!{iszhucdz}</td>
+				<th >产权主体：</th>
+				<td >$!{reginAddress.getChanqzt()}</td>
+			</tr>
+			<tr>
+				<th >申请方式：</th>
+				<td >$!{applyMethod}</td>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${hemjt}"  /></td>
+			</tr>
+			<tr>
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{companyFaRenInfo.getFaddbrshzfyj()}"  /></td>
+				<th ></th>
+				<td ></td>
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a> <a class="b2">退回 </a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		if(!WF.validate()){
+			return;
+		}
+		
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		var taskData = "&checkSignDataFlag=1";
+		WF.submitTask("111111", taskData);
+	});
+	
+	/************ 退回 *************************/
+	// 点击退回
+	$(".b2").click(function(){
+		WF.showDiv('tuiHuiDiv');
+	});
+	
+	// 退回 - 确定
+	$("#tuiHuiDiv .ok").click(function(){
+		if(!WF.validate("tuiHuiDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		var taskData = "&checkSignDataTuiHuiReason=''&checkSignDataFlag=0";
+		WF.submitTask("tuiHuiDiv", taskData);
+	});
+	
+	// 退回 - 取消
+	$("#tuiHuiDiv .cancel").click(function(){
+		WF.closeDiv('tuiHuiDiv');
+	});
+});
+
+</script>
+
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="checkSignDataTuiHuiReason" value="$!{checkSignDataTuiHuiReasonKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('checkSignDataTuiHuiReason')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>退回描述：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="checkSignDataTuiHuiRemark" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

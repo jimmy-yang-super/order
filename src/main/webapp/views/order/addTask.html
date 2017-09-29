@@ -1,0 +1,527 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css">
+<link rel="stylesheet" href="/css/ystep.css">
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+<style type="text/css">  
+        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  
+        z-index:333;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}    
+</style>  
+<script type="text/javascript">
+/* 本页面的js逻辑实现========================================================= */
+
+$(function(){
+	
+	
+   //单选按钮点击绑定
+   $(".check").each(function(){
+	   $(this).click(function(){
+		   var orderid = $(this).attr("cid");
+		  //设置任务的隐藏字段
+		   $("#J_orderid").val(orderid);
+	   })
+   });
+   //单选按钮点击绑定
+	
+   //城市切换
+	$("#J_sel_bj").click(function(){//显示北京
+		$("#J_area_bj").css("display","");
+		$("#J_area_sz").css("display","none");
+	})
+	$("#J_sel_sz").click(function(){//显示深圳
+		$("#J_area_bj").css("display","none");
+		$("#J_area_sz").css("display","");
+	})
+	//城市切换
+	
+	
+	//提交事件
+	$(".task_btn").click(function(){
+		var address = $("#J_address").val();
+		var time = $("#J_handletime").val();
+		var type = $("#J_servicetype").val();
+		var J_cname = $("#J_cname").val();
+		var J_pname = $("#J_pname").val();
+		var J_orderid =$("#J_orderid").val();
+//		alert(address+"\n\t"+time); return
+		if(!J_orderid){
+				alert('请选择关联订单');
+				return;
+		}
+		if(testPhone()){	
+			if(address && time && type && J_cname && J_pname){
+				$.ajax({
+
+		             url:"/task/saveTask",
+
+		             type:"post",
+
+		             data:$('#form1').serialize(),// 要提交的表单 
+
+		             success:function(msg){
+
+		                 if(msg=="success"){
+
+		                     alert('添加成功');
+		                 }            
+
+		             }
+
+		         });
+			}else{
+				alert('请填写相关必须信息');
+			}
+		}
+		
+	});
+	
+})
+
+
+function testPhone(){
+	
+	var isMobile=/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/; //手机号码验证规则
+	var isPhone=/^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$/;   //座机验证规则
+	var dianhua = $("#J_userphone").val();                   //获得用户填写的号码值 赋值给变量dianhua
+	if(! isMobile.test(dianhua) ){ //如果用户输入的值不同时满足手机号和座机号的正则
+	    alert("请正确填写电话号码");  //就弹出提示信息
+	    $("#J_userphone").focus();       //输入框获得光标
+	    return false;         //返回一个错误，不向下执行
+	}else{
+		return true;
+	}
+	
+}
+
+
+
+/* 以下为copy别的页面的内容========================================================= */
+$(function(){
+  //设置奇数行背景色
+  $("#tab tr:odd").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+$(function(){
+    $(".com_box1 li").each(function(){
+        $(this).click(function(){
+            $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+        })
+    });
+    $("#t1").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    });
+    /* $("#t2").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    }); */
+});
+$(document).ready(function(){
+  $("#t1").click(function(){
+    $("#show_t1").toggle();
+  });
+  $("#t2").click(function(){
+    $("#show_t2").toggle();
+  });
+});
+// 点击名称变成可编辑框
+function ShowElement(element){
+  var oldhtml = element.innerHTML;   //获得元素之前的内容
+  var newobj = document.createElement('input');   //创建一个input元素
+  newobj.type = 'text';   //为newobj元素添加类型
+  //设置newobj失去焦点的事件
+  newobj.onblur = function(){
+    element.innerHTML = this.value ? this.value : oldhtml;   //当触发时判断newobj的值是否为空，为空则不修改，并返回oldhtml。
+  }
+  element.innerHTML = '';   //设置元素内容为空
+  element.appendChild(newobj);   //添加子元素
+  newobj.focus();   //获得焦点
+}
+
+
+
+/**
+ *点击详情后执行方法 
+ */
+$(document).on("click","#t2",function(){
+
+	var orderid = $(this).attr("temval");
+	var cont = $("#orderdetil_"+orderid);
+	
+	var url = "/order/orderDetil/"+orderid;
+	
+	if($(this).hasClass("sel")) { 
+		$(this).removeClass("sel");
+		cont.hide();
+		cont.html("");
+	}else {  
+		$(this).addClass("sel");
+		$.post(url,	function(data){
+			cont.show();
+			cont.html(data);
+		});
+	};
+	
+	
+});
+
+
+$(function(){
+	$("span[name='gpAE']").each(function(){
+		var o = $(this);
+		o.click(function(){
+			var orderid = o.parent().parent().find("span[name='orderidspan']").text();
+			yjorder = orderid;
+			var url = "/action/fuwulist";
+			$.post(url,{'gpAE':'gpAE'},function(data){
+				$(".ceng_box1").show();
+				$(".ceng_box1").html(data);
+			});
+		});
+	});
+})
+
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+//点击查询
+function myOrderQuery(){
+	document.getElementById("myQueryForm").submit(); //提交表单
+}
+
+//显示意向度
+function showFollowUp(args){
+	//改变t1的样式
+	var t1="."+args;
+	if($(t1).hasClass("t1bg")){
+        $(t1).removeClass("t1bg").addClass("tdbg");
+    }else{
+        $(t1).addClass("t1bg").removeClass("tdbg");    
+    }
+	
+
+	var followId = "#show_t1_"+args;
+	var follow_ulList ="#follow_list_"+args;
+	//先清除掉所有的li
+	$(follow_ulList).find('li').remove();
+	if($(followId).is(":hidden")){
+		// 向后台发送处理数据  
+	    $.ajax({  
+	        type: "POST", // 用POST方式传输  
+	        dataType: "json", // 数据格式:JSON  
+	        url: "/order/queryFollow.html", // 目标地址  
+	        data: "orderid=" + args,  
+	        success: function (data){
+	        	if(data==""){
+	        		$(".num_box2").hide();
+	        	}else{
+	        		$(".num_box2").show();
+	        	}
+	        	$.each(data,function(index,value){
+	        		var htmStr="<li class=\"num_info b_color\"><p>"+value.addtime+"</p><p><span>记录人："+value.empName+"</span><span>意向度："+value.intentvalue+"</span><span>备注：<b>"+value.content+"</b></span></p><div class=\"clear\"></div></li> ";
+	        		$(follow_ulList).append(htmStr);
+	        	})
+	        	
+	        }  
+	    }); 
+		$(followId).toggle();
+	}else{
+		$(followId).toggle();
+	}
+}
+
+//添加新的意向度到指定的ul中
+function submitFollow(args,orderid){
+	$(args).css("display","none");
+	
+	var follow_ulList ="#follow_list_"+orderid;
+	var content = $("#content_"+orderid).val();
+    var intentcode = $("#intentcode").val();
+    if(content!="" && intentcode!=""){
+    	// 向后台发送处理数据  
+        $.ajax({  
+            type: "POST", // 用POST方式传输  
+            dataType: "json", // 数据格式:JSON  
+            url: "/order/addFollow.html", // 目标地址  
+            data: {"content":content,"intentcode":intentcode,"orderid":orderid},  
+            success: function (data){
+            	if(data != "" && data != null){
+            		$(args).css("display","block");
+            		var htmStr="<li class=\"num_info b_color\"><p>"+data.addtime+"</p><p><span>记录人："+data.empname+"</span><span>意向度："+data.intentcode+"</span><span>备注：<b>"+data.content+"</b></span></p><div class=\"clear\"></div></li> ";
+            		$(follow_ulList).prepend(htmStr);
+            		
+            		//修改列表标头的count数
+            	    var time =$("."+orderid).attr("cun");
+            	    var con = parseInt(time)+1
+            	    $("."+orderid).attr("cun",con)
+            	    $("."+orderid).html(con+"次<img src=\"/images/xjt.png\">");
+            	    $("."+orderid).parent().parent().find("span.pay").html(data.intentcode);
+            	    
+            	    //清空当前备注信息
+            	    $("#content_"+orderid).val("");
+
+            		
+            	}else{
+            		alert("登录过期,请重新登录!");
+            		$(args).css("display","block");
+            	}
+            }  
+        });  
+    }else{
+    	alert("请选择意向度或填写备注!");
+    }
+    
+	
+	
+}
+</script>
+
+</head>
+
+<body>
+<div id="bg"></div>  
+<div class="ceng_box1" style="display:none">
+
+</div>
+<div class="user_box">
+  <div class="crumbs">
+    <a class="crumb-link" href="#">您目前的位置：<span>我的任务</span></a>
+    <i class="crumb-line">></i>
+    <a class="crumb-link" href="reg.html">新建任务</a>
+  </div>
+  <form action="" id="form1" method="post">
+  <p class="add_task_box">新建任务</p>
+  <div class="task_box">
+    <div class="task_info">
+      <table>
+        <input type="hidden" name="orderid" id="J_orderid" value=""/>
+        <tr>
+          <th>公司名称：</th><td><input class="text_in" name="company_name" id="J_cname" type="text"></td>
+        </tr>
+        <tr>
+          <th>联系客户：</th><td><input class="text_in" name="partner_name" id="J_pname" type="text"></td>
+        </tr>
+        <tr>
+          <th>客户手机：</th><td><input class="text_in" name="userphone" id="J_userphone" type="text"></td>
+        </tr>
+        <tr>
+          <th>服务类型：</th>
+          <td>
+            <div class="nice-select2 task_sel_m" name="nice-select2">
+              <input type="hidden" name="servicetype"  id="J_servicetype" >
+              <input type="text" name="servicetypeval"   readonly>
+              <ul>
+              
+               #foreach($t in $!stype.keySet())
+           			<li data-value="${t}">$!{stype.get($t)}</li>
+           			
+          	   #end
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>任务名称：</th><td><input class="text_in" name="task_name" type="text"></td>
+        </tr>
+        <tr>
+          <th>办理地址：</th>
+          <td>
+            <div class="nice-select2 task_sel_s" name="nice-select2">
+              <input type="hidden" name="cityid" >
+              <input type="text" name="cityval" readonly>
+              <ul>
+                <li data-value="1" id="J_sel_bj">北京</li>
+                <li data-value="2" id="J_sel_sz">深圳</li>
+              </ul>
+            </div>
+            <div class="nice-select2 task_sel_s" name="nice-select2">
+              <input type="hidden" name="areaid" >
+              <input type="text" name="areaval" readonly>
+              <ul>
+                <div  id="J_area_bj">
+                #foreach($pe in $!bjArea)
+			     	 <li data-value="$!{pe.areaid}">$!{pe.name}</li>
+			    #end
+			    </div>
+			    
+			    <div id="J_area_sz" style="display: none;">
+			    #foreach($pe in $!szArea)
+			     	 <li data-value="$!{pe.areaid}">$!{pe.name}</li>
+			    #end
+			    </div>
+              </ul>
+            </div>
+            <div class="nice-select2 task_sel_s" name="nice-select2">
+              <input type="text" name="address" id="J_address" readonly>
+              <ul>
+                  #foreach($t in $!wq_address.keySet())
+           			<li data-value="${t}">$!{wq_address.get($t)}</li>
+           			
+          	   	  #end
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>期望办理时间：</th>
+          <td>
+            <div class="nice-select2 task_sel_m" name="nice-select2">
+            
+              <input id="J_handletime"   name="handletime" type="text" value=""  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+      
+            </div>
+            <div class="time_c_box">
+              <input type="checkbox" class="time_c" name="timeflag" value="0">不可更改
+            </div>
+            
+          </td>
+        </tr>
+        <tr>
+          <th class="info_box">说明：</th><td><textarea name="remark"></textarea></td>
+        </tr>
+      </table>
+    </div>
+
+    </form>
+    
+    
+    <!-- ===================================================================================== -->
+    
+    <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="15%">企业ID/订单ID</th>
+        <th width="7%">订单来源</th>
+        <th width="7%">客户资料</th>
+        <th width="7%">注册区域</th>
+        <th width="6%">商品类型</th>
+        <th width="6%">接待顾问</th>
+        <th width="6%">跟进次数</th>
+        <th width="5%">意向度</th>
+        <th width="7%">签单时间</th>
+        <th width="6%">订单状态</th>
+        <th width="6%">签单状态</th>
+        <th width="8%">详情</th>
+      </tr>
+      
+<!-- 动态数据展示------------------------------------------------------->      
+      #foreach($item in $!orderList)
+      <tr>
+        <td><input class="check" cid="$!{item.orderId}" type="radio" name="c1">#if($item.busId != '0')$!{item.busId}<br/>#end<span name="orderidspan">$!{item.orderId}</span></td>
+        <td><span>$!{item.customerForm}<br/>$!{item.orderForm}</span></td>
+        <td><span>$!{item.customerName}<br/>$!{item.customerPhone}<br/>$!{item.companyname}</span></td>
+        <td><span>$!{item.cityName} $!{item.areaName}<br>$!{item.companytype}</br></span></td>
+        <td><span>$!{item.commodiType}</span></td>
+        <td><span>$!{item.kefuname}$!{item.fawuName}$!{item.consultantName}$!{item.fzName}</span></td>
+        <td><a id="t1" onclick="showFollowUp($!{item.orderId});" class="$!{item.orderId}" cun="$!{item.flowupSize}">$!{item.flowupSize}次<img src="/images/xjt.png"></a></td>
+        <td><span class="pay">$!{item.intent}</span></td>
+        <td>$!{item.signtime}</td>
+        <td>$!{item.orderState}</td>
+        <td>$!{item.signstate}</td>
+        <td><a id="t2" temval="$!{item.orderId}">详情<img src="/images/xjt.png" /></a></td>
+      </tr>
+      
+      <tr style="border:none">
+        <td colspan="13" style="height:0px">
+            <div class="nav">
+              <div class="box" >
+                <div class="cont" id="show_t1_$!{item.orderId}" style="display:none">  
+                  <div class="num_box1">
+                    <ul id="follow_list_$!{item.orderId}">
+                    </ul>
+                  </div>
+                  <div class="num_box2">
+                    <div class="com_box1">
+                      <ul>
+                        <p class="title">意向度：</p>
+                        <li class="flow1_change" value="1"><p>低</p></li>
+                        <li class="flow1_change" value="2"><p>中</p></li>
+                        <li class="flow1_change" value="3"><p>高</p></li>
+                        <input type="hidden" name="intentcode" id="intentcode" />
+                        <div class="clear"></div>
+                      </ul>
+                    </div>
+                    <div class="com_box2">
+                      <p class="title">备注：</p>
+                      <p class="area_box"><textarea id="content_$!{item.orderId}" name="content"></textarea></p>
+                      <div class="clear"></div>
+                    </div>
+                    <div class="com_box3" onclick="submitFollow(this,$!{item.orderId})">确认</div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                
+                
+                <div class="cont" style="display:none" id="orderdetil_$!{item.orderId}"><!-- 操作日志 -->
+
+                </div>
+                
+                
+              </div>
+            </div> 
+        </td>
+      </tr>
+      #end
+  <!-- 以上为动态循环---------------------------------------------- -->    
+      
+    </table> 
+  </div>
+    
+    
+    
+    
+    
+    <p class="task_btn">
+      <a >确认</a>
+    </p>
+  </div>
+
+</div>
+
+</body>
+<script>
+$('[name="nice-select2"]').click(function(e){
+  $('[name="nice-select2"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select2"] li').hover(function(e){
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select2"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+  $(this).parents('[name="nice-select2"]').find('input[type="text"]').val(val);
+  $(this).parents('[name="nice-select2"]').find('input[type="hidden"]').val(dataVal);
+  $('[name="nice-select2"] ul').hide();
+  e.stopPropagation();
+  // alert("中文值是："+val);
+  // alert("数字值是："+dataVal);
+  //alert($(this).parents('[name="nice-select2"]').find('input').val());
+});
+$(document).click(function(){
+  $('[name="nice-select2"] ul').hide();
+});
+</script>
+
+</html>

@@ -1,0 +1,61 @@
+<div class="ck_box" id="editmoney" style="display:none"><!-- 催款弹出层 -->
+     <form id="editmoney" action="/action/editmoney" method="post">
+      <table>
+        <tbody>
+	        <tr>
+		        <th>原价:</th>
+		        <td id="yjpriceshow"></td>
+		        <td>
+		        	<input type="text" style="display:none" name="orderid" id="moneyorderid" />
+		        	<input type="text" style="display:none" name="yjprice" id="yjprice" />
+		        </td>
+	        </tr>
+	        <tr>
+		        <th>现价:</th>
+		        <td><input type="text" class="w_text_s" name="xjprice" id="xjprice" value="0"/>元</td>
+	        </tr>
+	        <tr>
+	            <th>原因:</th>
+	            <td><input type="text" class="w_text_l" name="contents" id="contents"></td>
+            </tr>
+      </tbody>
+      </table>
+      <div class="btn_box">
+        <span class="qr_btn" name="editmoneysb">提交</span>
+        <span class="qx_btn" name="editmoneycancel">取消</span>
+      </div>
+      </form>
+    </div>
+    <script>
+    $("span[name='editmoneycancel']").click(function(){
+    	cenghide();
+    	$("#editmoney").hide();
+    });
+    var i=0;
+    $("span[name='editmoneysb']").click(function(){
+    	if(i==0){
+    		i++;
+	    	var url = "/action/editmoney";
+	    	var dt = $("#editmoney").serialize();
+	    	var orderid = $("#moneyorderid").val();
+	    	var yjprice = $("#yjprice").val();
+	    	var xjprice = $("#xjprice").val();
+	    	var contents = $("#contents").val();
+	    	//alert("订单ID"+orderid+"原价"+yjprice+"现价"+xjprice+"内容"+contents);
+	    	$.ajax({url:url,
+	    		type:"post",
+	    		data:{'orderid':orderid,'yjprice':yjprice,'xjprice':xjprice,'contents':contents},
+	    		dataType:"json",
+	    		success:function(data){
+	    			if(data.res == "ok"){
+	    				alert("修改成功！");
+	    				window.location.reload();
+	    			}else{
+	    				alert(data.msg);
+	    			}
+	    		}});
+    	}else{
+    		alert("请不要点击太频繁!");
+    	}
+    });
+    </script>

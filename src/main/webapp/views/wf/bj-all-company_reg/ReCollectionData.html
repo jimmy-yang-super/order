@@ -1,0 +1,182 @@
+<!-- 补充材料 -->
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>地址类型：</th>
+				<td>$!{addressType}</td>
+				<th>产权主体：</th>
+				<td>$!{chanQuanType}</td>
+			</tr>
+			<tr>
+				<th>申请方式：</th>
+				<td>$!{applyMethod}</td>
+				<th ></th>
+				<td ></td>
+			</tr>
+			<tr>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${checkNamePic}" /></td>
+				#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{legalPerson.get('idPicIds')}"  /></td>
+				#end
+			</tr>
+			#parse("views/wf/common/company-download.html")
+			
+			#if($gongShangApplyTuiHuiReason && $!{gongShangApplyTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "GongShangApply")
+			<tr>
+				<th>工商申请申请退回原因：</th>
+				<td>$!{gongShangApplyTuiHuiReason}</td>
+				<th>工商申请申请退回描述：</th>
+				<td>$!{gongShangApplyTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($localApplyTuiHuiReason && $!{localApplyTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "LocalApply")
+			<tr>
+				<th>现场递交申请退回原因：</th>
+				<td>$!{localApplyTuiHuiReason}</td>
+				<th>现场递交申请退回描述：</th>
+				<td>$!{localApplyTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($quDeQuanBuZhengZhaoTuiHuiReason && $!{quDeQuanBuZhengZhaoTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "ReceiveAllLicense")
+			<tr>
+				<th>取得全部证照 退回原因：</th>
+				<td>$!{quDeQuanBuZhengZhaoTuiHuiReason}</td>
+				<th>取得全部证照 退回描述：</th>
+				<td>$!{quDeQuanBuZhengZhaoTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($lingQuYingYeZhiZhaoTuiHuiReason && $!{lingQuYingYeZhiZhaoTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "ReceiveBusinessLicense")
+			<tr>
+				<th>领取营业执照 退回原因：</th>
+				<td>$!{lingQuYingYeZhiZhaoTuiHuiReason}</td>
+				<th>领取营业执照 退回描述：</th>
+				<td>$!{lingQuYingYeZhiZhaoTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		WF.showDiv('wanChengDiv');
+	});
+	
+	// 完成 - 确定
+	$("#wanChengDiv .ok").click(function(){
+		if(!WF.validate("wanChengDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		#if(($gongShangApplyTuiHuiReason && $!{gongShangApplyTuiHuiReason} != "")
+				||($localApplyTuiHuiReason && $!{localApplyTuiHuiReason} != "")
+				||($quDeQuanBuZhengZhaoTuiHuiReason && $!{quDeQuanBuZhengZhaoTuiHuiReason} != "")
+				||($lingQuYingYeZhiZhaoTuiHuiReason && $!{lingQuYingYeZhiZhaoTuiHuiReason} != ""))
+		var reCollectionDataTuiHuiFlag = 1;
+		#else
+		var reCollectionDataTuiHuiFlag = 0;
+		#end
+		
+		// 保存企业附件
+		WF.updateCompanyAttach("wanChengDiv", "1002");
+			
+		// 调用流程接口
+		WF.submitTask("wanChengDiv", "&reCollectionDataTuiHuiFlag=" + reCollectionDataTuiHuiFlag);
+		WF.taskFinish();
+	});
+	
+	// 完成 - 取消
+	$("#wanChengDiv .cancel").click(function(){
+		WF.closeDiv('wanChengDiv');
+	});
+});
+
+</script>
+
+<!-- 弹出框 - 完成 -->
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t1">
+<!-- 			<tr>
+				<th>证照申领数量：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="zhengZhaoShenQingShuLiang" value="$!{zhengZhaoShenQingShuLiangKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('zhengZhaoShenQingShuLiang')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr> -->
+			<tr>
+				<th>登记基本信息表：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" data-info="inputInfoCompanyAttach" id="regBasicInfoTable" value="$!{regBasicInfoTable}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="regBasicInfoTable" multiple />
+				</td>
+			</tr>
+<!-- 			<tr>
+				<th>住所证明：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" data-info="inputInfoCompanyAttach" id="residenceCertificate" value="$!{residenceCertificate}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="residenceCertificate" multiple />
+				</td>
+			</tr> -->
+<!-- 			<tr>
+				<th>房屋产权证：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" data-info="inputInfoCompanyAttach" id="houseRights" value="$!{houseRights}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="houseRights" multiple />
+				</td>
+			</tr> -->
+<!-- 			<tr>
+				<th>企业联系人登记表：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" data-info="inputInfoCompanyAttach" id="enterpriseContactRegTable" value="$!{enterpriseContactRegTable}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="enterpriseContactRegTable" multiple />
+				</td>
+			</tr> -->
+			<tr>
+				<th>章程：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" data-info="inputInfoCompanyAttach" id="constitutionFile" value="$!{constitutionFile}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="constitutionFile" multiple />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

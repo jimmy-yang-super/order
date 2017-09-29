@@ -1,0 +1,143 @@
+<!-- 材料整理 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+				<th >产权主体：</th>
+				<td >$!{chanQuanType}</td>
+			</tr>
+			<tr>
+				<th >申请方式：</th>
+				<td >$!{applyMethod}</td>
+				<th >工商设立材料状态：</th>
+				<td >$!{DicUtils.getDicDataValue("archiveDataStatus", $CollationDataStatus, "未提取")}</td>
+			</tr>
+
+			#if($CollationDataTuiHuiAct && $!{CollationDataTuiHuiAct} == "2")
+			<tr>
+				<th>提交工商申请退回原因：</th>
+				<td>$!{gongShangApplyTuiHuiReason}</td>
+				<th>提交工商申请退回描述：</th>
+				<td>$!{gongShangApplyTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			<tr>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${checkNamePic}" /></td>
+				#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{legalPerson.get('idPicIds')}"  /></td>
+				#end			
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		var CollationDataStatus = WF.getVariableByName("CollationDataStatus");
+		if(CollationDataStatus == "1"){
+			// 已提取
+			alert("档案组未确认相关材料已存放，请到档案组存放档案。");
+		}else if(CollationDataStatus == "2"){
+			// 已归档
+			WF.showDiv('wanChengDiv');
+		}else{
+			// 未提取
+			alert("档案组未确认相关材料已提取，请到档案组提取档案。");
+		}
+	});
+	// 提交工商申请 - 确定
+	$("#wanChengDiv .ok").click(function(){
+		if(!WF.validate("wanChengDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		var gongShangShenQingFlag = WF.getVariableByName("gongShangShenQingFlag");
+		if(gongShangShenQingFlag == undefined || gongShangShenQingFlag == ""){
+			gongShangShenQingFlag = 3;
+		}
+		// 调用流程接口
+		//&customerSignDataFlag=0&CustomerSignDataStatus=0&CollationDataTuiHuiAct=1
+		var taskData = "&gongShangShenQingFlag=" + gongShangShenQingFlag + "&GongShangApplyDataStatus=0&CollationDataStatus=0";
+		WF.submitTask("wanChengDiv",taskData);
+		WF.taskFinish();
+	});
+	
+	// 提交工商申请 - 取消
+	$("#wanChengDiv .cancel").click(function(){
+		WF.closeDiv('wanChengDiv');
+	});
+});
+
+</script>
+
+<!-- 弹出框 - 完成 -->
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t1">
+			<tr>
+				<th>登记基本信息表：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoTask" data-info="inputInfoCompanyAttach" id="regBasicInfoTable" value="$!{regBasicInfoTable}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="regBasicInfoTable" multiple />
+				</td>
+			</tr>
+<!-- 			<tr>
+				<th>住所证明：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoTask" data-info="inputInfoCompanyAttach" id="residenceCertificate" value="$!{residenceCertificate}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="residenceCertificate" multiple />
+				</td>
+			</tr> -->
+<!-- 			<tr>
+				<th>房屋产权证：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoTask" data-info="inputInfoCompanyAttach" id="houseRights" value="$!{houseRights}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="houseRights" multiple />
+				</td>
+			</tr> -->
+<!-- 			<tr>
+				<th>企业联系人登记表：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoTask" data-info="inputInfoCompanyAttach" id="enterpriseContactRegTable" value="$!{enterpriseContactRegTable}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="enterpriseContactRegTable" multiple />
+				</td>
+			</tr> -->
+			<tr>
+				<th>章程：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoTask" data-info="inputInfoCompanyAttach" id="constitutionFile" value="$!{constitutionFile}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="constitutionFile" multiple />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

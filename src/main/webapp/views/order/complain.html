@@ -1,0 +1,542 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+<link rel="stylesheet" href="/css/ystep.css">
+<link type="text/css" href="/css/star.css" rel="stylesheet" />
+<style type="text/css">  
+        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 180%;  background-color: black;  
+        z-index:333;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}    
+</style> 
+<script type="text/javascript">
+
+var cengshow = function(){
+	document.getElementById("bg").style.display = "block"; 
+}
+var cenghide = function(){
+	document.getElementById("bg").style.display = "none"; 
+}
+
+function testPhone(){
+	
+	var isMobile=/^(?:13\d|15\d|18\d|17\d)\d{5}(\d{3}|\*{3})$/; //手机号码验证规则
+	var isPhone=/^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$/;   //座机验证规则
+	var dianhua = $("#J_phone").val();                   //获得用户填写的号码值 赋值给变量dianhua
+	if(! isMobile.test(dianhua) ){ //如果用户输入的值不同时满足手机号和座机号的正则
+	    alert("请正确填写电话号码");  //就弹出提示信息
+	    $("#J_phone").focus();       //输入框获得光标
+	    return false;         //返回一个错误，不向下执行
+	}else{
+		return true;
+	}
+	
+}
+
+$(function(){ 
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+$(function(){
+    $(".com_box1 li").each(function(){
+        $(this).click(function(){
+            $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+            var intentcode = $(this).attr("value");
+            $("#intentcode").attr("value",intentcode);
+        })
+    });
+    
+    //bind query param set val
+    $(".J_query_type").each(function(){
+    	$(this).click(function(){
+    		$("#type").val($(this).attr("data-value"));
+    	});
+    });
+    $(".J_query_qudao").each(function(){
+    	$(this).click(function(){
+    		$("#J_qudao_id").val($(this).attr("data-value"));
+    	});
+    });
+    
+    $(".J_query_status").each(function(){
+    	$(this).click(function(){
+    		$("#J_status_id").val($(this).attr("data-value"));
+    	});
+    });
+    
+    
+    //查询以后把查询参数设置上
+    var phone = "$!{phone}";
+    var type = "$!{type}";
+    var qudao_param = "$!{qudao_param}" ;
+    var status_param = "$!{status_param}" ;
+    if(phone){
+    	$("#phone").val(phone);
+    }
+    if(type){
+    	    $(".J_query_type").each(function(){
+    	    	var value = $(this).attr("data-value");
+    	    	var name = $(this).text();
+    	    	if(type == value){
+    	    		$("#J_type").val(name);
+    	    		$("#type").val(value);
+    	    	}
+    	    });
+    }
+    
+    if(qudao_param){
+	    $(".J_query_qudao").each(function(){
+	    	var value = $(this).attr("data-value");
+	    	var name = $(this).text();
+	    	if(qudao_param == value){
+	    		$("#J_qudao").val(name);
+	    		$("#J_qudao_id").val(value);
+	    	}
+	    });
+	}
+    
+    if(qudao_param){
+	    $(".J_query_status").each(function(){
+	    	var value = $(this).attr("data-value");
+	    	var name = $(this).text();
+	    	if(status_param == value){
+	    		$("#J_h_status").val(name);
+	    		$("#J_status_id").val(value);
+	    	}
+	    });
+	}
+    
+    
+    
+    
+    //bind addnew click
+    $("#J_add_new").click(function(){
+    	cengshow();
+    	$("#new_div").show();
+    });
+    
+    
+    //bind 新增的层的提交和取消按钮
+    $("#J_ok_btn").click(function(){
+    	if(testPhone()){
+    		//异步提交数据
+    		$.ajax({
+                url:"/complain/saveNew",
+                type:"post",
+                data:$("#J_new_form").serialize(),
+                success:function(msg){
+                    if(msg=="success"){
+                    	alert("成功！");
+                        window.location.href = window.location.href;
+                    }else{
+                    	alert("网络异常，请重试！");
+                    }   
+                }
+            });
+    	}
+    });
+    
+    $("#J_cal_btn").click(function(){
+    	cenghide();
+    	$("#new_div").hide();
+    });
+});
+
+
+
+
+
+$(function(){
+	//回访点击view
+	$(".detail").each(function(){
+		$(this).click(function(){
+			var suggestid = $(this).attr("suggestid");
+			var cont = $("#suggest_"+suggestid);
+			var url = "/complain/view";
+			if($(this).hasClass("sel")) { 
+			$(this).removeClass("sel");
+			cont.hide();
+			cont.html("");
+			}else {  
+			         $(this).addClass("sel");
+			              $.ajax({
+			                  url:url,
+			                  type:"post",
+			                  data:{"suggestid":suggestid},
+			                  success:function(data){
+			                	  cont.show();
+					              cont.html(data);
+
+					              //提交事件
+					              	$(cont).find(".com_box3").click(function(){
+					              		var content = $("#JJ_content").val();
+					              		if(content){
+					              		    $.ajax({
+					                            url:"/complain/addFollow",
+					                            type:"post",
+					                            data:{"suggestid":suggestid,"content":content},
+					                            success:function(msg){
+					                                if(msg=="success"){
+					                                    window.location.href = window.location.href;
+					                                }            
+					                            }
+					                        });
+					              		}else{
+					              			alert('请填写备注');
+					              		}
+					              	});
+					              
+					              //完成事件
+					              	$(cont).find(".com_box4").click(function(){
+					              		var content = $("#JJ_content").val();
+					              		if(content){
+					              		  if (confirm("确认要完成？")) {
+					              			$.ajax({
+					                            url:"/complain/addFollow",
+					                            type:"post",
+					                            data:{"suggestid":suggestid,"content":content,"over":"yes"},
+					                            success:function(msg){
+					                                if(msg=="success"){
+					                                    window.location.href = window.location.href;
+					                                }            
+					                            }
+					                        });
+					                      }
+					              		    
+					              		}else{
+					              			alert('请填写备注');
+					              		}
+					              	})
+					              	//end.
+			                  }
+			              });
+			};
+		})
+		
+	});
+	
+	//点击编辑按钮
+	$(".option").each(function(){
+		$(this).click(function(){
+			var suggestid = $(this).attr("suggestid");
+			var cont = $("#option_"+suggestid);
+			var url = "/complain/edit";
+			if($(this).hasClass("sel")) { 
+				$(this).removeClass("sel");
+				cont.hide();
+				cont.html("");
+			}else {  
+			         $(this).addClass("sel");
+			              $.ajax({
+			                  url:url,
+			                  type:"post",
+			                  data:{"suggestid":suggestid},
+			                  success:function(data){
+			                	  cont.show();
+					              cont.html(data);
+
+					              //提交事件
+					              	$(cont).find("#J_edit_btn").click(function(){
+					              		var qudaoid = $("#J_sel_qudao").val();
+					              		var typeid = $("#J_sel_type").val();
+					              		var fzr = $("#J_fzr").val();
+					              		if(qudaoid && typeid){
+					              		    $.ajax({
+					                            url:"/complain/saveEdit",
+					                            type:"post",
+					                            data:{"suggestid":suggestid,"qudao":qudaoid,"type":typeid,"resperson":fzr},
+					                            success:function(msg){
+					                                if(msg=="success"){
+					                                    window.location.href = window.location.href;
+					                                }            
+					                            }
+					                        });
+					              		}else{
+					              			alert('请选择投诉类型和投诉渠道');
+					              		}
+					              	})
+					              	//end.
+			                  }
+			              });
+			};
+		})
+		
+	});
+	
+});
+
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+//点击查询
+function myOrderQuery(){
+	document.getElementById("myQueryForm").submit(); //提交表单
+}
+
+
+</script>
+
+</head>
+
+<body>
+<div id="bg"></div>
+#parse("views/common/fqorder.html")
+<div class="ceng_box1" style="display:none"></div>
+<div class="user_box">
+  
+  <div class="user_search">
+    <form action="/complain/list" id="myQueryForm" name="myQueryForm" method="post">
+    <div class="search_bg qz_w" style="width: 1200px;">
+      
+      <div class="nice-select" name="nice-select" id="query1">
+        <input type="text" value="投诉电话" readonly />
+      </div>
+      <input class="fq_box1" type="text" name="phone" style="width: 150px;" id="phone" />
+
+      <div class="nice-select" name="nice-select" style="width: 150px;" id="query2">
+        <input type="text" value="投诉类型" id="J_type" style="width: 70px;"  readonly />
+        <ul>
+        <li class="J_query_type" data-value="">全部</li>
+         #foreach($t in $!seltype.keySet())
+          <li class="J_query_type" data-value="${t}">$!{seltype.get($t)}</li>
+           #end
+        </ul>
+        
+      </div>
+      <div class="nice-select" name="nice-select" style="width: 70px;" id="query2">
+        <input type="text" value="投诉渠道" id="J_qudao" style="width: 70px;"  readonly />
+        <ul>
+        <li class="J_query_qudao" data-value="">全部</li>
+         #foreach($q in $!qudao.keySet())
+          <li class="J_query_qudao" data-value="${q}">$!{qudao.get($q)}</li>
+           #end
+        </ul>
+        
+      </div>
+      
+      <div class="nice-select" name="nice-select" style="width: 70px;" id="query2">
+        <input type="text" value="处理状态" id="J_h_status" style="width: 70px;" readonly />
+        <ul>
+        <li class="J_query_status" data-value="">全部</li>
+         #foreach($s in $!T_status.keySet())
+          <li class="J_query_status" data-value="${s}">$!{T_status.get($s)}</li>
+           #end
+        </ul>
+        
+      </div>
+      <input type="hidden" name="J_status_id" id="J_status_id" value="0" />
+      <input type="hidden" name="J_qudao_id" id="J_qudao_id" value="0" />
+      <input type="hidden" name="type" id="type" value="0" />
+      <label class="fq_box1" style="width: 70px;">投诉时间</label>
+      <input id="startTime" class="fq_box1" style="width: 90px;" name="startTime" type="text" value="$!{startTime}" onClick="WdatePicker()"/>
+      
+      <label class="fq_box1" style="width: 20px;">至</label>
+      <input id="endTime" class="fq_box1" style="width: 90px;" name="endTime" type="text" value="$!{endTime}" onClick="WdatePicker()"/>
+      <p class="search_btn rang_left" onclick="myOrderQuery()">查询</p>
+      <p class="search_btn rang_left" style="background: red;"id="J_add_new">添加</p>
+      <div class="clear"></div>
+    </div>
+    </form>
+    <div class="clear"></div>
+  </div>
+
+  
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="7%">投诉渠道</th>
+        <th width="10%">投诉电话</th>
+        <th width="7%">投诉类型</th>
+        <th width="7%">负责人</th>
+        <th width="7%">投诉时间</th>
+        <th width="7%">投诉跟进</th>
+        <th width="7%">是否处理</th>
+        <th width="7%">处理时间</th>
+        <th width="7%">操作</th>
+      </tr>
+      
+<!-- 动态数据展示------------------------------------------------------->      
+      #foreach($item in $!list)
+      <tr>
+      	<td><span >
+          $!{qudao.get($!{item.qudao})}
+		</span></td>
+        <td><span >$!{item.mobile}</span></td>
+        <td><span>$!{item.type}</span></td>
+        <td><span>$!{item.resperson}</span></td>
+        <td><span>$!{item.sugtime}</span></td>
+        <td><span><a class="detail" suggestid="$!{item.suggestid}">$!{item.fcount}次<img src="/images/xjt.png"></a></span></td>
+        <td><span>
+		#if($!{item.status} == 3)
+			 已处理
+			 #elseif($!{item.status} == 1)
+			 <font color="red">未处理</font>
+			 #elseif($!{item.status} == 2)
+			 <font color="orange">处理中</font>
+		#end
+        </span></td>
+        <td><span>$!{item.lastTime}</span></td>
+        <td><span><a class="option" suggestid="$!{item.suggestid}">修改<img src="/images/xjt.png"></a></span></td>
+      </tr>
+      
+      <tr style="border:none">
+        <td colspan="11" style="height:0px">
+         <div class="nav_menu">
+            <div class="nav">
+              <div class="box" id="navbox" >
+                 
+                 <!-- 回访弹窗 -->
+                  
+                 <div class="cont" id="suggest_$!{item.suggestid}" style="display:none;"><!-- 回访 -->
+
+                </div>
+                <!-- 回访弹窗 -->
+                
+                 <!-- 编辑弹窗 -->
+                  
+                 <div class="cont" id="option_$!{item.suggestid}" style="display:none;"><!-- 编辑 -->
+
+                </div>
+                <!-- 编辑弹窗 -->
+                  
+              </div>
+            </div>
+           </div>
+        </td>
+      </tr>
+      #end
+  <!-- 以上为动态循环---------------------------------------------- --> 
+  
+  
+    </table> 
+  </div>
+
+  #parse("views/common/pages.html")
+</div>
+     
+     <!-- 新增弹出层 -->
+
+     <div class="ck_box" id="new_div" style="display:none;left: 20%;top:20%;height: 240px;">
+     <form id="J_new_form" action="" method="post">
+     
+      <table>
+        <tbody><tr>
+          <th>投诉渠道:</th>
+          <td>
+			             <select id="J_sel_qudao_new" name="J_sel_qudao_new">
+							    #foreach($t in $!qudao.keySet())
+							     #if($t!='999')
+							     
+							    	<option  value="$t">$!{qudao.get($t)}</option>
+							    
+							     #end
+				            	#end
+							
+						 </select> 
+
+		  </td>
+        </tr>
+        <tr>
+          <th>投诉电话:</th>
+          <td><input type="text" class="w_text_s" name="J_phone" id="J_phone" />
+        </tr>
+        <tr>
+          <th>投诉类型:</th>
+           	 <td>  
+           	 					<select id="J_sel_type_new" name="J_sel_type_new">
+							    #foreach($q in $!seltype.keySet())
+							      
+							        <option value="$q">$!{seltype.get($q)}</option>
+							      
+				            	#end
+							
+								</select>      
+     		 </td>
+        </tr>
+        <tr>
+          <th>负责人:</th>
+          <td><input type="text" class="w_text_s" id="J_fzr" name="J_fzr" /></td>
+        </tr>
+        <tr>
+          <th>备注:</th>
+          <td><input type="text" class="w_text_s" id="J_content" name="J_content" /></td>
+        </tr>
+      </tbody></table>
+      <div class="btn_box">
+        <span class="qr_btn" id="J_ok_btn">确认</span>
+        <span class="qx_btn" id="J_cal_btn">取消</span>
+      </div>
+      </form>
+    </div>  
+    
+    <!-- 新增弹出层 -->
+    
+</body>
+<script type="text/javascript">
+var zpfworderid = 0;
+var fqorderid = 0;
+$("span[name='fqspan']").each(function(){
+	var o = $(this);
+	o.click(function(){
+		fqorderid = o.parent().parent().find("span[name='orderid']").text();
+		$("#bg").show();
+		$("#giveupdiv").show();
+		
+	});
+});
+$("span[name='zpspan']").each(function(){
+	var obj = $(this);
+	
+	obj.click(function(){
+		var orderid = obj.parent().parent().find("span[name='orderid']").text();
+		zpfworderid = orderid;
+		var url = "/action/fwlist";
+		$.post(url,function(data){
+			$(".ceng_box1").show();
+			$(".ceng_box1").html(data);
+		});
+	});
+});
+$('[name="nice-select"]').click(function(e){
+  $('[name="nice-select"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').hover(function(e){ 
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+
+  if(val =="公司名称" || val == "客户姓名" || val =="客户电话"){
+	  $("#paramOneType").attr("value",dataVal);
+  }else{
+	 // $("#type").attr("value",dataVal);
+  }
+  
+  $(this).parents('[name="nice-select"]').find('input').val(val);
+  $('[name="nice-select"] ul').hide();
+  e.stopPropagation();
+  // alert("中文值是："+val);
+  // alert("数字值是："+dataVal);
+  //alert($(this).parents('[name="nice-select"]').find('input').val());
+});
+$(document).click(function(){
+  $('[name="nice-select"] ul').hide();
+});
+</script>
+</html>

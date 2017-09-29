@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<link rel="stylesheet" href="/css/ystep.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script src="/js/ystep.js"></script>
+<style type="text/css">  
+        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  
+        z-index:333;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}    
+</style>  
+<script type="text/javascript">
+
+$(function(){ 
+	
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+var cengshow = function(){
+	document.getElementById("bg").style.display = "block"; 
+}
+var cenghide = function(){
+	document.getElementById("bg").style.display = "none"; 
+}
+$(document).ready(function(){
+
+	 var allHeight = Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight) + "px"; 
+	
+	$("span[name='ckbutton']").click(function(){
+		cengshow();
+		$("#cuikuandiv").show();
+		var lid = $(this).parent().parent().find("td span[name='lid']").text();
+	    $("#friendLinkid").val(lid);
+		 $.ajax({  
+		        type: "POST", // 用POST方式传输  
+		        dataType: "text", // 数据格式:JSON  
+		        url: "/order/friendLinkinfo", // 目标地址  
+		        data: {"lid":lid},  
+		        success: function (data){
+		        	if(data != null){
+		        		var tmp = data.split("_");
+		        		var indexpage = tmp[0];
+		        		var keyword = tmp[1];
+		        		var lurl = tmp[2];
+		        		var showinput = tmp[3];
+		        		$!("#skorderid").val(lid);
+		        		$!("#keyword").val(keyword);
+		        		$!("#lur").val(lurl);
+		        		$!("#includepage").val(indexpage);
+		        		$!("#paychannelshowinput").val(showinput);
+		        		$("#ckdiv").show();
+		        		//ShowDivCenter(ckdiv);
+		        	}
+		        }  
+		    }); 
+	});
+	//删除数据
+$("span[name='qrskorder']").click(function(){
+	var lid = $(this).parent().parent().find("td span[name='lid']").text();
+	if(confirm("你确定要删除该条记录吗？？")){
+		window.location.href="/order/deletefriendLink/"+lid;
+	}
+});
+$('[name="nice-select"]').click(function(e){
+  $('[name="nice-select"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').hover(function(e){ 
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+  $("#paramOneType").val(dataVal);
+  $(this).parents('[name="nice-select"]').find('input').val(val);
+  $('[name="nice-select"] ul').hide();
+  //提交表单
+  myOrderQuery();
+  e.stopPropagation();
+});
+$(document).click(function(){
+  $('[name="nice-select"] ul').hide();
+});
+});
+
+
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+//点击查询
+function myOrderQuery(){
+	document.getElementById("myQueryForm").submit(); //提交表单
+}
+
+/**
+ *点击详情后执行方法 
+ */
+$(document).on("click","#t2",function(){
+	//修改详情样式
+	if($(this).hasClass("t1bg")){
+        $(this).removeClass("t1bg").addClass("tdbg");
+    }else{
+        $(this).addClass("t1bg").removeClass("tdbg");    
+    }
+	
+
+	var orderid = $(this).attr("temval");
+	var cont = $("#orderdetil_"+orderid);
+	
+	var url = "/order/orderDetil/"+orderid;
+	
+	if($(this).hasClass("sel")) { 
+		$(this).removeClass("sel");
+		cont.hide();
+		cont.html("");
+	}else {  
+		$(this).addClass("sel");
+		$.post(url,	function(data){
+			cont.show();
+			cont.html(data);
+		});
+	};
+	
+	
+});
+
+//获取财务下的日志信息
+function optionLog(orderid){
+	var  payprocesslist= "#payprocess_list_"+orderid;
+	var show_t4 = "#show_t4_"+orderid;
+	var t4 = ".t4_"+orderid;
+	
+ 
+	//给相对应的A标签添加样式
+    if($(t4).hasClass("t1bg")){
+        $(t4).removeClass("t1bg").addClass("tdbg");
+    }else{
+        $(t4).addClass("t1bg").removeClass("tdbg");    
+    }
+    
+	//先清空数据
+	$(payprocesslist).find("li").remove();
+	if($(show_t4).is(":hidden")){
+		// 向后台发送处理数据  
+	    $.ajax({  
+	        type: "POST", // 用POST方式传输  
+	        dataType: "json", // 数据格式:JSON  
+	        url: "/order/getPayprocess.html", // 目标地址  
+	        data: {"orderid":orderid},  
+	        success: function (data){
+	        	$.each(data,function(index,value){
+	        		var htmStr="<li class=\"detail_info b_color\"><p>"+value.optime+"</p><p>"+value.title+"  "+value.contents+"</p></li>";
+	        		$(payprocesslist).append(htmStr);
+	        	})
+	        }  
+	    }); 
+	    $(show_t4).toggle();
+	}else{
+		$(show_t4).toggle();
+	}
+}
+//添加链接
+function addlink(){
+	cengshow();
+	var o = $(this);
+	var orid = o.parent().parent().find("td span[name='orderidtd']").text();
+	$!("#skorderid").val(orid);
+	$("#ckdiv").show();
+	//ShowDivCenter(ckdiv);
+}
+
+function ShowDivCenter(div) {
+    var top = ($(window).height() - $(div).height()) / 2;
+    var left = ($(window).width() - $(div).width()) / 2;
+    var scrollTop = $(document).scrollTop();
+    var scrollLeft = $(document).scrollLeft(); 
+    $(div).css({ position: 'absolute', 'top': top + scrollTop, left: left + scrollLeft }).show();
+    //$(div).css({ position: 'absolute', 'bottom':5, left: left + scrollLeft }).show();
+}
+
+</script>
+
+</head>
+
+<body>
+<div id="bg"></div>  
+<div class="user_box">
+  
+  <div class="user_search">
+    <form action="/order/friendLinklist" id="myQueryForm" name="myQueryForm" method="post">
+    <input type="hidden" name="orderType" id="orderType" value="friendLinklist" />
+    <div class="search_bg qz_w">
+     <p class = "search_btn rang_left">所属页面：</p>
+      <div class="nice-select" name="nice-select" id="query1">
+        <input type="text" value="$!{showsearch}" readonly value ="$!{showsearchval}"/>
+        <ul>
+          <li data-value="1">首页</li>
+          <li data-value="2">公司注册</li>
+          <li data-value="3">代理记账</li>
+          <li data-value="4">商标注册</li>
+          <li data-value="5">公司注册预约</li>
+          <li data-value="6">代理记账预约</li>
+          <li data-value="7">商标注册预约</li>
+          <li data-value="8">小微说首页</li>
+          <li data-value="9">小微说栏目页</li>
+           <!-- 新的 -->
+          <li data-value="11">新官网首页 </li>
+          <li data-value="12">产品列表页 </li>
+          <li data-value="21">资讯站首页 </li>
+          <li data-value="22">文章一级分类 </li>
+          <li data-value="23">文章二级分类 </li>
+          <li data-value="24">问答首页</li>
+          <li data-value="25">问答一级分类 </li>
+        </ul> 
+      </div>
+      <input type="hidden" name="paramOneType" id="paramOneType" value="$!{showsearchval}" />
+       <p class="add_btn range_t" onclick="addlink();">+添加链接</p> 
+      <div class="clear"></div>
+    </div>
+    </form>
+    <div class="clear"></div>
+  </div>
+
+  
+  
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="20%">序号</th>
+        <th width="15%">关键词</th>
+        <th width="25%">网址</th>
+        <th width="20%">添加时间</th>
+        <th width="20%">操作</th>
+      </tr>
+      #foreach($item in $!friendLinkEntity)
+      <tr>
+        <td  width="20%"><span name="lid">$!{item.lid}</span></td>
+        <td  width="15%"><span name="keyword">$!{item.keyword}</span></td>
+		<td  width="25%"><a href="http://$!{item.lurl}"><span name="lurl">$!{item.lurl}</span></a></td>
+		<td  width="20%"><span>$!{item.addtime}</span></td>
+        <td  width="20%">
+            <span class="orderBtn" name="ckbutton">修改</span>
+            <span class="orderBtn" name="qrskorder">删除</span>
+        </td>
+      </tr>
+      #end
+    </table> 
+  </div>
+
+  #parse("views/common/pages.html")
+</div>
+#parse("views/order/addlink.html")
+</body>
+<script>
+
+</script>
+</html> 

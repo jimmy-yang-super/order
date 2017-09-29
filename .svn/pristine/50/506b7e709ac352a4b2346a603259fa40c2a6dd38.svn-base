@@ -1,0 +1,103 @@
+
+<!-- 银行开户建档 -->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th width="100px">档案位置编号：</th>
+				<td width="300px">$!{createArchiveID}</td>
+				<th width="100px">存档人：</th>
+				<td width="300px">$!{WFUtils.getAssgineeByProcessInstanceIdAndTaskDefId($taskInfo.getProcessInstanceId(), "bankAccountInfo")}</td>
+			</tr>
+			<tr>
+				<th width="100px">存放内容：</th>
+				<td width="300px">银行开户材料</td>
+				<th>开户银行</th>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">确认建档</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($) {
+	
+	var div1Id = "createArchiveDiv";
+	/****确认建档*****************************/
+	// 点击 - 确认建档
+	$(".b1").click(function() {
+		
+		WF.showDiv(div1Id);
+	});
+		
+	// 确认建档 - 取消
+	$("#" + div1Id + " .cancel").click(function() {
+		WF.closeDiv(div1Id);
+	});
+	
+	// 确认建档 - 确定
+	$("#" + div1Id + " .ok").click(function() {
+		if(!WF.validate(div1Id)){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		// 调用流程接口
+		WF.submitTask(div1Id, "&taskCreateArchiveStatus=1");
+	});
+	
+	$("#createArchiveDiv").find("input[name='inputInfoOther']").keyup(function(){
+		var pai = $("#createArchivePai").val();
+		var gui = $("#createArchiveGui").val();
+		var hao = $("#createArchiveHao").val();
+		$("#createArchiveID").val(pai + "P" + gui + "G" + hao);
+	});
+});
+</script>
+
+<!-- 弹出框 - 确认建档 -->
+<div id="createArchiveDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">确认建档</p>
+		<table class="t1">
+			<tr>
+				<th>排：</th>
+				<td><input id="createArchivePai" name="inputInfoOther" type="number" data-validate="number" /></td>
+			</tr>
+			<tr>
+				<th>柜：</th>
+				<td><input id="createArchiveGui" name="inputInfoOther" type="number" data-validate="number" /></td>
+			</tr>
+			<tr>
+				<th>号：</th>
+				<td><input id="createArchiveHao" name="inputInfoOther" type="number" data-validate="number" /></td>
+			</tr>
+			<tr>
+				<th>档案位置编号：</th>
+				<td><input id="createArchiveID" type="text" name="inputInfoAll" disabled="disabled" /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,80 @@
+<!-- 外勤办理国税报到 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($) {
+	/**** 确认存放 *****************************/
+	// 点击 - 确认存放
+	$(".b1").click(function() {
+		var nationalTaxFieldWorkerRegDataStatus = WF.getVariableByName("nationalTaxFieldWorkerRegDataStatus")
+		if(nationalTaxFieldWorkerRegDataStatus != "2"){
+			alert("档案组未确认相关材料已存放，请到档案组存放档案");
+			return;
+		}
+		
+		
+		//WF.showDiv('wanChengDiv');
+		
+		// 调用流程接口
+		WF.submitTask();
+		WF.taskFinish();
+	});
+	
+	// 提交工商申请 - 确定
+	$("#wanChengDiv .ok").click(function(){
+		if(!WF.validate("wanChengDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 更新企业库
+		WF.updateCompanyInfo("wanChengDiv", "", "1004");
+		
+		// 调用流程接口
+		WF.submitTask("wanChengDiv");
+		WF.taskFinish();
+	});
+	
+	// 提交工商申请 - 取消
+	$("#wanChengDiv .cancel").click(function(){
+		WF.closeDiv('wanChengDiv');
+	});
+	
+});
+</script>
+
+<!-- 弹出框 - 完成 -->
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t1">
+			<tr>
+				<th>国税CA用户名：</th>
+				<td><input id="nationalTaxCaAccount" value="$!{nationalTaxCaAccount}" type="text" data-validate="number:true" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>国税CA密码：</th>
+				<td><input id="nationalTaxCaPassword" value="$!{nationalTaxCaPassword}" type="text" data-validate="number:true" name="inputInfoAll" /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css" />
+<script type="text/javascript" src="/js/jquery-1.11.0.js"></script>
+<script type="text/javascript" src="/js/jquery.upload/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/js/jquery.upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	var taskId = "$!{taskInfo.getId()}";
+	var enterpriseId = "$!{enterpriseId}";
+	var orderId = "$!{orderid}";
+	var procInstId = "$!{taskInfo.getProcessInstanceId()}";
+	var taskDefinitionKey = "$!{taskInfo.getTaskDefinitionKey()}"
+	window.location.taskId =window.taskId = taskId;
+	window.location.orderId =window.orderId = orderId;
+	window.location.procInstId =window.procInstId = procInstId;
+	window.location.taskDefinitionKey =window.taskDefinitionKey = taskDefinitionKey;
+</script>
+<style type="">
+.fq_box1{
+	border-left:  1px solid #a5c2d3;
+}
+.nice-select4 ul {
+	max-height: 100px;
+}
+
+</style>
+</head>
+<body>
+	
+	<div class="zy_box">
+		<div class="zy_left">
+			<!-- 流程信息 -->
+			#if($taskInfo.getProcessDefinitionKey() == 'bj-all-company_reg')
+				#parse("views/wf/$!{taskInfo.getProcessDefinitionKey()}-v$!{procDefVersion}/$!{taskInfo.getTaskDefinitionKey()}.html")
+			#else
+				#parse("views/wf/$!{taskInfo.getProcessDefinitionKey()}/$!{taskInfo.getTaskDefinitionKey()}.html")
+			#end
+		</div>
+		<div class="zy_right">
+			<!-- 企业信息 -->
+			 #parse("views/wf/common/company-info.html")
+		</div>
+		<div id="fade" class="black_overlay">
+		</div>
+	</div>
+	<script type="text/javascript" src="/js/wf/task-detail.js"></script>
+</body>
+</html>

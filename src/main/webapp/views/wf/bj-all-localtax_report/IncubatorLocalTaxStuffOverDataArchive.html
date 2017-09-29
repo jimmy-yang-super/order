@@ -1,0 +1,111 @@
+
+<!--孵化器地税报到完成归档-->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th width="100px">档案位置编号：</th>
+				<td width="300px">$!{createArchiveID}</td>
+				<th width="100px">存档人：</th>
+				<td width="300px">$!{WFUtils.getAssgineeByProcessInstanceIdAndTaskDefId($taskInfo.getProcessInstanceId(), "IncubatorLocalTaxStuffOver")}</td>
+			</tr>
+			<tr>
+				<th>注册地址：</th>
+				<td>$!{iszhucdz}</td>
+				<th>地址合作商：</th>
+				<td>$!{reginAddress.getAttribute1()}</td>
+			</tr>
+			<tr>
+				<th width="100px">存放内容：</th>
+				<td width="300px">综合申报密码或数字证书等材料</td>
+				<th></th>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/****完成****************************/
+	    // 点击 - 完成
+	    $(".b1").click(function() {
+			WF.showDiv("localTaxShenBaoMiMa");
+		}); 
+		
+		//点击综合申报密码Div 确定
+		$("#localTaxShenBaoMiMa .ok").click(function(){
+			//如果选择[地税综合申报密码]时须输入landTaxLocalaxOverFileDszhsbmmValue不能为空；选择地税数字证书后可改值可为空。
+			var landTaxLocalaxOverFileDszhsbmmKey = $("#landTaxLocalaxOverFileDszhsbmmKey").val();
+			if(landTaxLocalaxOverFileDszhsbmmKey == "1"){
+				$("#landTaxLocalaxOverFileDszhsbmmValue").removeAttr("data-validate");
+			}
+			
+			if(!WF.validate("localTaxShenBaoMiMa")){
+				return;
+			}
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 保存企业库数据
+			//WF.updateCompanyInfo("localTaxShenBaoMiMa");
+			
+			// 调用流程接口
+			WF.submitTask("localTaxShenBaoMiMa","&IncubatorLocalTaxStuffOverDataArchive=2");
+		});
+		
+		//点击综合申报密码Div 取消
+		$("#localTaxShenBaoMiMa .cancel").click(function(){
+			WF.closeDiv("localTaxShenBaoMiMa");
+		});
+	});
+</script>
+
+<!-- 弹出框 - 地税综合申报密码 -->
+<div id="localTaxShenBaoMiMa" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">地税综合申报密码</p>
+		<table class="t1">
+			<tr>
+				<th>地税综合申报密码：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="landTaxLocalaxOverFileDszhsbmmKey" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('landTaxLocalaxOverFileDszhsbmmKey')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+				<th></th>
+				<td>
+					<input type="text" name="inputInfoTask" data-validate="none" id="landTaxLocalaxOverFileDszhsbmmValue" />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

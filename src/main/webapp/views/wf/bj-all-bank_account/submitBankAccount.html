@@ -1,0 +1,72 @@
+
+<!-- 银行开户材料报到 -->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>公司名称：</th>
+				<td>$!{companymc}</td>
+				<th>开户银行：</th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>法人姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>法人电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>Ukey管理员1姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>Ukey管理员1电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>Ukey管理员2姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>Ukey管理员2电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/****完成****************************/
+	    // 点击 - 完成
+	    $(".b1").click(function() {
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+	    	var submitBankAccountDataPick = WF.getVariableByName("submitBankAccountDataPick");
+	    	var submitBankAccountDataArchive = WF.getVariableByName("submitBankAccountDataArchive");
+	    	if(submitBankAccountDataPick == ""){
+	    		alert("请完成[银行开户提档]任务!");	    		
+	    	}else if(submitBankAccountDataPick == "1" && submitBankAccountDataArchive == ""){
+				alert("请完成[银行开户公章归档]任务!");
+	    	}else{
+	    		alert("请到档案组确认提档或归档任务");
+	    	}
+		}); 
+		
+	});
+</script>

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>公共任务操作</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){ 
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+function TaskCommon(option){
+	$.ajax({url:"/common/taskOptionCommon/"+option,
+		dataType:"json",
+		data:$("#myform").serialize(),
+		error:function(){
+			alert("操作失败! 请正确填写必须的参数!");
+			return;
+		},
+		success:function(data){
+			alert("操作成功！");
+		}
+	});
+}
+</script>
+
+</head>
+
+<body>
+<div class="user_box">
+  <div class="user_list">
+    <form action="/common/taskOptionCommon" method="post" id="myform" >
+    <table id="tab" class="order" >
+      <tr>
+        <th width="11%">任务类型</th>
+        <th width="8%">操作所需参数</th>
+        <th width="9%">操作</th>
+        <th></th>
+      </tr>
+      <tr>
+      	<td>发起任务</td>
+      	<td>
+      		当前登陆人：<input type="text" name="empid" />
+      	</td>
+      	<td>
+      		母单ID：<input type="text" name="start_orderid" />
+      	</td>
+      	<td>
+      		<span class="orderBtn" onclick="TaskCommon('start')">执行</span>
+      	</td>
+      </tr>
+      <tr>
+      	<td>更换人员</td>
+      	<td>
+      		任务ID：<input type="text" name="taskId" />
+      		要设置的人员ID：<input type="text" name="userid" />
+      	</td>
+      	<td></td>
+      	<td>
+      		<span class="orderBtn" onclick="TaskCommon('setAssignee')">执行</span> </td>
+      </tr>
+      <tr>
+      	<td>删除任务</td>
+      	<td>
+      		废弃原因：<input type="text" name="delReson" />
+      	</td>
+      	<td>
+      		母单ID：<input type="text" name="del_orderid" />
+      	</td>
+      	<td>
+      		<span class="orderBtn" onclick="TaskCommon('del')">执行</span></td>
+      </tr>
+      <tr>
+      	<td>暂停任务</td>
+      	<td>
+      		母单ID：<input type="text" name="suspend_orderid" />
+      	</td>
+      	<td></td>
+      	<td>
+      		<span class="orderBtn" onclick="TaskCommon('suspend')">执行</span></td>
+      </tr>
+      <tr>
+      	<td>激活任务</td>
+      	<td>
+      		母单ID：<input type="text" name="active_orderid" />
+      	</td>
+      	<td></td>
+      	<td> 
+      	<span class="orderBtn" onclick="TaskCommon('active')">执行</span></td>
+      </tr>
+      
+    </table> 
+    </form>
+  </div>
+</div>
+</body>
+</html>

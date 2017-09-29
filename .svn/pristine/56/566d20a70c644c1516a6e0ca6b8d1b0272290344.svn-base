@@ -1,0 +1,184 @@
+<!-- 确认支出地址费用 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>注册地址：</th>
+				<td >$!{iszhucdz}</td>
+				<th>订单号：</th>
+				<td>$!{taskOrderId}</td>
+			</tr>
+			<tr>
+				<th>申请支付金额：</th>
+				<td>$!{applyAddressFeeFuKuanJinE}</td>
+				<th>地址合作商：</th>
+				<td>$!{reginAddress.getAttribute1()}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >确认支出</a><a class="b2" >内部退回</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 确认支出 *************************/
+	// 点击 - 确认支出
+	$(".b1").click(function(){
+		if(!WF.validate()){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		WF.showDiv("showkuanDiv");
+		//WF.submitTask();
+	});
+	
+	
+	/**收款  确定*/
+	$("#showkuanDiv .ok").click(function() {
+		if(!WF.validate("showkuanDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		var paymoneycount = "$!{paymoneycount}"; //应收金额
+		var prepaidamount = "$!{prepaidamount}"; //预收金额
+		var paynumber = $("#paynumber").val();  //收到金额
+		var payfee = $("#payfee").val();         //手续费
+		var payTotal = parseInt(paynumber) + parseInt(payfee);  //收到金额+手续费
+		var pay_over = parseInt(paymoneycount) - (parseInt(prepaidamount) + parseInt(payTotal));
+		$("#prepaidamount").val(payTotal);
+		$("#paytotal").val(payTotal);
+		//alert(paymoneycount+"=="+prepaidamount+"=="+paynumber+"=="+payfee+"==="+payTotal+"=="+pay_over);
+		if(pay_over>0){
+			WF.addTaskComment("showkuanDiv","");
+			WF.addPayProcess("showkuanDiv","");
+			alert("操作成功");
+			window.opener.location.reload();
+			window.close();
+			return;
+		}else{
+			WF.addTaskComment("showkuanDiv","");
+			WF.addPayProcess("showkuanDiv","");
+			WF.submitTask("showkuanDiv","");
+		}
+	});
+	
+	/**收款  取消*/
+	$("#showkuanDiv .cancel").click(function() {
+		WF.closeDiv("showkuanDiv");
+	});
+	
+	$("#paynumber").blur(function(){
+    	jstotal();
+    });
+    $("#payfee").blur(function(){
+    	jstotal();
+    });
+    var jstotal = function(){
+    	var p = $("#paynumber").val();
+    	var f = $("#payfee").val();
+    	var t = parseFloat(p) + parseFloat(f);
+    	$("#paytotal").val(t);
+    }
+    
+    
+    /************ 内部退回 *************************/
+	// 点击 - 内部退回
+	$(".b2").click(function(){
+		WF.showDiv('tuiHuiDiv');
+	});
+	//内部退回 - 确定
+	$("#tuiHuiDiv .ok").click(function(){
+		if(!WF.validate("tuiHuiDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		var taskData = "&gongShangShenQingFlag=0&GongShangApplyDataStatus=0&CollationDataTuiHuiAct=2";
+		WF.submitTask("tuiHuiDiv", taskData);
+	});
+	
+	// 内部退回 - 取消
+	$("#tuiHuiDiv .cancel").click(function(){
+		WF.closeDiv('tuiHuiDiv');
+	});
+});
+
+
+
+</script>
+
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="gongShangApplyTuiHuiReason" value="$!{gongShangApplyTuiHuiReasonKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('gongShangApplyTuiHuiReason')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>退回描述：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="gongShangApplyTuiHuiRemark" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>
+
+<!-- 弹出框 - 收款 -->
+<div id="showkuanDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">收款信息</p>
+		<table class="t1">
+			<tr>
+				<th>支付地址款项：</th>
+				<td>
+					<input id="paynumber" type="number" data-info="inputInfoTaskComment;inputInfoPayProcess" data-validate="number" value="0" name="inputInfoTask" />
+					<input id="paychannel" type="hidden" value="6" data-info="inputInfoTaskComment;inputInfoPayProcess" name="inputInfoTask" />
+					<input id="payfee" type="hidden" data-info="inputInfoTaskComment;inputInfoPayProcess" data-validate="number" value="0" name="inputInfoTask" />
+				</td>
+			</tr>
+			<tr>
+				<th>合计：</th>
+				<td>
+					<input id="paytotal" type="number" data-info="inputInfoPayProcess" value="0"  name="inputInfoTask" readonly="readonly" />
+				</td>
+			</tr>
+			<tr>
+				<th>：</th>
+				<td><input id="contents" type="text" data-info="inputInfoTaskComment;inputInfoPayProcess" value="$!{iszhucdz}" data-validate="none" name="inputInfoTask" /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

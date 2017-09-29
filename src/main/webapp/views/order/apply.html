@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css" />
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<style type="text/css">  
+        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  
+        z-index:0;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}    
+</style>  
+
+
+<script type="text/javascript">
+//签单申请
+var j =0 ;
+function singleFormSubmit(){
+	/* var singleForm = document.getElementById("singleForm");
+	
+	if(confirm("是否确定金额正确?")){
+		singleForm.submit();	
+	}  */
+	if(confirm("是否确定金额正确?")){
+		//防止第二次点击
+		if(j==0){
+			j++;
+			//判断是否绑定企业信息
+		    var orderid = $("#orderid").val();
+			$.ajax({url:"/action/isblanbusiness",
+			type:"post",
+			data:{"orderid":orderid},
+			dataType:"text",
+			success:function(data){
+				if(data == "false"){
+					alert("请返回修改页面添加所属企业!!");
+				}else{
+					$.ajax({url:"/action/writeSingle",
+						type:"post",
+						data:$("#singleForm").serialize(),
+						dataType:"json",
+						success:function(data){
+							if(data.res == "ok"){
+								var tempUrl = $("#paramType").val();
+								if(tempUrl == ""){
+									window.location.href="/order/zxgwtobesigned";
+								}else{
+									window.location.href=tempUrl;
+								}
+							}else{
+								alert(data.msg);
+								j=0;
+							}
+							
+						}});
+				}
+			}});
+		}else{
+			alert("已经提交过一次,请不要二次提交!");
+		}
+	}  
+	
+}
+var cengshow = function(){
+	document.getElementById("bg").style.display = "block"; 
+}
+var cenghide = function(){
+	document.getElementById("bg").style.display = "none"; 
+}
+//展现出来人
+function showCustomerUser(){
+	//放置第二次点击
+	$("#zhipaiqueding").unbind("click");
+	
+	var url = "/action/notZpfuwulist";
+	$.post(url,function(data){
+		cengshow();
+		$(".ceng_box1").show();
+		$(".ceng_box1").html(data);
+	});
+}
+//取消
+function orderCancel(){
+	document.location.href="/order/zxgwtobesigned";
+}
+
+
+//选择优惠券
+function myCoupoonChange(args){
+	var commonValue = args.value;
+	if(commonValue != "不使用"){
+		var temp = commonValue.split("_");
+		commonValue = temp[1];
+		var ucouponid = temp[0];
+		$("#userCouponid").val(ucouponid);
+	}else{
+		$("#userCouponid").val("");
+	}
+	
+	var totalmoney =  '$!{sorderE.paymoneycount}';
+	var paymoney   =  '$!{sorderE.paymoneycount}';
+	var couponeyMoney = commonValue;
+	if(couponeyMoney == "不使用"){
+		$("#userCouponPrice").html(0);
+		$("#payMoneyCount").html("￥"+paymoney);
+		$("#paymoney").val(paymoney);
+	}else{
+		$("#userCouponPrice").html(couponeyMoney);
+		paymoney = parseInt(totalmoney) - parseInt(couponeyMoney);
+		$("#payMoneyCount").html("￥"+paymoney+".0");
+		$("#paymoney").val(paymoney);
+	} 
+}
+</script>
+
+</head>
+
+<body>
+<div id="bg"></div>  
+<div class="ceng_box1" style="display:none; margin: 30px 0; padding: 30px; width: 92%;height: 1200px;background: #2F3032; position: absolute;z-index:1;">
+</div>
+<div class="user_box">
+  <form action="/action/writeSingle" method="post" name="singleForm" id="singleForm">
+  <div class="crumbs">
+    <a class="crumb-link" href="/order/zxgwtobesigned">您目前的位置：<span>跟进中订单</span></a>
+    <i class="crumb-line">></i>
+    <a class="crumb-link">申请签单</a>
+  </div>
+  <div class="qd_box range_t1">
+    <div class="qd_b1">
+      <p>客户姓名：<span>$!{userE.username}</span></p>
+      <p>手机号码：<span>$!{userE.userphone}</span></p>
+      <p>订单来源：<span>$!{userE.channel}</span></p>
+      <p>所属公司：<span>$!{suosgs}</span></p>
+      <p>公司名称：<span>$!{suosgs}</span></p>
+      <!-- <p>公司名称：<span>$!{userE.companyname}</span></p> -->
+      <p>电子邮箱：<span>$!{userE.email}</span></p>
+      <p>通信地址：<span>$!{userE.address} </span></p>
+      <p>座机号码：<span>$!{userE.landlinenumber}</span></p>
+      #if($!{userCouponList})
+      <p>优惠券: 
+      	  <span>
+	      <select onchange="myCoupoonChange(this)">
+	      	<option>不使用</option>
+	      	#foreach($usercoupon in $!{userCouponList})
+	      	<option value="$!{usercoupon.tucid}_$!{usercoupon.price}">$!{usercoupon.price}  $!{usercoupon.dqtime}</option>
+	      	#end
+	      </select>
+	      </span>
+      </p>
+	  #end
+    </div>
+    <div class="qd_b2">
+      <div class="b2_title">$!{serviceName}</div>
+      <div class="b2_con">
+      #foreach($childOrder in  $!{childOrderList})
+        <table>
+          <tr>
+            <td width="120">$!{childOrder.serverContent}</td>
+            <td class="td_con">$!{childOrder.properties}</td>
+            <td width="90">￥$!{childOrder.price}</td>
+          </tr>
+        </table>
+      #end
+      </div>
+      
+      <div class="clear"></div>
+      <div class="t_box">
+        <p>订单金额：<span class="red">￥$!{sorderE.totalmoney}</span></p>
+        #if($!{userCoupon})
+        	<p>$!{userCoupon.couponsname}：<span class="red">-￥$!{userCoupon.price}</span></p>
+        	#set($cha = $!{sorderE.totalmoney} - $!{sorderE.paymoneycount} )
+            #if($!cha > 0)
+            <p>赠送减免：<span class="red">-￥$!{cha}</span></p>
+            #end
+        #elseif($!{userCouponList})
+        	#set($cha = $!{sorderE.totalmoney} - $!{sorderE.paymoneycount} )
+            #if($!cha > 0)
+            <p>赠送减免：<span class="red">-￥$!{cha}</span></p>
+            #end
+        	<p>优惠券：<span class="red">-￥<span id="userCouponPrice">0</span></span></p>
+        	<input id="userCouponid" name="userCouponid" type="hidden" value="" />
+        #else  <!-- 没有优惠券--赠送减免 ==（订单金额--实付金额）-->
+            #set($cha = $!{sorderE.totalmoney} - $!{sorderE.paymoneycount})
+            #if($!cha > 0)
+            <p>地址福利：<span class="red">-￥$!{cha}</span></p>
+            #end
+        #end
+        <p class="fact_t">应付金额：<span class="red" id="payMoneyCount">￥$!{sorderE.paymoneycount}</span></p>
+        <p class="order_in">订单编号：$!{sorderE.orderid}</p>
+        <p class="order_in">订单时间：$!{sorderE.postime}</p>
+      </div>
+    </div>
+  </div>
+  
+  <input type="hidden" name="orderid" id="orderid" value="$!{orderid}" />
+  <input type="hidden" name="paramType" id="paramType" value="$!{paramType}" />
+  <div class="order_e_box">
+    <table>
+      <tr>
+        <td width="8%">应付金额<br/><span class="red text_font">(谨慎修改)</span></td>
+        <td width="15%"><input type="text" class="d_text_ss" name="paymoney" id="paymoney" value="$!{sorderE.paymoneycount}" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" />元</td>
+        <input type="hidden" name="totalmoney" id="totalmoney" value="$!{sorderE.totalmoney}" />
+       <!--  <td width="8%">预收金额</td>
+        <td width="15%"><input type="text" class="d_text_ss" name="prepaidamount" id="prepaidamount" value="0" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"  />元</td> -->
+        <!-- <td width="8%">手续费</td>
+        <td width="15%"><input type="text" class="d_text_ss" name="poundage" id="poundage" value="0" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"  />元</td> -->
+        <td width="8%">合同编号</td>
+        <td><input type="text" class="d_text_ss" name="contract" id="contract" /></td>
+      </tr>
+      <tr>
+        <td>备 注</td>
+        <td colspan="5"><textarea class="d_area_l" name="contents" id="contents" ></textarea></td>
+      </tr>
+    </table>
+    <div class="dd_btn_box">
+      #if($!{qianDanCompanyAE} == "31926878381057")
+      	<input type="hidden" name="qianDanCompanyAE" id="qianDanCompanyAE" />
+      	<span class="dd_qr_btn" id="zhipaiqueding" onclick="showCustomerUser()">指派确认</span>
+      #end
+      <span class="dd_qr_btn" id="queding" onclick="singleFormSubmit()">确认</span>
+      <span class="dd_qx_btn" onclick="orderCancel()">取消</span>
+    </div>
+  </div>
+  </form>
+
+</div>  
+</body>
+
+</html>

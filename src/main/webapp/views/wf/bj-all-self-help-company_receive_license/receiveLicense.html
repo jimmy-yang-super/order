@@ -1,0 +1,98 @@
+
+<!-- 领取证照 -->
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="210px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="220px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>客户姓名：</th>
+				<td>$!{loginEntity.username}</td>
+				<th>客户电话：</th>
+				<td>$!{loginEntity.userphone}</td>
+			</tr>
+			<!-- <tr>
+				<th>服务状态：</th>
+				<td>$!{}</td>
+				<th>付款状态：</th>
+				<td>$!{}</td>
+			</tr> -->
+			<tr>
+				<th>商品名称：</th>
+				<td>$!{product_other_name}</td>
+				<th>付款状态：</th>
+				<td>已付款</td>
+			</tr>
+			<tr>
+				<th>城市：</th>
+				<td>$!{DicUtils.getAreaDataById("$!{city_id}")}</td>
+				<th>区域：</th>
+				<td>$!{DicUtils.getAreaDataById("$!{area_id}")}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >提交信息</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	//点击 提交信息
+	$(".b1").click(function(){
+		WF.showDiv("submitReceiveInfoDiv");
+	});
+	
+	//查看领取证照 取消
+	$(".cancel").click(function(){
+		WF.closeDiv("submitReceiveInfoDiv");
+	});
+	
+	//点击领取证照 确定
+	$(".ok").click(function(){
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		//把图片保存到企业库
+		//WF.updateCompanyInfo("submitReceiveInfoDiv");
+		WF.submitTask("submitReceiveInfoDiv", "");
+		
+		alert("任务处理成功");
+		window.opener.location.reload();
+		window.close();
+		return;
+	});
+});
+
+</script>
+
+<!-- 弹出框 - 提交领取证照 -->
+<div id="submitReceiveInfoDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">领取证照</p>
+		<table class="t1">
+			<tr>
+				<th>营业执照副本(选填)：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" id="yezzfb" data-info="inputInfoCompanyAttach" />
+					<input id="fileupload" type="file" name="fileupload" fileId="yezzfb" multiple />
+				</td>
+			</tr>
+			<tr>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th></th>
+				<td></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

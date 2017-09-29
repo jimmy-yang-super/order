@@ -1,0 +1,110 @@
+<!-- 外勤办理地税报到 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+// 选择“地税综合申报密码”时须输入该项数据才可完成；选择地税数字证书后可直接完成。
+function localTaxRegMethodChange(ele){
+	var localTaxRegMethod = $(ele).attr("data-value");
+	var localTaxRegInfoHide = $("tr[name='localTaxRegInfoHide']");
+	if(localTaxRegMethod == "1"){
+		$(localTaxRegInfoHide).show();
+		$(localTaxRegInfoHide).find("input").attr("name", "inputInfoAll");
+	}else{
+		$(localTaxRegInfoHide).hide();
+		$(localTaxRegInfoHide).find("input").attr("name", "");
+	}
+}
+
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		var localTaxFieldWorkerRegDataStatus = WF.getVariableByName("localTaxFieldWorkerRegDataStatus")
+		if(localTaxFieldWorkerRegDataStatus != "2"){
+			alert("档案组未确认相关材料已存放，请到档案组存放档案");
+			return;
+		}
+		
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		//WF.showDiv('localTaxFuHuaQiRegDiv');
+		// 调用流程接口
+		WF.submitTask();
+		WF.taskFinish();
+	});
+	
+
+	
+	// 完成 - 确定
+	$("#localTaxFuHuaQiRegDiv .ok").click(function(){
+		if(!WF.validate("localTaxFuHuaQiRegDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 更新企业库
+		WF.updateCompanyInfo("localTaxFuHuaQiRegDiv", "", "1004");
+		
+		// 调用流程接口
+		WF.submitTask("localTaxFuHuaQiRegDiv");
+		WF.taskFinish();
+	});
+	
+	// 完成 - 取消
+	$("#localTaxFuHuaQiRegDiv .cancel").click(function(){
+		WF.closeDiv('localTaxFuHuaQiRegDiv');
+	});
+});
+</script>
+<!-- 弹出框 - 地税报到归档 -->
+<div id="localTaxFuHuaQiRegDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">地税报到归档</p>
+		<table class="t1">
+			<tr>
+				<th>地税申报方式：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="localTaxRegMethod" data-select="none"  value="$!{localTaxRegMethod}" />
+					<div class="nice-select4" name="nice-select4" >
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('localTaxRegMethod')})
+							<li onclick="localTaxRegMethodChange(this)" data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr name="localTaxRegInfoHide" >
+				<th>计算机代码：</th>
+				<td><input type="text" name="inputInfoAll" id="enterpriseCompanyCode" data-validate="number:true" value="$!{enterpriseCompanyCode}" /></td>
+			</tr>
+			<tr name="localTaxRegInfoHide" >
+				<th>地税综合申报密码：</th>
+				<td><input type="text" name="inputInfoAll" id="localTaxRegMethodMultiplePassword" data-validate="number:true" value="$!{localTaxRegMethodMultiplePassword}" /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

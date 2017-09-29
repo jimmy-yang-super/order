@@ -1,0 +1,231 @@
+
+<!-- 名称核准信息采集 -->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>订单号：</th>
+				<td>$!{taskOrderId}</td>
+				<th>咨询顾问：</th>
+				<td>$!{taskInitiator}</td>
+			</tr>
+			<tr>
+				<th>核名状态：</th>
+				<td>$!{checkNameStatus}</td>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>客户名称：</th>
+				<td>$!{loginEntity.getUsername()}</td>
+				<th>客户联系电话</th>
+				<td>$!{loginEntity.getUserphone()}</td>
+			</tr>
+			#if($checkNameTuiHuiReason && $!{checkNameTuiHuiReason} != "" )
+			<tr>
+				<th>退回原因：</th>
+				<td>$!{checkNameTuiHuiReason}</td>
+				<th>退回描述：</th>
+				<td>$!{checkNameTuiHuiRemark}</td>
+			</tr>
+			#end
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">已核名</a><a class="b2">采集核名信息</a> 
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		
+		var beixmc = "$!{beixmc}";
+		if(beixmc != ""){
+			var beis = beixmc.split("&");
+			for(var num=0;num < beis.length;num++){
+				var n = num + 1;
+				$("#beixmc" + n).val(beis[num]);
+			}
+		}
+		
+		$("#weihemingDiv").find("[id^='beixmc'] ").keyup(function(){
+			var data = $("#beixmc1").val() + "|" + $("#beixmc2").val() + "|" + $("#beixmc3").val() + "|" + $("#beixmc4").val();
+			$("#beixmc").val(data);
+		});
+		
+		/****已核名*****************************/
+		// 点击 - 已核名
+		$(".b1").click(function() {
+			WF.showDiv("yihemingDiv");
+		});
+			
+		// 已核名窗 - 取消
+		$("#yihemingDiv .cancel").click(function() {
+			WF.closeDiv('yihemingDiv');
+		});
+		
+		// 已核名窗 - 确定
+		$("#yihemingDiv .ok").click(function() {
+			if(!WF.validate("yihemingDiv")){
+				return;
+			}
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 保存企业附件
+			WF.updateCompanyAttach("yihemingDiv");
+			// 调用流程接口
+			WF.submitTask("yihemingDiv", "&heMingFlag=1&iszhucdz=$!{iszhucdzKey}");
+		}); 
+		
+		/****未核名*****************************/
+		// 点击未核名
+		$(".b2").click(function() {
+			WF.showDiv("weihemingDiv");
+		});
+		
+		// 未核名窗 - 取消
+		$("#weihemingDiv .cancel").click(function() {
+			WF.closeDiv('weihemingDiv');
+		});
+		
+		// 未核名窗 - 确定
+		$("#weihemingDiv .ok").click(function() {
+			if(!WF.validate("weihemingDiv")){
+				return;
+			}
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 保存企业附件
+			WF.updateCompanyAttach("weihemingDiv");
+			WF.updateCompanyKehu("weihemingDiv");
+			// 调用流程接口
+			WF.submitTask("weihemingDiv", "&heMingFlag=0");
+		});
+		// 未核名窗 - 保存
+		$("#weihemingDiv .save").click(function() {
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 调用任务保存接口
+			WF.updateCompanyAttach("weihemingDiv");
+			WF.updateCompanyKehu("weihemingDiv");
+			WF.saveTask("weihemingDiv");
+		});
+	});
+</script>
+<!-- 弹出框 - 已核名 -->
+<div id="yihemingDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">已核名</p>
+		<table class="t1">
+			<input id="qiymczt" type="hidden" value="1" name="inputInfoAll" />
+			<tr>
+				<th>公司名称：</th>
+				<td><input id="companymc" value="$!{companymc}" data-validate="min:8" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>名称预先核准文号：</th>
+				<td><input id="mingcyxhz" value="$!{mingcyxhz}" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>核名工商账号：</th>
+				<td><input id="hemgszh" value="$!{hemgszh}" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>密码：</th>
+				<td><input id="hempassword" value="$!{hempassword}" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>核名截图：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoTask" data-info="inputInfoCompanyAttach" id="hemjt" value="$!{hemjt}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="hemjt" multiple />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>
+<!-- 弹出框 - 未核名 -->
+<div id="weihemingDiv" class="white_content">
+	<div class="gw_cz_box1" style="width: 700px;" >
+		<p class="title">采集核名信息</p>
+		<table class="t1 t2">
+			<input id="qiymczt" type="hidden" value="2" name="inputInfoAll" />
+			<input id="beixmc" type="hidden" value="$!{beixmc}" data-validate="none" name="inputInfoCompany" />
+			<tr>
+				<th >公司类型：</th>
+				<td >
+					<input id="companytype" type="hidden" value="$!{companytypeKey}" name="inputInfoAll" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('companytype')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+				
+				<th>主营业务：</th>
+				<td><input id="hangytd" type="text" value="$!{hangytd}" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>公司名称：</th>
+				<td><input id="companymc" type="text" data-validate="min:8" value="$!{companymc}" name="inputInfoAll" /></td>
+				
+				<th>备选名称1：</th>
+				<td><input id="beixmc1" type="text" value="$!{beixmc1}" data-validate="none" name="inputInfoTask" /></td>
+			</tr>
+			<tr>
+				<th>备选名称2：</th>
+				<td><input id="beixmc2" type="text" value="$!{beixmc2}" data-validate="none" name="inputInfoTask" /></td>
+				
+				<th>备选名称3：</th>
+				<td><input id="beixmc3" type="text" value="$!{beixmc3}" data-validate="none" name="inputInfoTask" /></td>
+			</tr>
+			<tr>
+				<th>备选名称4：</th>
+				<td><input id="beixmc4" type="text" value="$!{beixmc4}" data-validate="none" name="inputInfoTask" /></td>
+				
+				<th>注册地址：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="iszhucdz" data-select="none" value="$!{iszhucdzKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('iszhucdz')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			#parse("views/wf/common/company-upload.html")
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a><a class="save" >保存</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

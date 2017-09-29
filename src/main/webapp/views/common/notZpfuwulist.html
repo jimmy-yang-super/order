@@ -1,0 +1,83 @@
+<div class="dd_box2" id="fuwulistdiv"><!-- 选择律师层 -->
+      <div class="container">
+        <ul class="tabs_nei">
+            <div class="active" name="fwcitydiv" value="1"><a href="javascript:void(0);" >北京 </a></div>
+            <div name="fwcitydiv" value="2"><a href="javascript:void(0);" >深圳</a></div>
+        </ul>
+        <div class="clear"></div>
+        <div class="tab_container">
+            <div id="tab1" class="tab_content" style="display: block;">
+              <div class="c_lowyer1">
+                <div class="low_box1" name="fwlist" value="1">
+                  <ul>
+                  #foreach($ev in $fwlist)
+                   #if($ev.cityid == 1)
+                   #if($ev.jdstate == 0)
+                    <li class="low_change1" val="$!ev.empid" name="fwli"><p>$!{ev.realname}</p></li>
+                    #else
+                    <li class="low_change1" title="无法接单"><p class="red">$!{ev.realname}</p></li>
+                    #end
+					#end
+					#end
+                  </ul>
+
+                </div>
+                <div class="low_box1" name="fwlist" value="2" style="display:none">
+                <ul>
+                  #foreach($ev in $fwlist)
+                  #if($ev.cityid == 2)
+                    <li class="low_change1" val="$!ev.empid" name="fwli"><p>$!ev.realname</p></li>
+                    #end
+					#end
+                  </ul>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </div>
+            
+            <div class="dd_btn_box">
+              <span class="dd_qr_btn" id="zpbutton">确认</span>
+              <span class="dd_qx_btn" id="cancelbutton">取消</span>
+            </div>
+        </div>
+        <input type="hidden" name="gpAE" id="gpAE" value="$!{gpAE}" />
+        <input type="hidden" name="kfzpAE" id="kfzpAE" value="$!{kfzpAE}" />
+      </div>
+    </div>
+    <script type="text/javascript">
+    var fwid = 0;
+    $("div[name='fwcitydiv']").each(function(){
+    	var o = $(this);
+    	o.click(function(){
+    		$("div[name='fwcitydiv']").removeClass("active");
+    		o.addClass("active");
+    		$("div[name='fwlist']").hide();
+    		var v = o.attr("value");
+    		$("div[name='fwlist'][value='"+v+"']").show();
+    		
+    	});
+    });
+    $("li[name='fwli']").each(function(){
+        $(this).click(function(){
+            $(".low_box1").find("li[name='fwli']").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+            fwid = $(this).attr("val");
+            
+        })
+    });
+    var i =0 ;
+    $("#zpbutton").click(function(){
+    	if(i==0){
+    		i++;
+    		$("#qianDanCompanyAE").val(fwid);
+    		singleFormSubmit();
+    	}else{
+    		alert("请不要点击太频繁!");
+    	}
+    });
+    $("#cancelbutton").click(function(){
+    	$("#fuwulistdiv").hide();
+    	$(".ceng_box1").hide();
+    	cenghide();
+    });
+    </script>

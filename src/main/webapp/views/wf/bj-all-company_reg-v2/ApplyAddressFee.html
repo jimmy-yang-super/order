@@ -1,0 +1,69 @@
+
+<!-- 申请支付地址费用 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>地址类型：</th>
+				<td>$!{addressType}</td>
+				<th>地址合作商：</th>
+				<td>$!{addressPartner}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >申请付款</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/****申请付款*****************************/
+	// 点击 - 申请付款
+	$(".b1").click(function() {
+		WF.showDiv("shenQingFuKuanDiv");
+	});
+		
+	// 申请付款 - 取消
+	$("#shenQingFuKuanDiv .cancel").click(function() {
+		WF.closeDiv('shenQingFuKuanDiv');
+	});
+	
+	// 申请付款 - 确定
+	$("#shenQingFuKuanDiv .ok").click(function() {
+		if(!WF.validate("shenQingFuKuanDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		WF.submitTask("shenQingFuKuanDiv");
+		WF.taskFinish();
+	});
+	
+});
+
+</script>
+<!-- 弹出框 -->
+<div id="shenQingFuKuanDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">申请付款</p>
+		<table class="t1">
+			<tr>
+				<th>付款金额：</th>
+				<td><input id="applyAddressFeeFuKuanJinE" type="number" data-validate="number:true" name="inputInfoTask" /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a><a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

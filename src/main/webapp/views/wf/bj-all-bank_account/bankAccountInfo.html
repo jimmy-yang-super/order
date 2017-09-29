@@ -1,0 +1,158 @@
+
+<!-- 银行开户信息采集 -->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>公司名称：</th>
+				<td>$!{companymc}</td>
+				<th>开户银行：</th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>客户姓名：</th>
+				<td>$!{loginEntity.username}</td>
+				<th>客户电话：</th>
+				<td>$!{loginEntity.userphone}</td>
+			</tr>
+			<tr>
+				<th>法人姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>法人电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>Ukey管理员1姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>Ukey管理员1电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>Ukey管理员2姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>Ukey管理员2电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">信息采集</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/****信息采集****************************/
+	    // 点击 - 信息采集
+	    $(".b1").click(function() {
+			WF.showDiv("xinxicaijiDiv");
+		}); 
+			
+		// 信息采集 - 保存
+		$("#xinxicaijiDiv .save").click(function() {
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 保存企业附件
+			//WF.updateCompanyAttach("xinxicaijiDiv");
+			//保存客户信息
+			//WF.updateCompanyKehu("xinxicaijiDiv");
+			// 调用任务保存接口
+			WF.saveTask("xinxicaijiDiv");
+		});
+		
+		// 信息采集 - 提交
+		$("#xinxicaijiDiv .ok").click(function() {
+			if(!WF.validate("xinxicaijiDiv")){
+				return;
+			}
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 保存企业附件
+			//WF.updateCompanyAttach("xinxicaijiDiv");
+			//保存客户信息
+			//WF.updateCompanyKehu("xinxicaijiDiv");
+			
+			//获取是否建档标志
+			var isDocument = WF.getVariableByName("isDocument");
+			//等于0表示未建档
+			if(isDocument == "0"){
+				//获取是否点击了建档标志
+				var createArchiveStatus = WF.getVariableByName("taskCreateArchiveStatus");
+				if(createArchiveStatus == "1"){
+					// 调用流程接口
+					WF.submitTask("xinxicaijiDiv","&isDocument=1");
+				}else{
+					alert("档案组未确认相关材料已存放，请到档案组存放档案");
+				}
+			}else{
+				//是否退回标志
+				var localTaxStuffReadyBack = WF.getVariableByName("localTaxStuffReadyBack");
+				if(localTaxStuffReadyBack =="1"){
+					// 调用流程接口
+					WF.submitTask("xinxicaijiDiv","&localTaxStuffReadyBack=0");
+				}else{
+					//获取是否点击归档标志
+					var localTaxInfoCollectionDataArchive = WF.getVariableByName("localTaxInfoCollectionDataArchive");
+					if(localTaxInfoCollectionDataArchive == "2"){
+						// 调用流程接口
+						WF.submitTask("xinxicaijiDiv","&localTaxInfoCollectionDataArchive=0");
+					}else{
+						alert("请先到档案组进行归档");
+					}
+				}
+			}
+		});
+		
+		// 采集核名信息窗 - 取消
+		$("#xinxicaijiDiv .cancel").click(function() {
+			WF.closeDiv('xinxicaijiDiv');
+		});
+	});
+</script>
+<!-- 弹出框 - 采集信息 -->
+<div id="xinxicaijiDiv" class="white_content">
+	<div class="gw_cz_box1" style="width: 700px;">
+		<p class="title">信息采集</p>
+		<table class="t1 t2">
+			<tr>
+				<th>公司名称：</th>
+				<td><input id="companymc" type="text" value="$!{companymc}" name="inputInfoAll" /></td>
+				<th>开户银行：</th>
+				<td><input id="companymc" type="text" value="$!{companymc}" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>Ukey管理员1姓名：</th>
+				<td><input id="companymc" type="text" value="$!{companymc}" name="inputInfoAll" /></td>
+				<th>Ukey管理员1电话：</th>
+				<td><input id="companymc" type="text" value="$!{companymc}" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>Ukey管理员2姓名：</th>
+				<td><input id="companymc" type="text" value="$!{companymc}" name="inputInfoAll" /></td>
+				<th>Ukey管理员2电话：</th>
+				<td><input id="companymc" type="text" value="$!{companymc}" name="inputInfoAll" /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="save">保存</a> <a class="ok">提交</a>  
+		</div>
+	</div>
+</div>

@@ -1,0 +1,111 @@
+
+<!-- 工商设立信息采集 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>订单号：</th>
+				<td>$!{taskOrderId}</td>
+				<th>咨询顾问：</th>
+				<td>$!{taskInitiator}</td>
+			</tr>
+			#if($wangDengTuiHuiReason && $!{wangDengTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "InternetApply")
+			<tr>
+				<th>网登退回原因：</th>
+				<td>$!{wangDengTuiHuiReason}</td>
+				<th>网登退回描述：</th>
+				<td>$!{wangDengTuiHuiRemark}</td>
+			</tr>
+			#end
+			
+			#if($fuHuaQiShenQingTuiHuiReason && $!{fuHuaQiShenQingTuiHuiReason} != "" && $!{lastTaskInfo.getTaskDefinitionKey()} == "FuHuaQiAddressApply")
+			<tr>
+				<th>孵化器地址申请退回原因：</th>
+				<td>$!{fuHuaQiShenQingTuiHuiReason}</td>
+				<th>孵化器地址申请退回描述：</th>
+				<td>$!{fuHuaQiShenQingTuiHuiRemark}</td>
+			</tr>
+			#end
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完善企业库信息</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击完成
+	$(".b1").click(function(){
+		#if(($wangDengTuiHuiReason && $!{wangDengTuiHuiReason} != "")||($fuHuaQiShenQingTuiHuiReason && $!{fuHuaQiShenQingTuiHuiReason} != ""))
+		var gongShangInfoTuiHuiFlag = 1;
+		#else
+		var gongShangInfoTuiHuiFlag = 0;
+		#end
+	    var url = "/order/business/$!{busid}?issource=2&taskId=" + taskId + "&gongShangInfoTuiHuiFlag=" + gongShangInfoTuiHuiFlag ;
+	    window.open(url,'','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ', top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+	});
+});
+
+</script>
+
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t1">
+			<tr>
+				<th>注册地址：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="iszhucdz" value="$!{iszhucdzKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('iszhucdz')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>产权主体：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="chanqzt" value="$!{chanqztKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('chanqzt')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>申请方式：</th>
+				<td>
+					<input type="hidden" name="inputInfoAll" id="applyMethod" value="$!{applyMethodKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('applyMethod')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

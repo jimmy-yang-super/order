@@ -1,0 +1,129 @@
+
+<!-- 名称核准 -->
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="210px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="220px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>客户姓名：</th>
+				<td>$!{loginEntity.username}</td>
+				<th>客户电话：</th>
+				<td>$!{loginEntity.userphone}</td>
+			</tr>
+			<!-- <tr>
+				<th>服务状态：</th>
+				<td>$!{}</td>
+				<th>付款状态：</th>
+				<td>$!{}</td>
+			</tr> -->
+			<tr>
+				<th>商品名称：</th>
+				<td>$!{product_other_name}</td>
+				<th>付款状态：</th>
+				<td>已付款</td>
+			</tr>
+			<tr>
+				<th>城市：</th>
+				<td>$!{DicUtils.getAreaDataById("$!{city_id}")}</td>
+				<th>区域：</th>
+				<td>$!{DicUtils.getAreaDataById("$!{area_id}")}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b2" >填写信息</a><a class="b1" >完成任务</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	//点击 提交信息
+	$(".b1").click(function(){
+		WF.showDiv("submitHeMingInfoDiv");
+	});
+	
+	$(".b2").click(function(){
+		window.open("http://wsdj.baic.gov.cn:8088/");
+	});
+	
+	//查看核准信息 取消
+	$("#submitHeMingInfoDiv .cancel").click(function(){
+		WF.closeDiv("submitHeMingInfoDiv");
+	});
+	
+	//点击查看核准信息 确定
+	$("#submitHeMingInfoDiv .ok").click(function(){
+		if(!WF.validate("submitHeMingInfoDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		synchronEnterpriseInfo();
+	});
+});
+
+/**同步企业库数据**/
+function synchronEnterpriseInfo(){
+	var companymc = $("#companymc").val();
+	var hemgszh = $("#hemgszh").val();
+	var hempassword = $("#hempassword").val();
+	$.ajax({
+		async:false,
+		url:'/wf/getGSCheckNameInfo/'+enterpriseId,
+		method:'post',
+		data:{"companymc":companymc,"hemgszh":hemgszh,"hempassword":hempassword},
+		dataType:'json',
+		success:function(data){
+			if(data.returnFlag == "核准通过"){
+				WF.submitTask("submitHeMingInfoDiv", "");
+
+				alert("任务处理成功");
+				window.opener.location.reload();
+				window.close();
+				return;
+			}else{
+				alert(data.returnFlag);
+				window.opener.location.reload();
+				window.close();
+				return;
+			}
+		},
+		error:function(){
+			alert("用户名:密码:公司名称不能为空");
+		}
+	});
+}
+
+</script>
+
+<!-- 弹出框 - 提交核名信息 -->
+<div id="submitHeMingInfoDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">名称核准</p>
+		<table class="t1">
+			<tr>
+				<th>公司名称：</th>
+				<td><input id="companymc"  data-validate="min:8" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>核名工商账号：</th>
+				<td><input id="hemgszh"  type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>密码：</th>
+				<td>
+					<input id="hempassword"  type="text" name="inputInfoAll" />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,576 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<link rel="stylesheet" href="/css/ystep.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+<script src="/js/ystep.js"></script>
+<style type="text/css">  
+        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  
+        z-index:333;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}    
+</style>  
+<!-- 已派订单 -->
+<script type="text/javascript">
+$(function(){
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+var fqorderid = 0;
+var zpfworderid = 0;
+var yjorder =0;
+$(function(){
+    $(".com_box1 li").each(function(){
+        $(this).click(function(){
+            $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+            var intentcode = $(this).attr("value");
+            $("#intentcode").attr("value",intentcode);
+        })
+    });
+    
+   /*  $("#t1").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    }); */
+});
+$(document).ready(function(){
+//  $("#t1").click(function(){
+//    $("#show_t1").toggle();
+//  });
+	var cengshow = function(){
+		document.getElementById("bg").style.display = "block"; 
+	}
+	var cenghide = function(){
+		
+	}
+	$("span[name='fqorderbutton']").each(function(){
+    	var o = $(this);
+    	o.click(function(){
+    		fqorderid = o.parent().parent().find("span[name='orderidspan']").text();
+			cengshow();
+			$("#fqtextarea").val("");
+			$("#giveupdiv").show();
+    	});
+	});
+	$("span[name='gporderbutton']").each(function(){
+		var o = $(this);
+		o.click(function(){
+			var orderid = o.parent().parent().find("span[name='orderidspan']").text();
+			zpfworderid = orderid;
+			var url = "/action/fwlist";
+			$.post(url,function(data){
+				$(".ceng_box1").show();
+				$(".ceng_box1").html(data);
+			});
+		});
+	});
+	
+	$("span[name='gpAE']").each(function(){
+		var o = $(this);
+		o.click(function(){
+			var orderid = o.parent().parent().find("span[name='orderidspan']").text();
+			yjorder = orderid;
+			var url = "/action/fuwulist";
+			$.post(url,{'gpAE':'gpAE'},function(data){
+				$(".ceng_box1").show();
+				$(".ceng_box1").html(data);
+			});
+		});
+	});
+	
+    	var paramOneType = '$!{paramOneType}';
+    	var paramOneValue= '$!{paramOneValue}';
+    	if(paramOneType=="1"){
+        	$('#query1').find('input').val("公司名称");
+        	$("#paramOneType").val("1");
+    	}else if(paramOneType=="2"){
+        	$('#query1').find('input').val("客户电话");
+        	$("#paramOneType").val("2");
+    	}else if(paramOneType=="3"){
+        	$('#query1').find('input').val("客户姓名");
+        	$("#paramOneType").val("3");
+    	}else if(paramOneType=="5"){
+        	$('#query1').find('input').val("咨询顾问");
+        	$("#paramOneType").val("5");
+    	}else if(paramOneType=="6"){
+        	$('#query1').find('input').val("服务顾问");
+        	$("#paramOneType").val("6");
+    	}else if(paramOneType=="7"){
+        	$('#query1').find('input').val("服务专员");
+        	$("#paramOneType").val("7");
+    	}
+    	
+    	$("#paramOneValue").val(paramOneValue);
+    	
+    	var paramTwoValue = '$!{paramTwoValue}';
+    	if(paramTwoValue=="0"){
+        	$('#query2').find('input').val("全部来源");
+        	$("#paramTwoValue").val(paramTwoValue);
+    	}else if(paramTwoValue=="1"){
+        	$('#query2').find('input').val("微信");
+        	$("#paramTwoValue").val(paramTwoValue);
+    	}else if(paramTwoValue=="2"){
+        	$('#query2').find('input').val("官网");
+        	$("#paramTwoValue").val(paramTwoValue);
+    	}else if(paramTwoValue=="3"){
+        	$('#query2').find('input').val("后台");
+        	$("#paramTwoValue").val(paramTwoValue);
+    	}else if(paramTwoValue=="4"){
+        	$('#query2').find('input').val("合作");
+        	$("#paramTwoValue").val(paramTwoValue);
+    	}
+    	
+    	var paramfourValue = '$!{paramfourValue}';
+    	if(paramfourValue==""){
+        	$('#query4').find('input').val("意向度");
+        	$("#paramfourValue").val(paramfourValue);
+    	}else if(paramfourValue=="1"){
+        	$('#query4').find('input').val("低");
+        	$("#paramfourValue").val(paramfourValue);
+    	}else if(paramfourValue=="2"){
+        	$('#query4').find('input').val("中");
+        	$("#paramfourValue").val(paramfourValue);
+    	}else if(paramfourValue=="3"){
+        	$('#query4').find('input').val("高");
+        	$("#paramfourValue").val(paramfourValue);
+    	}
+    	
+    	
+    	var paramfiveValue = '$!{paramfiveValue}';
+    	if(paramfiveValue==""){
+        	$('#query5').find('input').val("订单状态");
+        	$("#paramfiveValue").val(paramfiveValue);
+    	}else if(paramfiveValue=="3"){
+        	$('#query5').find('input').val("派单成功");
+        	$("#paramfiveValue").val(paramfiveValue);
+    	}else if(paramfiveValue=="1"){
+        	$('#query5').find('input').val("服务中");
+        	$("#paramfiveValue").val(paramfiveValue);
+    	}else if(paramfiveValue=="4"){
+        	$('#query5').find('input').val("服务完成");
+        	$("#paramfiveValue").val(paramfiveValue);
+    	}else if(paramfiveValue=="10"){
+        	$('#query5').find('input').val("订单完结");
+        	$("#paramfiveValue").val(paramfiveValue);
+    	}
+    	
+});
+
+
+/**
+ *点击详情后执行方法 
+ */
+$(document).on("click","#t2",function(){
+
+	var orderid = $(this).attr("temval");
+	var cont = $("#orderdetil_"+orderid);
+	
+	var url = "/order/orderDetil/"+orderid;
+	
+	if($(this).hasClass("sel")) { 
+		$(this).removeClass("sel");
+		cont.hide();
+		cont.html("");
+	}else {  
+		$(this).addClass("sel");
+		$.post(url,	function(data){
+			cont.show();
+			cont.html(data);
+		});
+	};
+});
+
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+//点击查询
+function myOrderQuery(){
+	document.getElementById("myQueryForm").submit(); //提交表单
+}
+
+function toReplenish(orderId){
+	if(orderId == '0'){
+		alert("该单目前没有完善的企业信息！！");
+	}else{
+//	    var url = "/order/business/"+busid+"?issource=1";
+		var url = "/enterprise/emp/edit?orderId=" + orderId + "&sourceType=1";
+	    //"edge: Raised; center: Yes; help: Yes; resizable: Yes; status: Yes; dialogWidth=1100px;dialogHeight=655px"				   
+		window.open(url,'','height=655, width=1300, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+	}
+}
+
+//显示意向度
+function showFollowUp(args){
+	//改变t1的样式
+	var t1="."+args;
+	if($(t1).hasClass("t1bg")){
+        $(t1).removeClass("t1bg").addClass("tdbg");
+    }else{
+        $(t1).addClass("t1bg").removeClass("tdbg");    
+    }
+
+	var followId = "#show_t1_"+args;
+	var follow_ulList ="#follow_list_"+args;
+	//先清除掉所有的li
+	$(follow_ulList).find('li').remove();
+	if($(followId).is(":hidden")){
+		// 向后台发送处理数据  
+	    $.ajax({  
+	        type: "POST", // 用POST方式传输  
+	        dataType: "json", // 数据格式:JSON  
+	        url: "/order/queryFollow.html", // 目标地址  
+	        data: "orderid=" + args,  
+	        success: function (data){
+	        	if(data==""){
+	        		$(".num_box2").hide();
+	        	}else{
+	        		$(".num_box2").show();
+	        	}
+	        	$.each(data,function(index,value){
+	        		var htmStr="<li class=\"num_info b_color\"><p>"+value.addtime+"</p><p><span>记录人："+value.empName+"</span><span>意向度："+value.intentvalue+"</span><span>备注：<b>"+value.content+"</b></span></p><div class=\"clear\"></div></li> ";
+	        		$(follow_ulList).append(htmStr);
+	        	})
+	        	
+	        }  
+	    }); 
+		$(followId).toggle();
+	}else{
+		$(followId).toggle();
+	}
+}
+
+//添加新的意向度到指定的ul中
+function submitFollow(args,orderid){
+	$(args).css("display","none");
+	
+	var follow_ulList ="#follow_list_"+orderid;
+	var content =$(args).parent().find("#content").val();
+    var intentcode = $("#intentcode").val();
+
+    
+	// 向后台发送处理数据  
+    $.ajax({  
+        type: "POST", // 用POST方式传输  
+        dataType: "json", // 数据格式:JSON  
+        url: "/order/addFollow.html", // 目标地址  
+        data: {"content":content,"intentcode":intentcode,"orderid":orderid},  
+        success: function (data){
+        	if(data != "" && data != null){
+        		$(args).css("display","block");
+        		var htmStr="<li class=\"num_info b_color\"><p>"+data.addtime+"</p><p><span>记录人："+data.empname+"</span><span>意向度："+data.intentcode+"</span><span>备注：<b>"+data.content+"</b></span></p><div class=\"clear\"></div></li> ";
+        		$(follow_ulList).prepend(htmStr);
+        		
+        		//修改列表标头的count数
+        	    var time =$("."+orderid).attr("cun");
+        	    var con = parseInt(time)+1
+        	    $("."+orderid).attr("cun",con)
+        	    $("."+orderid).html(con+"次<img src=\"/images/xjt.png\">");
+        	    $("."+orderid).parent().parent().find("span.pay").html(data.intentcode);
+        	    
+        	    //清空当前备注信息
+        	    $("#content_"+orderid).val("");
+
+        		
+        	}else{
+        		alert("登录过期,请重新登录!");
+        		$(args).css("display","block");
+        	}
+    		
+        }  
+    }); 
+	
+}
+//修改订单
+function updateOrder(orderid){
+	window.location.href="/order/modifyOrder/"+orderid+"/haveBeenSent.html";
+	
+}
+
+
+//展示客户信息
+function showCustomer(orderid){
+	
+    if($(".t0_"+orderid).hasClass("tbg")){
+        $(".t0_"+orderid).removeClass("tbg").addClass("tbg1");
+    }else{
+        $(".t0_"+orderid).addClass("tbg").removeClass("tbg1");    
+    }
+    $("#show_t0_"+orderid).toggle();
+}
+//更新用户信息
+function editCustomer(customerId,orderId){
+	var email = $("#email_"+orderId).val();
+	var otherPhone = $("#linenum_"+orderId).val();
+	var address = $("#address_"+orderId).val();
+	var companyName = $("#comN_"+orderId).val();
+	var customerName = $("#cusN_"+orderId).val();
+	// 向后台发送处理数据  
+    $.ajax({  
+        type: "POST", // 用POST方式传输  
+        dataType: "json", // 数据格式:JSON  
+        url: "/order/editCustomerInfo/"+customerId, // 目标地址  
+        data: {"orderid":orderId,"email":email,"otherPhone":otherPhone,"address":address,"companyName":companyName,"customerName":customerName},  
+        success: function (data){
+        	if(data.msg == "success"){
+            	alert("操作成功");	
+            	document.location.reload();
+        	}else{
+        		alert("操作失败!")
+        	}
+        }  
+    });
+	
+}
+</script>
+
+</head>
+
+<body>
+<div id="bg"></div>  
+#parse("views/common/fqorder.html")
+<div class="ceng_box1" style="display:none">
+
+</div>
+<div class="user_box">
+  
+  <div class="user_search">
+    <form action="/order/haveBeenSent" id="myQueryForm" name="myQueryForm" method="post">
+    <input type="hidden" name="orderType" id="orderType" value="haveBeenSent" />
+    <div class="search_bg qz_w">
+      
+      <div class="nice-select" name="nice-select" id="query1">
+        <input type="text" value="客户电话" readonly />
+        <ul>
+          <li data-value="2">客户电话</li>
+          <li data-value="1">公司名称</li>
+          <li data-value="3">客户姓名</li>
+          <li data-value="5">咨询顾问</li>
+          <li data-value="6">服务顾问</li>
+          <li data-value="7">服务专员</li>
+        </ul> 
+      </div>
+      <input type="hidden" name="paramOneType" id="paramOneType" value="2" />
+      <input class="fq_box1" type="text" name="paramOneValue" id="paramOneValue" />
+      
+      <div class="nice-select" name="nice-select" id="query3">
+        <input type="text" value="派单时间" readonly />
+        <ul>
+          <li data-value="1">派单时间</li>
+        </ul>
+      </div>
+      <input type="hidden" name="paramThreeValue" id="paramThreeValue" value="1" />
+      <input id="startTime" class="fq_box1"  name="paramStartTimeValue" type="text" value="$!{paramStartTimeValue}" onClick="WdatePicker()"/>
+      <label class="fq_box1" style="width: 20px;">至</label>
+      <input id="endTime" class="fq_box1" name="paramEndTimeValue" type="text" value="$!{paramEndTimeValue}" onClick="WdatePicker()"/>
+
+      <div class="nice-select" name="nice-select" id="query2">
+        <input type="text" value="订单来源" readonly />
+        <ul>
+          <li data-value="0">全部来源</li>
+          <li data-value="1">微信</li>
+          <li data-value="2">官网</li>
+          <li data-value="3">后台</li>
+          <li data-value="4">合作</li>
+        </ul>
+      </div>
+      <input type="hidden" name="paramTwoValue" id="paramTwoValue" value="0" />
+      
+      <div class="nice-select" name="nice-select" id="query4">
+        <input type="text" value="意向度" readonly />
+        <ul>
+          <li data-value="">全部</li>
+          <li data-value="3">高</li>
+          <li data-value="2">中</li>
+          <li data-value="1">低</li>
+        </ul>
+      </div>
+      <input type="hidden" name="paramfourValue" id="paramfourValue" value="" />
+      
+      
+      
+      <div class="nice-select" name="nice-select" id="query5">
+        <input type="text" value="订单状态" readonly />
+        <ul>
+          <li data-value="">全部状态</li>
+          <li data-value="3">派单成功</li>
+          <li data-value="1">服务中</li>
+          <li data-value="4">服务完成</li>
+          <li data-value="10">订单完结</li>
+        </ul>
+      </div>
+      <input type="hidden" name="paramfiveValue" id="paramfiveValue" value="" />
+
+      <p class="search_btn rang_left" onclick="myOrderQuery()">查询</p>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    </form>
+  </div>
+
+  
+  
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="10%">企业ID/订单ID</th>
+        <th width="7%">订单来源</th>
+        <th width="7%">客户资料</th>
+        <th width="7%">注册区域</th>
+        <th width="7%">商品类型</th>
+        <th width="7%">接待顾问</th>
+        <th width="7%">跟进次数</th>
+        <th width="7%">派单时间</th>
+        <th width="7%">订单状态</th>
+        <th width="26%">操作</th>
+        <th width="8%">详情</th>
+      </tr>
+      
+<!-- 动态数据展示------------------------------------------------------->      
+      #foreach($item in $!orderList)
+      <tr>
+        <td>#if($item.busId != '0')$!{item.busId}<br/>#end<span name="orderidspan">$!{item.orderId}</span></td>
+        <td><span>$!{item.customerForm}<br/>$!{item.orderForm}</span></td>
+        <!-- <td><span>$!{item.customerName}<br/>$!{item.customerPhone}<br/>$!{item.companyname}</span></td> -->
+        <td id="t0" class="t0_$!{item.orderId}" onclick="showCustomer($!{item.orderId})"><span>$!{item.customerName}<br/>$!{item.customerPhone}<br/>$!{item.companyname}<img src="/images/xjt.png"></span></td>
+        <td><span>$!{item.cityName} $!{item.areaName}<br>$!{item.companytype}</br></span></td>
+        <td><span>$!{item.commodiType}</span></td>
+        <td><span>$!{item.kefuname}$!{item.fawuName}$!{item.consultantName}$!{item.fzName}</span></td>
+        <td><a id="t1" onclick="showFollowUp($!{item.orderId});" class="$!{item.orderId}" cun="$!{item.flowupSize}">$!{item.flowupSize}次<img src="/images/xjt.png"></a></td>
+        <td>$!{item.piesingletime}</td>
+        <td>$!{item.orderState}</td>
+        <td>
+        	#if($!{item.orderState} != "订单完结")
+	        	#if($!{item.signstate} == "未签")
+	            <span class="orderBtn" onclick="updateOrder($!{item.orderId})">修改</span>
+	        	#end
+	            #if($!{item.fawuName} && $!{item.isNewProcess} == 0)
+	            <span class="orderBtn" name="gporderbutton">改派</span>
+	            #elseif($!{item.isNewProcess} == 0)
+	            <span class="orderBtn" name="gpAE">改派AE</span>
+	            #end
+	            <span class="orderBtn" name="fqorderbutton">放弃</span>
+        	#end
+        	<!-- 
+            <span class="orderBtn" onclick="toReplenish($!{item.orderId})">完善企业库</span>
+             -->
+        </td>
+        <td><a id="t2" temval="$!{item.orderId}">详情<img src="/images/xjt.png" /></a></td>
+      </tr>
+      
+      <tr style="border:none">
+        <td colspan="12" style="height:0px">
+          <div class="nav_menu">
+            <div class="nav">
+              <div class="clear"></div>
+              <div class="box" id="navbox" >
+              
+                <!-- 修改客户的资料 -->
+              	<div class="cont" id="show_t0_$!{item.orderId}" style="display:none">
+                  <div class="cus_edit">
+                    <ul>
+                      <li class="li1">客户资料</li>
+                      <li class="li2">手机<br>$!{item.customerPhone}</li>
+                      <li class="li3">姓名<br><input type="text" id="cusN_$!{item.orderId}" value="$!{item.customerName}"></li>
+                      <li class="li4">公司名称<br><input type="text" id="comN_$!{item.orderId}" value="$!{item.companyname}"></li>
+                      <li class="li5">通讯地址<br><input type="text" id="address_$!{item.orderId}" value="$!{item.address}"></li>
+                      <li class="li6">其他电话<br><input type="text" id="linenum_$!{item.orderId}" value="$!{item.landlinenumber}"></li>
+                      <li class="li7">邮箱<br><input type="text" id="email_$!{item.orderId}" value="$!{item.email}"></li>
+                      <li class="li8"><p onclick="editCustomer($!{item.customerId},$!{item.orderId})">更新</p></li>
+                    </ul>
+                  </div>
+                </div>
+              
+                <div class="cont" id="show_t1_$!{item.orderId}" style="display:none"><!-- 详情 -->
+                  <div class="num_box1">
+                    <ul id="follow_list_$!{item.orderId}">
+                    </ul>
+                  </div>
+                  <div class="num_box2">
+                    <div class="com_box1">
+                      <ul>
+                        <p class="title">意向度：</p>
+                        <li class="flow1_change" value="1"><p>低</p></li>
+                        <li class="flow1_change" value="2"><p>中</p></li>
+                        <li class="flow1_change" value="3"><p>高</p></li>
+                        <input type="hidden" name="intentcode" id="intentcode" />
+                        <div class="clear"></div>
+                      </ul>
+                    </div>
+                    <div class="com_box2">
+                      <p class="title">新增记录：</p>
+                      <p class="area_box"><textarea id="content" name="content"></textarea></p>
+                      <div class="clear"></div>
+                    </div>
+                    <div class="com_box3" onclick="submitFollow(this,$!{item.orderId})">确认</div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <div class="cont" id="orderdetil_$!{item.orderId}" style="display:none"><!-- 操作日志 -->
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      #end
+  <!-- 以上为动态循环---------------------------------------------- -->    
+      
+    </table> 
+  </div>
+
+  #parse("views/common/pages.html")
+</div>
+
+</body>
+<script>
+$('[name="nice-select"]').click(function(e){
+  $('[name="nice-select"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').hover(function(e){ 
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+
+  if(val =="公司名称" || val == "客户姓名" || val =="客户电话" || val =="咨询顾问" || val =="服务顾问" || val =="服务专员"){
+	  $("#paramOneType").attr("value",dataVal);
+  }else if(val=="全部来源" || val=="微信" || val=="官网" || val=="后台"|| val=="合作"){
+	  $("#paramTwoValue").attr("value",dataVal);
+  }else if(val=="全部" || val=="高" || val=="中" || val=="低"){
+	  $("#paramfourValue").attr("value",dataVal);
+  }else if(val =="全部状态" || val=="派单成功" || val=="服务中" || val=="服务完成" || val=="订单完结"){
+	  $("#paramfiveValue").attr("value",dataVal);
+  }
+  
+  $(this).parents('[name="nice-select"]').find('input').val(val);
+  $('[name="nice-select"] ul').hide();
+  e.stopPropagation();
+  // alert("中文值是："+val);
+  // alert("数字值是："+dataVal);
+  //alert($(this).parents('[name="nice-select"]').find('input').val());
+});
+$(document).click(function(){
+  $('[name="nice-select"] ul').hide();
+});
+</script>
+</html>

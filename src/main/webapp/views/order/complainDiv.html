@@ -1,0 +1,49 @@
+                 
+                 
+                 <!-- 解决投诉列表  -->
+                  #foreach($item in $!list)
+                   <div class="num_box1">
+                    <ul >
+                    <li class="num_info b_color">
+                    <p>$!{item.handletime}</p>
+                    <p><span>备注人：$!{item.handletype}</span>
+                       <span>备注内容：<font color="red"> $!{item.handlemark}</font></span></p>
+                    <div class="clear"></div>
+                    </li> 
+                    </ul>
+                  </div>                  
+                  #end
+ 				 <!-- 解决投诉列表  -->
+ 				 
+ 				   <!-- 投诉详情  -->
+                  <div class="num_box1">
+                    <ul >
+                    <li class="num_info b_color">
+                    <p>$!{model.sugtime}</p>
+                    <p><span>投诉电话：$!{model.mobile}</span>
+                       <span>投诉内容：<font color="red"> $!{model.content}</font></span></p>
+                    <div class="clear"></div>
+                    </li> 
+                    </ul>
+                  </div>                  
+                <!-- 投诉详情  -->
+                
+                  <!-- 添加解决备注  -->
+                  #if($!{model.status}!=3) <!-- 当处理状态为完成时  隐藏！！！ -->
+                <div class="num_box2">
+                    <div class="com_box2">
+                      <p class="title">备注：</p>
+                      <p class="area_box"><textarea id="JJ_content" name="content"></textarea></p>
+                      <div class="clear"></div>
+                    </div>
+                    <div class="com_box3" >确认</div>
+                    <div class="com_box4" >完成</div>
+                  </div>
+                  #end
+                  <!-- 添加解决备注  -->
+                  <div class="clear"></div>
+
+                  <br>
+
+                  
+

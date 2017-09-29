@@ -1,0 +1,151 @@
+<!-- 孵化器地址申请 -->
+<style>
+.nice-select4 .hezuo{
+	width: 100px;
+}
+</style>
+<script type="text/javascript" src="/js/business.js"></script>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>订单号：</th>
+				<td>$!{taskOrderId}</td>
+				<th>地址合作商</th>
+				<td>$!{reginAddress.getAttribute1()}</td>
+			</tr>
+			<tr>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${hemjt}" /></td>
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{companyFaRenInfo.getFaddbrshzfyj()}" /></td>
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a><a class="b2" >退回</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		var addressShop = "$!{reginAddress.getAttribute1()}";
+		if(addressShop == ""){
+			alert("地址合作商未选择，请选择退回。")
+			return;
+		}
+		WF.showDiv('wanChengDiv');
+	});
+	
+	// 完成 - 确定
+	$("#wanChengDiv .ok").click(function(){
+		if(!WF.validate("wanChengDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 同步到企业库，特殊处理，吴银提供js接口，以后要改
+		var fuHuaQiShenQingFangJianHao = $("#fuHuaQiShenQingFangJianHao").val(); // 孵化器地址房间号
+		saveDldz("", "" ,fuHuaQiShenQingFangJianHao,busid);
+		var  taskData = "&fuHuaQiAddressApplyFlag=1";
+		// 调用流程接口
+		WF.submitTask("wanChengDiv", taskData);
+	});
+	
+	// 完成 - 取消
+	$("#wanChengDiv .cancel").click(function(){
+		WF.closeDiv('wanChengDiv');
+	});
+	/************ 退回 *************************/
+	// 点击 - 退回
+	$(".b2").click(function(){
+		WF.showDiv('tuiHuiDiv');
+	});
+	
+	// 退回 - 确定
+	$("#tuiHuiDiv .ok").click(function(){
+		if(!WF.validate("tuiHuiDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		var  taskData = "&fuHuaQiAddressApplyFlag=0";
+		// 调用流程接口
+		WF.submitTask("tuiHuiDiv", taskData);
+	});
+	
+	// 退回 - 取消
+	$("#tuiHuiDiv .cancel").click(function(){
+		WF.closeDiv('tuiHuiDiv');
+	});
+	
+});
+
+</script>
+<!-- 弹出框 - 完成 -->
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t2">
+			<tr>
+				<th>地址合作商：</th>
+				<td>$!{reginAddress.getAttribute1()}</td>
+				<th>地址类型：</th>
+				<td>$!{reginAddress.getAttribute2()}</td>
+			</tr>
+			<tr>
+				<th>代理地址：</th>
+				<td colspan="3">
+					<span id="_dailidizhi">$!{reginAddress.getZiydz()}</span>
+					<input name="inputInfoTask" id="fuHuaQiShenQingFangJianHao" />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="fuHuaQiShenQingTuiHuiReason" value="$!{fuHuaQiShenQingTuiHuiReasonKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('fuHuaQiShenQingTuiHuiReason')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>退回描述：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="fuHuaQiShenQingTuiHuiRemark" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

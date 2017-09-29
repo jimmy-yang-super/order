@@ -1,0 +1,1255 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>企业信息维护</title>
+    <link rel="stylesheet" href="/css/reset.css" type="text/css"/>
+    <!-- <link rel="stylesheet" href="/css/style_1.css" type="text/css"/> -->
+     <link rel="stylesheet" href="/css/style_ht.css" type="text/css"/>
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+   <script type="text/javascript" src="/js/jquery.upload/jquery.ui.widget.js"></script>
+   <script type="text/javascript" src="/js/jquery.upload/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="/js/map.js"></script>
+    <script type="text/javascript" src="/js/jyfwinit.js"></script>
+    <script type="text/javascript" src="/js/style.js"></script>
+    <script type="text/javascript" src="/js/business.js"></script>
+    <script type="text/javascript" src="/js/filecommon.js"></script>
+ <script type="text/javascript">
+var beixcount = 1;
+var map = new Map();
+var mrmap = new Map();
+var flag = 1;
+var field ="";
+$(document).ready(
+  function(){   
+	$("#theButton").click(
+		function (){
+		beixcount++;
+		if(beixcount == 8){
+			$("#theButton").hide();
+		}
+		if(beixcount > 8){
+			alert("输入的备选名称不能超过八个！！！");
+			return false;
+		}
+	    var $txt = $("<input name='beixmc"+beixcount+"' id='beixmc"+beixcount+"'  type='text' value='' size='20' style='margin:0 1.5% 10px 0' />");
+		   $("#div1").append($txt);
+		})
+	var bc = '$!{beixcon}';
+	var beixmcs = '$!{businessLibaryEntity.beixmc}';
+	var text ="";
+	if(beixmcs != null && beixmcs !=""){
+		var tmp = beixmcs.split("&");
+		for(var i =0;i< tmp.length;i++ ){
+			beixcount++;
+			var $txt = $("<input name='beixmc"+(i+1)+"' id='beixmc"+(i+1)+"'  type='text' value='"+tmp[i]+"' size='20' style='margin:0 1.5% 10px 0' />");
+			$("#div1").append($txt);
+		}
+		if(beixcount <=3){
+			for(var i=beixcount;i<=3;i++){
+				 text = text+"<input onblur=\"becomeButon('gsmcbuyyon');\" type='text' name='beixmc"+beixcount+"' id='beixmc"+beixcount+"' value='' size='20' style='margin:0 1.5% 10px 0' />";
+				 if(beixcount != 3){
+					 beixcount++;
+				 }
+			}
+		}
+		$("#div1").append(text);
+	} else{
+		for(var i=1;i<=3;i++){
+			text = text+ "<input onblur=\"becomeButon('gsmcbuyyon');\" type='text' name='beixmc"+beixcount+"' id='beixmc"+beixcount+"' value='' size='20' style='margin:0 1.5% 10px 0' />";
+			if(beixcount != 3){
+				 beixcount++;
+			 }
+		}
+		$("#div1").append(text);
+	}
+	var display = '$!{display}';
+	if(display != null || display != ""){
+		$("#"+display+"").css("display","block");
+	}
+	var hzlx = '$!{hezdz}';
+	if(hzlx != null && hzlx !=""){
+		 $("#dzhzs").find("option[value='"+hzlx+"']").attr("selected",true);
+	}else{
+		 $("#dzhzs").find("option[value='rhjtxyl']").attr("selected",true);
+	}
+	 changeDizhzs();
+	var chanqur = '$!{chanqur}';
+	if(chanqur != null && chanqur !=""){
+		 $("#chanpzt").find("option[value='"+chanqur+"']").attr("selected",true);
+	}
+	var zulyt = '$!{zulyt}';
+	if(zulyt != null && zulyt !=""){
+		 $("#fangwghyt").find("option[value='"+zulyt+"']").attr("selected",true);
+	}
+	var fuqfs = '$!{fuqfs}';
+	if(fuqfs != null && fuqfs !=""){
+		 $("#zhushqfs").find("option[value='"+fuqfs+"']").attr("selected",true);
+	}
+	
+	var areaid = '$!{businessLibaryEntity.areaid}';
+	if(areaid != null && areaid !=""){
+		 $("#area").find("option[value='"+areaid+"']").attr("selected",true);
+	}
+	
+	var isdz =  "$!{businessLibaryEntity.iszhucdz}";
+	if(isdz == '0'){
+		$("#disshdz").hide();
+		
+		$("#dyziyinfo").show();
+	}else if(isdz =='1'){
+		$("#dyziyinfo").hide();
+		 $("#disshdz").show();
+		 
+		$("#disshdz").show();
+	}else{
+		 $("#disshdz").hide();
+	}
+	isBusiness(isdz);
+	
+	var zhuyyw ='$!{zhuyyw}';
+    if(zhuyyw != null && zhuyyw !=""){
+    	dyncjyfw(zhuyyw);
+		$("input:checkbox[value='"+zhuyyw+"']").attr("checked","true");
+	}else{
+		 $("#jyfw").hide();
+	}
+	var qityw ='$!{qityw}';//主营业务
+	var qhide = false;
+    if(qityw != null && qityw !=""){
+    	var tmp = qityw.split("&");
+		for(var i =0;i <tmp.length;i++){
+			$("input:checkbox[value='"+tmp[i]+"']").attr("checked","true");
+			var str = '<li class="bgBlue" bindValue="' + tmp[i] +'" namespace="businessType">' + tmp[i] + '</li>';
+            $("#scopeBusiness").append(str);
+		}
+		if(tmp.length>0){
+			qhide = true;
+		}
+	}
+    
+    $(':checkbox[name=zhuyyw]').each(function(){ 
+        $(this).click(function(){ 
+            if($(this).attr('checked')){ 
+                $(':checkbox[name=zhuyyw]').removeAttr('checked'); 
+                $(this).attr('checked','checked'); 
+            } 
+        }); 
+    }); 
+    var dis = '$!{display}';
+    if(dis != null && dis !=""){
+    	alert("保存成功！！");
+    }
+    inituploa();
+    initOtherfile(mrmap);
+    $("#firstdis").show();
+    if(!qhide){
+     $("#jyyl").hide();
+	$("#disjyyl").hide();
+    }
+   
+ })
+ function isBusiness(val){
+	if(val == '1'){
+		 $("#isfuhq").show();
+		 $("#nofuhq").hide();
+		 map = new Map();
+		 jyfwfhq(map);
+	}else{
+		 $("#isfuhq").hide();
+		 $("#nofuhq").show();
+		 map = new Map();
+		 jyfwinit(map);
+	}
+}
+ 
+   function inituploa(){
+		$("[name='fileupload']").each(function(index, element){
+			$(element).fileupload({
+		        url: "/file/upload?test=1",
+		        dataType: 'json',
+		        done: function (e, data) {
+		        	var kehId= $("#kehId_"+flag).val();
+		    		var kehname= $("#kehname_"+flag).val();
+		        	//保存信息
+		        	if(data.result == null){
+		        		alert("远程附件服务器连接失败，请联系技术人员，谢谢！！");
+		        		return false;
+		        	}
+		        	if(otherflag != ""){
+		        		saveOtherFile(data.result.fileId);
+		        	}else{
+		        		saveFileattach(kehId,data.result.fileId);
+		        	}
+		        }
+		    });
+	});
+	}
+
+ var addds = '$!{dscount}';
+ function adddongs(){
+	 addds++;
+	  var htmlstr = " <ul class=\"dsh_box\"> <a href=\"\" class=\"delShareholderIcon\"></a>"+
+      "<span class=\"b_i_lps_width05\"><input type=\"text\" name=\"dongsjis"+addds+"\" id=\"dongsjis"+addds+"\"/><label>董事"+addds+":</label></span>"+
+       "<span class=\"b_i_lps_width01\"><input type=\"text\" name=\"dongsjisphone"+addds+"\" id=\"dongsjisphone"+addds+"\"/><label>手机号:</label></span>"+
+       "<span class=\"b_i_lps_width04\">"+
+       "<select name=\"dongsjissex"+addds+"\" id=\"dongsjissex"+addds+"\">"+
+       "<option value=\"男\" selected=\"selected\">男</option><option value=\"女\">女</option>"+
+       "</select><label>性别:</label></span>"+
+       "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"dongsjiscard"+addds+"\" id=\"dongsjiscard"+addds+"\"/><label>身份证号:</label></span>"+
+       "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"dongsjiscarddz"+addds+"\" id=\"dongsjiscarddz"+addds+"\"/><label>身份地址:</label></span>"+
+       "</ul>";
+      $("#dsh_area").append(htmlstr);
+ }
+   var addjs = '$!{jianscount}';
+   function addjians(){
+	   addjs++;
+	   var text = "<ul class=\"dsh_box\"><a href=\"\" class=\"delShareholderIcon\"></a>"+
+ 	  "<span class=\"b_i_lps_width05\"><input type=\"text\" name=\"jians"+addjs+"\" id=\"jians"+addjs+"\"/><label>监事"+addjs+":</label></span>"+
+      "<span class=\"b_i_lps_width01\"><input type=\"text\" name=\"jiansphone"+addjs+"\" id=\"jiansphone"+addjs+"\"/><label>手机号:</label></span>"+
+      "<span class=\"b_i_lps_width04\">"+
+      "<select name=\"jianssex"+addjs+"\" id=\"jianssex"+addjs+"\">"+
+      "<option value=\"男\">男</option><option value=\"\">女</option>"+
+         "</select> <label>性别:</label></span>"+
+	 "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"jianscard"+addjs+"\" id=\"jianscard"+addjs+"\"/><label>身份证号:</label></span>"+
+	 "<span class=\"b_i_lps_width03\"><input type=\"text\" name=\"jianscarddz"+addjs+"\" id=\"jianscarddz"+addjs+"\"/><label>身份地址:</label></span>"+
+	 "</ul>";
+    $("#jsh_area").append(text);
+   }
+   
+   function changeGangjh(){
+       var dzhzszydz = $("#dzhzszydz").text();
+       var fjh = $("#fangjh").val();
+       var mt = dzhzszydz.replace("****",fjh);
+       $("#dzhzszydz").text(mt);
+    }
+   
+</script>
+</head>
+<body>
+<div class="wraper clearfix">
+    <div class="wraperTitle borderBottom">
+        <!--p class="r_allSave">全部保存</p-->
+        <ul>
+            <li><a href="">您目前的位置：</a></li>
+            <li><a href="" class="colorBlue">首页 > </a></li>
+            <li><a href="">企业信息</a></li>
+        </ul>
+    </div>
+    <div style="clear: both;height: 0px;font-size: 0px;line-height: 0"></div>
+      <input name="orderid" value="$!{orderid}" type="hidden" id ="orderid">
+       <input name="display" id="display" type="hidden" value="$!{display}">
+    <div class="bannerItem clearfix">
+        <form class="contentForm" action="/order/modifyBusinessinfo" method="post">
+            <input type="hidden" name="modifygsmc" id ="modifygsmc" value="modifygsmc">
+            <h3 class="nav navHover"><a ><input type="button" onclick="modifybusigsmc(0);" class="save" value="保存" />公司名称</a></h3>
+            <div class="b_i_companyName" id="firstdis">
+                <ul>
+                    <li class="radioMargin">
+                    #if($businessLibaryEntity.companytype != '1')
+                    <span><input type="radio" name="comptype" id ="comptype" value="0" checked="checked"/>普通有限公司</span>
+                    <span class="radioMarginLeft"><input type="radio" name="comptype" id ="comptype" value="1"/>一人有限公司</span>
+                    #else
+                    <span><input type="radio" name="comptype" id ="comptype" value="0" />普通有限公司</span>
+                    <span class="radioMarginLeft"><input type="radio" name="comptype" checked="checked" id ="comptype" value="1"/>一人有限公司</span>
+                    #end
+                    <label>公司类型：</label></li>
+                    <li><input type="text" placeholder="北京佶象" class="inputWidth01" name="gsmc" id ="gsmc" value="$!{businessLibaryEntity.companymc}"/><label>公司名称：</label></li>
+                    <li class="alternativeName">
+                    	<label>备选名称：</label>
+                    	<input type="hidden" name="bc" id ="bc" value="$!{beixcon}">
+                    	<input type="hidden" name="beixmcs" id ="beixmcs" value="$!{beixmcs}">
+                    	<div style="float:left;width:80%"><span id="div1" ></span ><a class="addIocn" id="theButton" ></a></div>
+                    </li>
+                    <li><input type="text" class="inputWidth03" name="zuczb" id="zuczb" value="#if($businessLibaryEntity.zuczb=='0')#else $!{businessLibaryEntity.zuczb}#end"/>　万元<label>注册资本：</label></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <input type="hidden" value="addgsdz" name="type" id ="type">
+             <input type="hidden" value="$!{reginAddressEntity.reginId}" name="regaddressid" id ="regaddressid">
+            <h3 class="nav navHover"><a><input type="button" onclick="saveaddress(0);"  class="save" value="保存" />公司地址</a></h3>
+            <div class="b_i_companyAddress clearfix" id="disgsdzapper">
+                <ul class="b_i_ca_form">
+                    <li class="b_i_ca_select">
+                        <select name="city" id ="city" onchange="citychangge();">
+                          <option value="1" selected="selected">北京</option>
+                         <!--  <option value="2" >深圳</option> -->
+                        </select>
+                        <select name="area" id="area">
+                         #foreach($pe in $!firstArea)
+	                       #if($pe.areaid != '107')
+	                         #if($pe.areaid == '101')
+	                            <option value="$!{pe.areaid}" selected="selected">$!{pe.name}</option>
+	                         #else
+	                         <option value="$!{pe.areaid}">$!{pe.name}</option>
+	                         #end
+	                       #end
+                         #end
+                        </select>
+                        <label>注册城市：</label>
+                    </li>
+                    <li class="radioMargin radioMarginBottom">
+                    #set ($str="")
+                    #set ($str1="")
+                        #if($businessLibaryEntity.iszhucdz == '0')
+                         #set($str ='style="display: block"')
+                         <span><input type="radio" name="ishaveaddress" id="a1" value="0" checked/><label for="a1">自有地址</label></span>
+                        <span class="radioMarginLeft02" id="dyncdldz"><input value="1" type="radio" id ="a2" name="ishaveaddress"/><label for="a2">孵化器地址</label></span>
+                       #elseif($businessLibaryEntity.iszhucdz == '1')
+                        #set($str1 ='style="display: block"')
+                         <span><input type="radio" name="ishaveaddress" id="a1" value="0" /><label for="a1">自有地址</label></span>
+                        <span class="radioMarginLeft02" id="dyncdldz"><input value="1" type="radio"  checked id ="a2" name="ishaveaddress"/><label for="a2">孵化器地址</label></span>
+                       #else
+                        <span><input type="radio" name="ishaveaddress" id="a1" value="0" /><label for="a1">自有地址</label></span>
+                        <span class="radioMarginLeft02" id="dyncdldz"><input value="1" type="radio"  id ="a2" name="ishaveaddress"/><label for="a2">孵化器地址</label></span>
+                       #end
+                        <label>注册地址：</label>
+                    </li>
+                    <li>
+                        <div class="adressWraper">
+                            <div class="ownAdress clearfix"  id="dyziyinfo" $!{str}>
+                                <ul>
+                                    <li>
+                                        <span class="spanMrgin"><input type="text" name="ziydz" id="ziydz" value="#if($businessLibaryEntity.iszhucdz != '1')$!{reginAddressEntity.ziydz}#end"/><label>自有地址：</label></span>
+                                        <span><input type="text" name="suosjx" id="suosjx" value="#if($businessLibaryEntity.iszhucdz != '1')$!{reginAddressEntity.suosjx}#end"/><label>所属街乡：</label></span>
+                                    </li>
+                                    <li>
+                                        <span class="spanMrgin">
+                                        <label>产权主体：</label>
+                                         <select name="chanpzt" id ="chanpzt">
+                                                 <option value="" selected="selected">请选择产权主体</option>
+                                                 <option value="单位">单位</option>
+			                                      <option value="个人">个人</option>
+                                            </select></span>
+                                        <span>
+                                        <label>产权人/产权单位：</label>
+                                            <input type="text" name="chanqr2dw" id ="chanqr2dw" value="#if($businessLibaryEntity.iszhucdz != '1')$!{reginAddressEntity.chanqr} #end"/>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="spanMrgin">
+                                         <label>房屋规划用途：</label>
+                                            <select name="fangwghyt" id ="fangwghyt">
+                                                <option value="" selected="selected">请选择房屋规划用途</option>
+                                                <option value="商业">商业</option>
+                                               <option value="办公">办公</option>
+                                               <option value="写字楼">写字楼</option>
+                                               <option value="其他">其他</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                         <label>住所获取方式：</label>
+                                            <select name="zhushqfs" id="zhushqfs">
+                                              <option value="" selected="selected">请选择住所获取方式</option>
+                                              <option value="租赁">租赁</option>
+                                               <option value="自有产权">自有产权</option>
+                                               <option value="无偿使用">无偿使用</option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="spanMrgin"><input type="text" class="inputWidth04" name="zulnf" id="zulnf" value="#if($businessLibaryEntity.iszhucdz != '1')#if($!reginAddressEntity.zulsynx != '0')$!{reginAddressEntity.zulsynx}#end#end" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>　年<label>租赁/使用年限：</label></span>
+                                        <span><input type="text" class="inputWidth05" name="zulmj" id="zulmj" value="#if($businessLibaryEntity.iszhucdz != '1')#if($!reginAddressEntity.zulsymj !='0')$!{reginAddressEntity.zulsymj}#end#end" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>　平方米<label>租赁/使用面积：</label></span>
+                                    </li>
+                                    <li>
+                                        <span class="spanWidth01"><input type="text"class="inputWidth06" name="chuzjscode" id ="chuzjscode" value="#if($businessLibaryEntity.iszhucdz != '1')$!{reginAddressEntity.chuzfcard}#end"/><label class="laelWidth01">出租方（单位）计算机代码／出租方（个人）身份证号：</label></span>
+                                        <span class="spanWidth02"><input type="text" class="inputWidth07" name="postcode" id ="postcode" value="#if($businessLibaryEntity.iszhucdz != '1')$!{reginAddressEntity.postcode}#end"/><label class="laelWidth02">邮编：</label></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="agentAdress" id="dyziyinfo" $!{str1} >
+                                <ul class="agentAdressTopMsg">
+                                    <li>
+                                        <select name="dzhzs" id="dzhzs" onchange="changeDizhzs();">
+                                            #foreach($pe in $!dlhzs)  
+                                              <option value="$!{pe.regadtcode}" selected="selected">$!{pe.dihzs}</option>
+                                            #end
+                                        </select>
+                                        <label>地址合作商：</label>
+                                    </li>
+                                    <li>
+                                        <select name="dzlx" id="dzlx">
+                                            <option value="大望路" selected="selected">大望路</option>
+                                        </select>
+                                        <label>地址类型：</label></li>
+                                    <li><span id="dzpcode">100021</span><label>邮编：</label>
+                                    </li>
+                                </ul>
+                                <div style="clear: both;font-size: 0px;height: 0px"></div>
+                                <p class="roomNum">代理地址：<span id="dzhzszydz">北京朝阳区西大望路甲12号2号楼国家广告产业园区孵化器</span><input value="$!{fjha}" id="fjh" id="fjh" type="hidden">
+                                </p>
+                                <p>所属街乡：<span id="dzhzsssjx">南磨房街道大望路甲12号2号楼</span>
+                                </p>
+                                <div style="clear: both;font-size: 0px;height: 0px"></div>
+                                <ul class="agentAdressBottomMsg">
+                                    <li><span>产权主体：<span id="hzschanqzt">单位房 </span></span><span>产权人/产权单位：<span id="hzschanqr">镕辉佳特创业孵化器(北京)有限公司</span></span></li>
+                                    <li><span>房屋规划用途：<span id="hzsfangwyt">办公</span> </span><span> 住所获取方式：<span id="hzszshqfs">租赁</span></span></li>
+                                    <li><span>面积：<span id="hzsmj" style="align:center;">5平米</span> </span><span> 住所使用期限：<span id="hzsnx">1年</span> </span></li>
+                                    <li>出租方（单位）计算机代码／出租方（个人）身份证号：<span id="hzscode">08883453</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="liMarginBottom" id="disshdz">
+                        <input type="text" class="inputWidth08" name="shijdz" id="shijdz" value="$!{reginAddressEntity.shijbgdz}"/>
+                        <label>实际办公地址：</label>
+                    </li>
+                    <li class="liMarginBottom">
+                        <input type="text" class="inputWidth08" name="kuaitddz" id="kuaitddz" value="$!{reginAddressEntity.kuaiddz}"/>
+                        <label>快递地址：</label>
+                    </li>
+                    <li>
+                        <ul class="contactCont">
+                            <li class="marginNone"><input type="text" class="inputWidth09" name="shoujr" id="shoujr" value="$!{reginAddressEntity.shoujr}"/><label>收件人：</label></li>
+                            <li class="liWidth"><input type="text" class="inputWidth10" name="phone" id="phone" value="$!{reginAddressEntity.lianxdh}"/><label>联系电话：</label></li>
+                            <li><input type="text" class="inputWidth11" name="ptcode" id="ptcode" value="$!{businessLibaryEntity.attribute1}"/><label>邮编：</label></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </form>      
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm" name ="hangyform" id ="hangyform" >
+            <input type="hidden" value="addjingyfw" name="addjingyfw" id ="addjingyfw">
+            <h3 class="nav navHover"><a><input type="button" onclick="saveHangy(0);" class="save" value="保存" />经营范围</a></h3>
+          <div class="b_i_operatingRangeItemWraper clearfix" id="jingyfwdis">
+			                <div class="b_i_operatingRangeItem clearfix">
+			                   <div class="b_i_operatingRangeItemTitle">
+			                        <p class="tit">主营业务 ：</p>
+			                   </div>
+			                  <div class="ms_remark">
+			               		<!-- <label>主营业务</label> -->
+			               		<input type="text" name ="hangylx" id="hangylx" value="$!{businessLibaryEntity.hangytd}"/>
+			                  </div> 
+			                    <div class="b_i_operatingRangeItemTitle">
+			                        <p>业务方向：</p>
+			                    </div>
+			                    <div class="b_i_operatingRangeItemCont type_1" bindShowArea="scopeBusiness" namespace="businessType" id="nofuhq">
+		                          	   <span><input type="checkbox" name="zhuyyw" value="专业投资咨询服务" /><label>专业投资咨询服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="项目投资或资产管理服务" /><label>项目投资或资产管理服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="高新技术研发与推广服务" /><label>高新技术研发与推广服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="互联网O2O服务（不含ICP信息服务）"/><label>互联网O2O服务（不含ICP信息服务）</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="环境保护服务" /><label>环境保护服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="文化艺术服务" /><label>文化艺术服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="教育咨询服务" /><label>教育咨询服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="会展服务" /><label>会展服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="软件开发服务" /><label>软件开发服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="网站设计与维护服务" /><label>网站设计与维护服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="广告服务" /><label>广告服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="日用品商品贸易" /><label>日用品商品贸易</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="矿产品、化工产品类商品贸易" /><label>矿产品、化工产品类商品贸易</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="建材商品贸易" /><label>建材商品贸易</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="机电产品商品贸易" /><label>机电产品商品贸易 </label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="非职业技能培训服务" /><label>非职业技能培训服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="金融外包服务" /><label>金融外包服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="产品设计服务" /><label>产品设计服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="企业管理及商务策划服务" /><label>企业管理及商务策划服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="商业房屋租赁服务" /><label>商业房屋租赁服务</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="本地生活服务" /><label>本地生活服务 </label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="经营健身娱乐场所" /><label>经营健身娱乐场所</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="经营健康服务机构（非诊疗）" /><label>经营健康服务机构（非诊疗）</label></span>
+									   <span><input type="checkbox" name="zhuyyw" value="汽车服务" /><label>汽车服务</label></span>
+			                     </div>
+			                     <div class="b_i_operatingRangeItemCont type_1" bindShowArea="scopeBusiness" namespace="businessType" id="isfuhq" style="display:none">
+								       <span><input type="checkbox" name="zhuyyw" value="专业商业咨询服务" /><label>专业商业咨询服务</label></span>
+								       <span><input type="checkbox" name="zhuyyw" value="高新技术研发与推广服务" /><label>高新技术研发与推广服务</label></span>
+								       <span><input type="checkbox" name="zhuyyw" value="互联网O2O服务（不含ICP信息服务）" />互联网O2O服务（不含ICP信息服务）</label></span>
+								       <span><input type="checkbox" name="zhuyyw" value="文化艺术服务"/><label>文化艺术服务</label></span>
+								       <span><input type="checkbox" name="zhuyyw" value="教育咨询服务" /><label>教育咨询服务</label></span>
+								       <span><input type="checkbox" name="zhuyyw" value="会展服务" /><label>会展服务</label></span>
+								       <span><input type="checkbox" name="zhuyyw" value="广告服务" /><label>广告服务</label></span>
+								        <span><input type="checkbox" name="zhuyyw" value="软件开发服务" /><label>软件开发服务</label></span>
+								        <span><input type="checkbox" name="zhuyyw" value="网站设计与维护服务" /><label>网站设计与维护服务</label></span>
+								        <span><input type="checkbox" name="zhuyyw" value="日用品商品贸易" /><label>日用品商品贸易</label></span>
+									    <span><input type="checkbox" name="zhuyyw" value="矿产品、化工产品商品贸易" /><label>矿产品、化工产品商品贸易 </label></span>
+									    <span><input type="checkbox" name="zhuyyw" value="建材商品贸易" /><label>建材商品贸易</label></span>
+									    <span><input type="checkbox" name="zhuyyw" value="机电产品商品贸易" /><label>机电产品商品贸易 </label></span>
+									    <span><input type="checkbox" name="zhuyyw" value="产品设计服务" /><label>产品设计服务</label></span>
+									   
+									    <span><input type="checkbox" name="zhuyyw" value="企业管理及商务策划服务" /><label>企业管理及商务策划服务</label></span>
+									    <span><input type="checkbox" name="zhuyyw" value="本地生活服务" /><label>本地生活服务</label></span>
+									    <span><input type="checkbox" name="zhuyyw" value="儿童教育服务" /><label>儿童教育服务 </label></span>
+	                           </div>
+			                </div>
+			              <!--   <div class="b_i_operatingRangeItem clearfix">
+			                    <div class="b_i_operatingRangeItemTitle">
+			                        <p>经营范围：</p>
+			                    </div>
+			                    <div class="b_i_operatingRangeItemCont type" bindShowArea="scopeBusiness" namespace="businessType" id="qitywcheck">
+			                    </div>
+			                </div>
+			               <div class="b_i_or_choiceArea clearfix">
+			                   <ul id="scopeBusiness">
+			
+			                   </ul>
+			               </div> -->
+			              <div class="b_i_operatingRangeItem clearfix"  id="disqtyw">
+			                    <div class="b_i_operatingRangeItemTitle" id="jyfw">
+			                        <p>经营范围：</p>
+			                    </div>
+			                    <div class="b_i_operatingRangeItemCont type" bindShowArea="scopeBusiness" namespace="businessType" id="qitywcheck"><!--  -->
+			                     </div>
+			                </div>
+			                
+			                 <div class="b_i_operatingRangeItemTitle st_box" id="jyyl">
+		                        <p>经营范围预览：</p>
+		                    </div>  
+		                  	<div class="b_i_or_choiceArea clearfix" id="disjyyl">
+			                   <ul id="scopeBusiness1" style="float:left;overflow:hidden">
+			
+			                   </ul>
+			                   <ul id="scopeBusiness" style="float:left;overflow:hidden">
+			
+			                   </ul>
+			               	</div>
+			               	
+			               	 <div class="b_i_operatingRangeItemTitle">
+			                        <p class="tit">补充经营范围 ：</p>
+			                   </div>
+			                  <div class="ms_remark">
+			               		<input type="text" name ="zdjyfw" id="zdjyfw" value="$!{businessLibaryEntity.jingyfw}"/>
+			                  </div> 
+            </div>
+        </form>
+    </div>
+
+    <div class="bannerItem clearfix">
+        <form class="contentForm" name="savegudform" id="savegudform" action="/order/modifykeh" method="post">
+            <input name="addbusinessgudong" id ="addbusinessgudong" type="hidden" >
+            <input name="addbusid" id="addbusid" type="hidden" value="$!{businessLibaryEntity.busId}"/>
+            <input name="addorderid" id="addorderid" type="hidden" value="$!{businessLibaryEntity.orderid}"/>
+            <input name="zirrgudcount" id="zirrgudcount" type="hidden" value="$!{zicount}"/>
+            <input name="fargudcount" id="fargudcount" type="hidden" value="$!{fargudcount}"/>
+             <input name="display" type="hidden" value="zirgud">
+            <h3 class="nav navHover"><a><input type="button" onclick="modify(0);"  class="save" value="保存" />股东</a></h3>
+            <div id="zirgud">
+                <div class="b_i_shareholder clearfix" id="shareholders">
+				   #if($isdisplayzr == 'true')
+                   #set ($i=1)
+                   #foreach($pe in $!zirrgud)  
+                    <div class="naturalShareholdersCont">
+                        <a href="" class="delShareholderIcon_1"></a>
+                         <input name="zirgudId$!{i}" id="zirgudId$!{i}" type="hidden" value="$!{pe.kehid}"/>
+                        <span class="n_s_inputWidth01"><input type="text" name="gudong$!{i}" id="gudong$!{i}" value="$!{pe.username}"/><label> 股东$!{i}:</label></span>
+                        <span class="n_s_inputWidth02"><input type="text" name="chuzf$!{i}" id="chuzf$!{i}" value="$!{pe.attribute1}" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>万<label>出资额:</label></span>
+                        <span class="n_s_inputWidth03"><input type="text" name="gudIdcard$!{i}" id ="gudIdcard$!{i}" value="$!{pe.idcard}"/><label>身份证号:</label></span>
+                        <span class="n_s_inputWidth04"><input type="text" name="gudIdcardaddre$!{i}" id ="gudIdcardaddre$!{i}" value="$!{pe.idcardaddress}"/><label>身份证地址:</label></span>
+                    <span class="n_s_inputWidth05">
+                        <select name="gudsex$!{i}" id ="gudsex$!{i}">
+                             #if($pe.sex =='男')
+                               <option value="男" selected="selected">男</option>
+                               <option value="女">女</option>
+                             #elseif($pe.sex =='女')
+                               <option value="男">男</option>
+                               <option value="女" selected="selected">女</option>
+                             #else
+                               <option value="男" selected="selected">男</option>
+                               <option value="女">女</option>
+                             #end
+                        </select>
+                        <label> 性别:</label>
+                    </span>
+                        <br/>
+                        <span class="n_s_inputWidth01"><input type="text" name="gudphone$!{i}" id ="gudphone$!{i}" value="$!{pe.phone}"/><label>手机号:</label></span>
+                    </div>
+                     #set($i=$i+1)
+                   #end
+                  #else
+                     <div class="naturalShareholdersCont">
+                        <a href="" class="delShareholderIcon_1"></a>
+                        <span class="n_s_inputWidth01"><input type="text" name="gudong1" id="gudong1"/><label> 股东1:</label></span>
+                        <span class="n_s_inputWidth02"><input type="text" name="chuzf1" id="chuzf1" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>万<label>出资额:</label></span>
+                        <span class="n_s_inputWidth03"><input type="text" name="gudIdcard1" id ="gudIdcard1"/><label>身份证号:</label></span>
+                        <span class="n_s_inputWidth04"><input type="text" name="gudIdcardaddre1" id ="gudIdcardaddre1"/><label>身份证地址:</label></span>
+                    <span class="n_s_inputWidth05">
+                        <select name="gudsex1" id ="gudsex1">
+                            <option value="男" selected="selected">男</option>
+                            <option value="女">女</option>
+                        </select>
+                        <label> 性别:</label>
+                    </span>
+                        <br/>
+                        <span class="n_s_inputWidth01"><input type="text" name="gudphone1" id ="gudphone1"/><label>手机号:</label></span>
+                    </div>
+                  #end
+                  #if($isdisplayfr == 'true')
+                    #set ($i=1)
+                   #foreach($pe in $!fargud)  
+                    <div class="corporateShareholdersCont">
+                        <a href="" class="delShareholderIcon_2"></a>
+                         <input name="fargudId$!{i}" id="fargudId$!{i}" type="hidden" value="$!{pe.kehid}"/>
+                        <span><input type="text" name="fargud$!{i}" id="fargud$!{i}" value="$!{pe.username}"/><label>法人股东$!{i}:</label></span>
+                        <span><input type="text" name="faryyzzh$!{i}" id ="faryyzzh$!{i}" value="$!{pe.yingyzz}"/><label>营业执照号:</label></span>
+                        <span><input type="text" name="farchuze$!{i}" id="farchuze$!{i}" value="#if($pe.chuze =='0.0') #else  $!{pe.chuze}  #end" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>万<label>出资额:</label></span>
+                    </div>
+                    #set($i=$i+1)
+                   #end 
+                   #else
+                    <!--  <div class="corporateShareholdersCont">
+                        <a href="" class="delShareholderIcon_2"></a>
+                        <span><input type="text" name="fargud1" id="fargud1"/><label>法人股东1:</label></span>
+                        <span><input type="text" name="faryyzzh1" id ="faryyzzh1"/><label>营业执照号:</label></span>
+                        <span><input type="text" name="farchuze1" id="farchuze1" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>万<label>出资额:</label></span>
+                    </div> -->
+                   #end
+                </div>
+                <p class="addBtn">
+                    <input type="button" value="添加自然人股东" onclick="addZirrgd();"/>
+                    <input type="button" value="添加法人股东"  onclick="addfargd();"/>
+                </p>
+            </div>
+        </form>
+    </div>
+   <div class="bannerItem clearfix">
+        <form class="contentForm" name="myForm" id="myForm" action="/order/saveKehinfo" method="post">
+           <input name="orderid" value="$!{orderid}" type="hidden" id ="orderid">
+            <input name="busid" value="$!{businessLibaryEntity.busId}" type="hidden" id ="busid">
+            <input name="adddscount" id="adddscount" type="hidden">
+            <input name="addjscount" id="addjscount" type="hidden">
+             <input name="display"  type="hidden" value="fadingdb">
+            <h3 class="nav navHover"><a><input type="button" onclick="savefardb2ds(0);" class="save" value="保存" />法定代表人及董监高</a></h3>
+            <div class="b_i_legalPerson clearfix" id="fadingdb">
+                <div class="b_i_legalPersonstyle01">
+                    <p class="b_i_lp_leftWidth clearfix b_i_lp_leftHeight01">法定代表人：</p>
+                    <div>
+                        <div class="b_i_lps_03Right">
+                            <div class="b_i_lps_marginBottom clearfix b_i_lps_bordreBottom">
+                                <span class="b_i_lps_width05"><input type="text" name="farzx" id="farzx" value="$!{faddbr.username}"/><label>法定代表人:</label></span>
+                                <span class="b_i_lps_width01"><input type="text" name="farphone" id="farphone" value="$!{faddbr.phone}"/><label>手机号:</label></span>
+                            <!-- <span class="b_i_lps_width04">
+                                <select name="farxw" id ="farxw">
+                                    <option value="博士">博士</option>
+                                    <option value="研究生">研究生</option>
+                                </select>
+                                <label>学历:</label>
+                            </span>
+                            <span class="b_i_lps_width01">
+                                <select name="farmm" id="farmm">
+                                    <option value="">群众</option>
+                                    <option value="">党员</option>
+                                </select>
+                                <label>党员面貌:</label>
+                            </span> -->
+                            <span class="b_i_lps_width04">
+                                <select name="farsex" id="farsex">
+                                     #if($faddbr.sex == '男')
+                                      <option value="男" selected="selected">男</option>
+                                      <option value="女">女</option>
+                                    #elseif($faddbr.sex =='女')
+		                              <option value="男">男</option>
+		                              <option value="女" selected="selected">女</option>
+		                            #else
+		                              <option value="男" selected="selected">男</option>
+		                              <option value="女">女</option>
+		                            #end
+                                </select>
+                                <label>性别:</label>
+                            </span>
+                                <span class="b_i_lps_width03"><input type="text" name="farcard" id ="farcard" value="$!{faddbr.idcard}"/><label>身份证号:</label></span>
+                                <span class="b_i_lps_width03"><input type="text" name="farsfdz" id ="farsfdz" value="$!{faddbr.idcardaddress}"/><label>身份地址:</label></span>
+                            </div>
+                        </div>
+                        <div style="clear: both;height: 0px;font-size: 0px"></div>
+                    </div>
+                </div>
+            
+                  <ul class="b_i_ca_form">
+
+                    <li class="radioMargin1 radioMarginBottom">
+                        #set ($dsdis='')
+                        #set ($jsdis='')
+                        #if($businessLibaryEntity.isdengsh =='1')
+                        <span ><input type="radio"  name="ishavedongsh" value="1" checked id="m1"/><label for="m1">有</label></span>
+                        <span class="radioMarginLeft02"><input type="radio" value="0"  name="ishavedongsh" id="m2"/><label for="m2">无</label></span>
+                          #set ($dsdis='style="display: block"')
+                        #else
+                        <span ><input type="radio"  name="ishavedongsh" value="1" id="m1"/><label for="m1">有</label></span>
+                        <span class="radioMarginLeft02"><input checked type="radio" value="0" id="m2"  name="ishavedongsh"/><label for="m2">无</label></span>
+                          #set ($jsdis='style="display: block"')
+                        #end
+                        <label>董事会：</label>
+                    </li>
+                    <li>
+                        <div class="adressWraper1">
+
+                            <div class="ownAdress" $!{dsdis}>
+                                <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="dongshzx1" id="dongshzx1" value="$!{dshzx.username}"/><label>董事长:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="dongshzxphone1" id="dongshzxphone1" value="$!{dshzx.phone}"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="dongshzxsex1" id="dongshzxsex1">
+                                            #if($dshzx.sex == '男')
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="">女</option>
+                                            #elseif($dshzx.sex =='女')
+				                              <option value="男">男</option>
+				                              <option value="女" selected="selected">女</option>
+				                            #else
+				                              <option value="男" selected="selected">男</option>
+				                              <option value="女">女</option>
+				                            #end
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongshzxcard1" id="dongshzxcard1" value="$!{dshzx.idcard}"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongshzxcarddz1" id="dongshzxcarddz1" value="$!{dshzx.idcardaddress}"/><label>身份地址:</label></span>
+                                </ul>
+                                <div id="dsh_area">
+                                #if($isdisplayds == 'true')
+                                  #set ($i=1)
+                                 #foreach($pe in $!dongs_1)  
+                                <ul class="dsh_box">
+                                    <input name="gongsId$!{i}" id="gongsId$!{i}"  type="hidden" value="$!{pe.kehid}"/>
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="dongsjis$!{i}" id="dongsjis$!{i}" value="$!{pe.username}"/><label>董事$!{i}:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="dongsjisphone$!{i}" id="dongsjisphone$!{i}" value="$!{pe.phone}"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="dongsjissex$!{i}" id="dongsjissex$!{i}">
+                                             #if($pe.sex =='女')
+                                            <option value="男">男</option>
+                                            <option value="女"  selected="selected">女</option>
+                                            #else
+                                              <option value="男"  selected="selected">男</option>
+                                            <option value="女">女</option>
+                                            #end
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongsjiscard$!{i}" id="dongsjiscard$!{i}" value="$!{pe.idcard}"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongsjiscarddz$!{i}" id="dongsjiscarddz$!{i}" value="$!{pe.idcardaddress}"/><label>身份地址:</label></span>
+                                </ul>
+                                #set($i=$i+1)
+                                #end 
+                                #else
+                                   <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="dongsjis1" id="dongsjis1"/><label>董事1:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="dongsjisphone1" id="dongsjisphone1"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="dongsjissex1" id="dongsjissex1">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongsjiscard1" id="dongsjiscard1"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="dongsjiscarddz1" id="dongsjiscarddz1"/><label>身份地址:</label></span>
+                                </ul>
+                                #end
+                                
+                                </div>
+                                <p class="addBtn">
+                                    <input type="button" value="添加董事" onclick="adddongs();" id="add_dsh"/>
+                                </p>
+                            </div>
+                            
+                            <div class="ownAdress" $!{jsdis}>
+                                <ul class="dsh_box">
+                                    <span class="b_i_lps_width05"><input type="text" name="zhixgongsh" id="zhixgongsh" value="$!{dshzx.username}"/><label>执行董事:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="zhixgongshphone" id="zhixgongshphone" value="$!{dshzx.phone}"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="zhixgongshsex" id="zhixgongshsex">
+                                            #if($dshzx.sex == '女')
+                                            <option value="男">男</option>
+                                            <option value="女"  selected="selected">女</option>
+                                            #else
+                                             <option value="男"  selected="selected">男</option>
+                                            <option value="女">女</option>
+                                            #end
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixgongshcard" id="zhixgongshcard" value="$!{dshzx.idcard}"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixgongshcarddz" id="zhixgongshcarddz" value="$!{dshzx.idcardaddress}"/><label>身份地址:</label></span>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="b_i_ca_form">
+                    <li class="radioMargin2 radioMarginBottom">
+                       #set ($dsdis_1='')
+                       #set ($jsdis_1='')
+                      #if($businessLibaryEntity.isjiash =='1')
+                        <span ><input type="radio" value="1"  id="c1" name="ishavejiansh" checked/><label for="c1">有</label></span>
+                        <span class="radioMarginLeft02"><input type="radio" value="0" name="ishavejiansh" id="c2"/><label for="c2">无</label></span>
+                         #set ($dsdis_1='style="display: block"')
+                      #else
+                        <span ><input type="radio" value="1"  name="ishavejiansh" id="c1"/><label for="c1">有</label></span>
+                        <span class="radioMarginLeft02"><input type="radio" checked value="0" name="ishavejiansh" id="c2"/><label for="c2">无</label></span>
+                          #set ($jsdis_1='style="display: block"')
+                      #end
+                        <label>监事会：</label>
+                    </li>
+                    <li>
+                        <div class="adressWraper2">
+
+                            <div class="ownAdress" $!{dsdis_1} >
+                                <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="zhixjianszx1" id="zhixjianszx1" value="$!{jianszx.username}"/><label>监事会主席:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="zhixjianszxphone1" id="zhixjianszxphone1" value="$!{jianszx.phone}"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select  name="zhixjianszxsex1" id="zhixjianszxsex1">
+                                            #if($jianszx.sex == '女')
+                                            <option value="男">男</option>
+                                            <option value="女" selected="selected">女</option>
+                                            #else
+                                              <option value="男" selected="selected">男</option>
+                                              <option value="女">女</option>
+                                            #end
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixjianszxcard1" id="zhixjianszxcard1" value="$!{jianszx.idcard}"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="zhixjianszxcarddz1" id="zhixjianszxcarddz1" value="$!{jianszx.idcardaddress}"/><label>身份地址:</label></span>
+                                </ul>
+                                <div id="jsh_area">
+                                #if($isdisplayjs == 'true')
+                                 #set ($i=1)
+                                 #foreach($pe in $!jianss)  
+                                <ul class="dsh_box">
+                                    <input name="jiansId$!{i}" id="jiansId$!{i}"  type="hidden" value="$!{pe.kehid}"/>
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="jians$!{i}" id="jians$!{i}" value="$!{pe.username}"/><label>监事$!{i}:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="jiansphone$!{i}" id="jiansphone$!{i}" value="$!{pe.phone}"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="jianssex$!{i}" id="jianssex$!{i}">
+                                            #if($pe.sex =='女')
+                                            <option value="男">男</option>
+                                            <option value="女" selected="selected">女</option>
+                                            #else
+                                              <option value="男" selected="selected">男</option>
+                                              <option value="女">女</option>
+                                            #end
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscard$!{i}" id="jianscard$!{i}" value="$!{pe.idcard}"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscarddz$!{i}" id="jianscarddz$!{i}" value="$!{pe.idcardaddress}"/><label>身份地址:</label></span>
+                                </ul>
+                                  #set($i=$i+1)
+                                #end 
+                                #else
+                                 <ul class="dsh_box">
+                                    <a href="" class="delShareholderIcon"></a>
+                                    <span class="b_i_lps_width05"><input type="text" name="jians1" id="jians1"/><label>监事一:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="jiansphone1" id="jiansphone1"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="jianssex1" id="jianssex1">
+                                            <option value="男" selected="selected">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscard1" id="jianscard1"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscarddz1" id="jianscarddz1"/><label>身份地址:</label></span>
+                                </ul>
+                                #end
+                                </div>
+                                <p class="addBtn">
+                                    <input type="button" value="添加监事" onclick="addjians();" id="add_jsh"/>
+                                </p>
+                            </div>
+                            
+                            <div class="ownAdress" $!{jsdis_1}>
+                                <ul class="dsh_box">
+                                    <span class="b_i_lps_width05"><input type="text" name="jians" id="jians" value="$!{jianszx.username}"/><label>监事:</label></span>
+                                    <span class="b_i_lps_width01"><input type="text" name="jiansphone" id="jiansphone" value="$!{jianszx.phone}"/><label>手机号:</label></span>
+                                    <span class="b_i_lps_width04">
+                                        <select name="jianssex" id="jianssex">
+                                           #if($jianszx.sex == '女')
+                                            <option value="男">男</option>
+                                            <option value="女" selected="selected">女</option>
+                                           #else
+                                              <option value="男"  selected="selected">男</option>
+                                              <option value="女">女</option>
+                                           #end
+                                        </select>
+                                        <label>性别:</label>
+                                    </span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscard" id="jianscard" value="$!{jianszx.idcard}"/><label>身份证号:</label></span>
+                                    <span class="b_i_lps_width03"><input type="text" name="jianscarddz" id="jianscarddz" value="$!{jianszx.idcardaddress}"/><label>身份地址:</label></span>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+                <div style="clear: both;height: 0;font-size: 0px"></div>
+                <div class="b_i_legalPersonstyle02">
+                    <p class="b_i_lp_leftWidth clearfix b_i_lp_leftHeight02">经理：</p>
+                    <div class="b_i_lps_03Right">
+                        <div class="b_i_lps_marginBottom clearfix">
+                            <span class="b_i_lps_width06"><input type="text" name="jingl"  id="jingl" value="$!{jingl.username}"/><label>姓名:</label></span>
+                            <span class="b_i_lps_width02"><input type="text" name="jinglphone" id ="jinglphone" value="$!{jingl.phone}"/><label>手机号:</label></span>
+                            <!-- <span class="b_i_lps_width01">
+                                <select>
+                                    <option value="">博士</option>
+                                    <option value="">研究生</option>
+                                </select>
+                                <label>学历:</label>
+                            </span>
+                            <span class="b_i_lps_width01">
+                                <select>
+                                    <option value="">群众</option>
+                                    <option value="">党员</option>
+                                </select>
+                                <label>党员面貌:</label>
+                            </span> -->
+                            <span class="b_i_lps_width01">
+                                <select name="jinglsex" id="jinglsex">
+                                    #if($jingl.sex == '女')
+                                      <option value="男">男</option>
+                                      <option value="女"  selected="selected">女</option>
+                                    #else
+                                         <option value="男"  selected="selected">男</option>
+                                        <option value="女">女</option>
+                                    #end
+                                </select>
+                                <label>性别:</label>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="b_i_lps_width03"><input type="text" name="jinglcard" id="jinglcard" value="$!{jingl.idcard}"/><label>身份证号:</label></span>
+                            <span class="b_i_lps_width03"><input type="text" name="jinglsfdz" id="jinglsfdz" value="$!{jingl.idcardaddress}"/><label>身份地址:</label></span>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear: both;height: 0;font-size: 0px"></div>
+                <div class="b_i_legalPersonstyle03">
+                    <p class="b_i_lp_leftWidth clearfix b_i_lp_leftHeight03">财务负责人：</p>
+                    <div class="b_i_lps_03Right">
+                       <div>
+                           <span class="b_i_lps_width06"><input type="text" name="caiwfzr" id="caiwfzr" value="$!{caiwfzr.username}"/><label>姓名:</label></span>
+                           <span class="b_i_lps_width02"><input type="text" name="caiwphone" id="caiwphone" value="$!{caiwfzr.phone}"/><label>手机号:</label></span>
+                           <span class="b_i_lps_width03"><input type="text" name="caiwsfz" id="caiwsfz" value="$!{caiwfzr.idcard}"/><label>身份证号:</label></span>
+                           <!--  <span class="b_i_lps_width01">
+                                <select>
+                                    <option value="">群众</option>
+                                    <option value="">党员</option>
+                                </select>
+                                <label>政治面貌:</label>
+                            </span> -->
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <input name="addgsyginfo" id ="addgsyginfo" value="addgsyginfo" type="hidden">
+            <h3 class="nav navHover"><a><input type="button" onclick="savegsyginfo(0);" class="save" value="保存" />公司员工信息</a></h3>
+            <div class="employeeMsg clearfix" id="employinfo">
+                <ul>
+                    <li class="lisPadding">
+                        <span><input type="text" name="qiylxr" id="qiylxr" value="$!{qiyeryinfo.username}"/><label>企业联系人:</label></span>
+                        <span><input type="text" name="qiylxrphone" id="qiylxrphone" value="$!{qiyeryinfo.phone}"/><label>手机号:</label></span>
+                        <span><input type="text" name="guddh" id="guddh" value="$!{qiyeryinfo.gudphone}"/><label>固定电话:</label></span>
+                        <span><input type="text" name="email" id="email" value="$!{qiyeryinfo.email}"/><label>邮箱地址:</label></span>
+                        <span><input type="text" name="qiypostcode" id="qiypostcode" value="$!{qiyeryinfo.attribute2}"/><label>邮编:</label></span>
+                    </li>
+                    <li class="lisPadding">
+                        <span><input type="text" value="$!{businessLibaryEntity.zhigrs}" name="zhigcount" id="zhigcount" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>职工总人数:</label></span>
+                        <span><input type="text" value="$!{businessLibaryEntity.bendrs}" name="bendrs" id="bendrs" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>本地人数:</label></span>
+                        <span><input type="text" value="$!{businessLibaryEntity.waidrs}" id="waidrs" id="waidrs" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>外地人数:</label></span>
+                        <span><input type="text" value="$!{businessLibaryEntity.nvxrs}" name="nvxrw" id="nvxrw" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>女性人数:</label></span>
+                      <!--   <span><input type="text" value="#if($businessLibaryEntity.zhigrs == '0')#else $!{businessLibaryEntity.zhigrs}#end" name="zhigcount" id="zhigcount" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>职工总人数:</label></span>
+                        <span><input type="text" value="#if($businessLibaryEntity.bendrs =='0')#else $!{businessLibaryEntity.bendrs}#end" name="bendrs" id="bendrs" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>本地人数:</label></span>
+                        <span><input type="text" value="#if($businessLibaryEntity.waidrs=='0')#else $!{businessLibaryEntity.waidrs}#end" id="waidrs" id="waidrs" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>外地人数:</label></span>
+                        <span><input type="text" value="#if($businessLibaryEntity.nvxrs=='0')#else $!{businessLibaryEntity.nvxrs}#end" name="nvxrw" id="nvxrw" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" /><label>女性人数:</label></span>
+                   -->  </li>
+                    <li>
+                        <span class="firstspanWidth"><input type="text" name="Ukey1" id="Ukey1" value="$!{Ukey1.username}"/><label>Ukey管理员1:</label></span>
+                        <span><input type="text" name="Ukey1phone" id="Ukey1phone" value="$!{Ukey1.phone}"/><label>手机号:</label></span>
+                    </li>
+                    <li>
+                        <span class="firstspanWidth"><input type="text" name="Ukey2" id="Ukey2" value="$!{Ukey2.username}"/><label>Ukey管理员2:</label></span>
+                        <span><input type="text" name="Ukey2phone" id="Ukey2phone" value="$!{Ukey2.phone}"/><label>手机号:</label></span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <input name="addotherinfo" id ="addotherinfo" value="addotherinfo" type="hidden">
+            <h3 class="nav navHover"><a><input type="button" onclick="saveotherInfo(0);" class="save" value="保存" />其它信息</a></h3>
+            <div class="b_i_other clearfix" id="otherinfodis">
+              <!--   <ul>
+                    <li><input type="text" name="gsxtcount" id="gsxtcount" value="$!{businessLibaryEntity.gongsxtcode}"/><label>工商系统账号：</label></li>
+                    <li><input type="password" name="password" id="password" value="$!{businessLibaryEntity.password}"/><label class="laelWidth03">密码：</label></li>
+                </ul> -->
+                    <div class="other_add">
+                    #if($issource == '2')
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>申请方式：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            #if($applyMethod =='1')
+                            <span><input type="radio" name="shenqfs" value="0" /><label>双向寄递</label></span>
+                            <span><input type="radio" name="shenqfs" value="1" checked/><label>现场递交</label></span>
+                            #elseif($applyMethod == '0')
+                             <span><input type="radio" name="shenqfs" value="0" checked/><label>双向寄递</label></span>
+                            <span><input type="radio" name="shenqfs" value="1" /><label>现场递交</label></span>
+                           #else
+                             <span><input type="radio" name="shenqfs" value="0"/><label>双向寄递</label></span>
+                            <span><input type="radio" name="shenqfs" value="1" /><label>现场递交</label></span>
+                            #end
+                        </div>
+                    </div>
+                   #end
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>名称预先核准文号：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                            <input name="mingchzwh" id="mingchzwh" type="text" class="in_text" value="$!{businessLibaryEntity.mingcyxhz}"/>
+                        </div>
+                    </div>
+                </div>
+                <ul class="zh_box">
+                    <li><input name="hemgszh" id="hemgszh" type="text" value="$!{businessLibaryEntity.hemgszh}"/><label>核名工商账号：</label></li>
+                    <li><input type="text" name="hempassword" id="hempassword"  value="$!{businessLibaryEntity.hempassword}"/><label class="laelWidth03">密码：</label></li>
+                </ul>
+                <ul class="zh_box">
+                    <li><input type="text"  name="wangdgszh" id="wangdgszh" value="$!{businessLibaryEntity.wangdgszh}"/><label>网登工商账号：</label></li>
+                    <li><input type="text"  name="wangdmm" id="wangdmm" value="$!{businessLibaryEntity.wangdpassword}"/><label class="laelWidth03">密码：</label></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+     <input name="issource" id="issource" type="hidden" value="$!{issource}"/>
+     <input name="applyMethod" id="applyMethod" type="hidden" value="$!{applyMethod}"/>
+     <input name="gongShangInfoTuiHuiFlag" id="gongShangInfoTuiHuiFlag" type="hidden" value="$!{gongShangInfoTuiHuiFlag}"/>
+     <input name="createArchiveStatus" id="createArchiveStatus" type="hidden" value="$!{createArchiveStatus}"/>
+        <div class="bannerItem clearfix">
+         <input name="filebusid" id="filebusid" type="hidden" value="$!{businessLibaryEntity.busId}"/>
+        <form class="contentForm" name="fileform" action="/filesupload" method="post">
+            <input id="fileupload" style="display:none;" type="file" fileId="CheckNameInfo_shareholder4IDFile" name="fileupload" multiple />
+            <h3 class="nav"><a onclick="initattach()"><input type="button" onclick="saveall();" class="save" value="保存" />附件资料</a></h3>
+            <div class="b_i_other clearfix"  id="initfile">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="btn_box">
+<!--     <a onclick="saveall();">保存</a> -->
+    #if($issource =='2')
+    <a onclick="saveSubmit();">提交</a>
+    #end
+</div>
+<script >
+function saveall(){
+	var fbuid = $("#filebusid").val();
+	if(fbuid != null && fbuid !=""){
+	/* 	if(!modifybusigsmc(1)){
+			return;
+		}
+		if(!saveaddress(1)){
+			return ;
+		}
+		if(!saveHangy(1)){
+			return ;
+		}
+		if(!modify(1)){
+			return;
+		}
+		if(!savefardb2ds(1)){
+			return;
+		}
+		if(!savegsyginfo(1)){
+			return ;
+		}
+		if(!saveotherInfo(1)){
+			return ;
+		} */
+		alert("附件保存成功！！");
+	}else{
+		alert("目前没有可保存的信息！！");
+	}
+}
+
+function validateFileattach(){
+	var fbuid = $("#filebusid").val();
+	var fla = "";
+	 jQuery.ajax({
+			url : '/order/validateFileattach',
+			type : "post",
+			async:false,
+			data : {
+				"fbuid" : fbuid,
+			},
+			dataType : "text",
+			success : function(data, textStatus) {
+				if(data !=""){
+					alert(data);
+					fla =  false;
+				}else{
+					fla =  true;
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+			}
+	}); 
+	return fla;
+}
+
+function saveSubmit(){
+	var fbuid = $("#filebusid").val();
+ 	if(!modifybusigsmc(1)){
+		return;
+	}
+	if(!saveaddress(1)){
+		return ;
+	}
+	if(!saveHangy(1)){
+		return ;
+	}
+	if(!modify(1)){
+		return;
+	}
+	if(!savefardb2ds(1)){
+		return;
+	}
+	if(!savegsyginfo(1)){
+		return ;
+	}
+	if(!saveotherInfo(1)){
+		return ;
+	} 
+	//判断附件
+	if(!validateFileattach()){
+		return ;
+	}
+    var issource = $("#issource").val();
+    if(issource =="2"){
+    	// 校验
+    	var createArchiveStatus = $("#createArchiveStatus").val();
+    	if(createArchiveStatus != '2'){
+    		alert("请到档案组创建企业档案");
+    		return;
+    	}
+    	submitAllBuseinee(fbuid);
+    	var taskData = commonDeal();
+    	window.opener.location.WF.submitTask("111", taskData, "1");
+    	window.close();
+    }
+}
+
+function submitAllBuseinee(fbuid){
+	 jQuery.ajax({
+			url : '/order/submitBusiness',
+			type : "post",
+			async:false,
+			data : {
+				"fbuid" : fbuid,
+			},
+			dataType : "text",
+			success : function(data, textStatus) {
+				if(data !="false"){
+					alert("提交成功！");
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+			}
+		}); 
+}
+
+function commonDeal(){
+	//表示其他访问
+	var shenqfs =$("input[name='shenqfs']:checked").val();
+	var gongShangInfoTuiHuiFlag = $("#gongShangInfoTuiHuiFlag").val();
+	// 注册地址
+	var ishaveadd =$("input[name='ishaveaddress']:checked").val();
+	// 产权主体，默认为单位，当注册地址为：个人，需变化。
+	var chanqzt = "1";
+	if(ishaveadd == "0"){
+		// 注册地址：个人
+    	var chanqztVal = $("#chanpzt").find("option:selected").val();
+    	if(chanqztVal == "单位"){
+    		chanqzt = "1";
+    	}else{
+    		chanqzt = "0";
+    	}
+	}
+	var taskData = "&gongShangInfoTuiHuiFlag="+gongShangInfoTuiHuiFlag + "&applyMethod=" + shenqfs + "&chanqzt=" + chanqzt+"&iszhucdz="+ishaveadd;
+    return taskData;
+}
+
+    var gudjs ='$!{zicount}';
+    function addZirrgd(){
+    	gudjs++;
+    	var htmlstr="<div class=\"naturalShareholdersCont\"><a href=\"\" class=\"delShareholderIcon_1\"></a>"+
+    		"<span class=\"n_s_inputWidth01\"><input type=\"text\" name=\"gudong"+gudjs+"\" id=\"gudong"+gudjs+"\"/><label> 股东"+gudjs+":</label></span>"+
+    	    "<span class=\"n_s_inputWidth02\"><input type=\"text\" name=\"chuzf"+gudjs+"\" id=\"chuzf"+gudjs+"\"/>万<label>出资额:</label></span>"+
+    	    "<span class=\"n_s_inputWidth03\"><input type=\"text\" name=\"gudIdcard"+gudjs+"\" id =\"gudIdcard"+gudjs+"\"/><label>身份证号:</label></span>"+
+    	    "<span class=\"n_s_inputWidth04\"><input type=\"text\" name=\"gudIdcardaddre"+gudjs+"\" id =\"gudIdcardaddre"+gudjs+"\"/><label>身份证地址:</label></span>"+
+    	    "<span class=\"n_s_inputWidth05\">"+
+    	    "<select name=\"gudsex"+gudjs+"\" id =\"gudsex"+gudjs+"\"><option value=\"男\" selected=\"selected\">男</option><option value=\"女\">女</option>"+
+    	    "</select><label> 性别:</label></span><br/>"+
+    	    "<span class=\"n_s_inputWidth01\"><input type=\"text\" name=\"gudphone"+gudjs+"\" id =\"gudphone"+gudjs+"\"/><label>手机号:</label></span>"+
+    	    "</div>";
+    	$("#shareholders").append(htmlstr); 
+    }
+    
+    $('#shareholders').on('click','.delShareholderIcon_1',function(){
+        $(this).parent().remove();
+        if(gudjs == 1){
+        	  gudjs--;
+        }
+        return false;
+    })
+     $('#shareholders').on('click','.delShareholderIcon_2',function(){
+        $(this).parent().remove();
+        if(farjs == 1){
+        	farjs--;
+        }
+        return false;
+    })
+       $('#dsh_area').on('click','.delShareholderIcon',function(){
+        $(this).parent().remove();
+       // farjs--;
+        return false;
+    })
+      $('#jsh_area').on('click','.delShareholderIcon',function(){
+        $(this).parent().remove();
+       // farjs--;
+        return false;
+    })
+</script>
+<script>
+var otherflag = "";
+function uploadfile(filefield,i,imggield){
+	  if(i == '0'){
+		  otherflag ="true";
+	  }else{
+	   flag = i;
+	   otherflag ="";
+	  }
+	  field = imggield;
+	   document.getElementById(filefield).click();
+}
+    var farjs = '$!{fargudcount}';
+    function addfargd(){
+    	farjs++;
+    	var htmlstr ="<div class=\"corporateShareholdersCont\">"+
+				     "<a href=\"\" class=\"delShareholderIcon_2\"></a>"+
+				     "<span><input type=\"text\" name=\"fargud"+farjs+"\" id=\"fargud"+farjs+"\"/><label>法人股东"+farjs+":</label></span>"+
+				     " <span><input type=\"text\" name=\"faryyzzh"+farjs+"\" id =\"faryyzzh"+farjs+"\"/><label>营业执照号:</label></span>"+
+				     "<span><input type=\"text\" name=\"farchuze"+farjs+"\" id=\"farchuze"+farjs+"\">万<label>出资额:</label></span>"+
+				     "</div>";
+	       $("#shareholders").append(htmlstr); 
+    }
+</script>
+</body>
+ </html>

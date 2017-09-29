@@ -1,0 +1,1235 @@
+  #if($!{serverName1List}||$!{serverName2List}||$!{serverName3List}||$!{serverName4List}||$!{serverName5List}||$!{serverName6List}||$!{serverName7List}||$!{serverName8List}||$!{serverName9List}||$!{serverName10List}||$!{serverName11List}||$!{serverName12List}||$!{serverName13List}||$!{serverName14List}||$!{serverName15List}||$!{serverName16List}||$!{serverName17List}||$!{serverName18List})
+  <div class="order_tab" id="order_tab">
+      <div class="tt1">
+        <!-- #set($size =$!{serverNameList.size()} - 1 ) -->
+        <ul>
+          #if($!{serverName1List})
+          	<li width="10%" $!{serverName1List.get(0).get("classTH")} >$!{serverName1List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName2List})
+          	<li width="10%" $!{serverName2List.get(0).get("classTH")} >$!{serverName2List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName3List})
+          	<li width="10%" $!{serverName3List.get(0).get("classTH")} >$!{serverName3List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName4List})
+          	<li width="10%" $!{serverName4List.get(0).get("classTH")} >$!{serverName4List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName5List})
+          	<li width="10%" $!{serverName5List.get(0).get("classTH")} >$!{serverName5List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName6List})
+          	<li width="10%" $!{serverName6List.get(0).get("classTH")} >$!{serverName6List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName7List})
+          	<li width="10%" $!{serverName7List.get(0).get("classTH")} >$!{serverName7List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName8List})
+          	<li width="10%" $!{serverName8List.get(0).get("classTH")} >$!{serverName8List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName9List})
+          	<li width="10%" $!{serverName9List.get(0).get("classTH")} >$!{serverName9List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName10List})
+          	<li width="10%" $!{serverName10List.get(0).get("classTH")} >$!{serverName10List.get(0).get("servername")}</li>
+          #end
+          <!-- 公司变更 -->
+          #if($!{serverName11List})
+          	<li width="10%" $!{serverName11List.get(0).get("classTH")} >$!{serverName11List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName12List})
+          	<li width="10%" $!{serverName12List.get(0).get("classTH")} >$!{serverName12List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName13List})
+          	<li width="10%" $!{serverName13List.get(0).get("classTH")} >$!{serverName13List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName14List})
+          	<li width="10%" $!{serverName14List.get(0).get("classTH")} >$!{serverName14List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName15List})
+          	<li width="10%" $!{serverName15List.get(0).get("classTH")} >$!{serverName15List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName16List})
+          	<li width="10%" $!{serverName16List.get(0).get("classTH")} >$!{serverName16List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName17List})
+          	<li width="10%" $!{serverName17List.get(0).get("classTH")} >$!{serverName17List.get(0).get("servername")}</li>
+          #end
+          #if($!{serverName18List})
+          	<li width="10%" $!{serverName18List.get(0).get("classTH")} >$!{serverName18List.get(0).get("servername")}</li>
+          #end
+        </ul>
+      </div> 
+      
+      <div id="tab_list">
+        <ul class="tab_menu">
+        	#if($!{serverName1List})
+          		<li><h3 $!{serverName1List.get(0).get("classTR")}>$!{serverName1List.get(0).get("serverstate")}</h3><p>$!{serverName1List.get(0).get("realname")}<br>$!{serverName1List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName2List})
+          		<li><h3 $!{serverName2List.get(0).get("classTR")}>$!{serverName2List.get(0).get("serverstate")}</h3><p>$!{serverName2List.get(0).get("realname")}<br>$!{serverName2List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName3List})
+          		<li><h3 $!{serverName3List.get(0).get("classTR")}>$!{serverName3List.get(0).get("serverstate")}</h3><p>$!{serverName3List.get(0).get("realname")}<br>$!{serverName3List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName4List})
+          		<li><h3 $!{serverName4List.get(0).get("classTR")}>$!{serverName4List.get(0).get("serverstate")}</h3><p>$!{serverName4List.get(0).get("realname")}<br>$!{serverName4List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName5List})
+          		<li><h3 $!{serverName5List.get(0).get("classTR")}>$!{serverName5List.get(0).get("serverstate")}</h3><p>$!{serverName5List.get(0).get("realname")}<br>$!{serverName5List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName6List})
+          		<li><h3 $!{serverName6List.get(0).get("classTR")}>$!{serverName6List.get(0).get("serverstate")}</h3><p>$!{serverName6List.get(0).get("realname")}<br>$!{serverName6List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName7List})
+          		<li><h3 $!{serverName7List.get(0).get("classTR")}>$!{serverName7List.get(0).get("serverstate")}</h3><p>$!{serverName7List.get(0).get("realname")}<br>$!{serverName7List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName8List})
+          		<li><h3 $!{serverName8List.get(0).get("classTR")}>$!{serverName8List.get(0).get("serverstate")}</h3><p>$!{serverName8List.get(0).get("realname")}<br>$!{serverName8List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName9List})
+          		<li><h3 $!{serverName9List.get(0).get("classTR")}>$!{serverName9List.get(0).get("serverstate")}</h3><p>$!{serverName9List.get(0).get("realname")}<br>$!{serverName9List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName10List})
+          		<li><h3 $!{serverName10List.get(0).get("classTR")}>$!{serverName10List.get(0).get("serverstate")}</h3><p>$!{serverName10List.get(0).get("realname")}<br>$!{serverName10List.get(0).get("time")}</p></li>
+          	#end
+          	<!-- 公司变更 -->
+          	#if($!{serverName11List})
+          		<li><h3 $!{serverName11List.get(0).get("classTR")}>$!{serverName11List.get(0).get("serverstate")}</h3><p>$!{serverName11List.get(0).get("realname")}<br>$!{serverName11List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName12List})
+          		<li><h3 $!{serverName12List.get(0).get("classTR")}>$!{serverName12List.get(0).get("serverstate")}</h3><p>$!{serverName12List.get(0).get("realname")}<br>$!{serverName12List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName13List})
+          		<li><h3 $!{serverName13List.get(0).get("classTR")}>$!{serverName13List.get(0).get("serverstate")}</h3><p>$!{serverName13List.get(0).get("realname")}<br>$!{serverName13List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName14List})
+          		<li><h3 $!{serverName14List.get(0).get("classTR")}>$!{serverName14List.get(0).get("serverstate")}</h3><p>$!{serverName14List.get(0).get("realname")}<br>$!{serverName14List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName15List})
+          		<li><h3 $!{serverName15List.get(0).get("classTR")}>$!{serverName15List.get(0).get("serverstate")}</h3><p>$!{serverName15List.get(0).get("realname")}<br>$!{serverName15List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName16List})
+          		<li><h3 $!{serverName16List.get(0).get("classTR")}>$!{serverName16List.get(0).get("serverstate")}</h3><p>$!{serverName16List.get(0).get("realname")}<br>$!{serverName16List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName17List})
+          		<li><h3 $!{serverName17List.get(0).get("classTR")}>$!{serverName17List.get(0).get("serverstate")}</h3><p>$!{serverName17List.get(0).get("realname")}<br>$!{serverName17List.get(0).get("time")}</p></li>
+          	#end
+          	#if($!{serverName18List})
+          		<li><h3 $!{serverName18List.get(0).get("classTR")}>$!{serverName18List.get(0).get("serverstate")}</h3><p>$!{serverName18List.get(0).get("realname")}<br>$!{serverName18List.get(0).get("time")}</p></li>
+          	#end
+        </ul>
+        <div class="tab_box">
+		  	  <!-- 名称核准节点列表 -->
+			    #if($!{unclearnameList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{unclearname_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{unclearnameArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep1"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{unclearnameList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{unclearnameArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{unclearnameList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{unclearnameArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,1)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,1)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  
+		  	  <!-- 公司注册节点列表 -->
+			  #if($!{regcompanyList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{regcompany_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{regcompanyArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep2"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{regcompanyList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{regcompanyArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{regcompanyList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{regcompanyArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,2)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,2)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  
+			  <!-- 代理地址节点列表 -->
+			  #if($!{addressList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{address_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{addressArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep3"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{addressList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{addressArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{addressList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{addressArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,3)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,3)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  
+			  <!-- 地税报道节点列表 -->
+			  #if($!{localtaxList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{localtax_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{localtaxArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep4"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{localtaxList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{localtaxArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{localtaxList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{localtaxArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,4)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,4)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  
+			  <!-- 银行开户节点列表 -->
+			  #if($!{bankaccountList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{bankaccount_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{bankaccountArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep5"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{bankaccountList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{bankaccountArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{bankaccountList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{bankaccountArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,5)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,5)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  
+			  <!-- 国税报道节点列表 -->
+			  #if($!{statetaxList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{statetax_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{statetaxArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep6"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{statetaxList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{statetaxArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{statetaxList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{statetaxArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,6)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,6)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  
+			  #if($!{serverName7List})
+				  <!-- 社保开户节点列表 -->
+				  #if($!{socialopenList.size()} > 0)
+				     <div class="hide">
+						  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+							<input type="hidden" value="$!{socialopen_coid}"  name="childorderid" />
+							<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+							<input type="hidden" value="$!{socialopenArray.size()}" name="jiediancount" />
+						    <div class="flow1_main">
+						      <div class="ystep7"></div>
+						      <div class="flow1_box">
+						        <ul>
+						          #set($Aindex = $!{socialopenList.size()} - 1) <!-- 总节点数量 -->
+						          #set($Scount = $!{socialopenArray.size()})  <!-- 自己的节点数量 -->
+						          #foreach($foo in [0..$!{Aindex}])
+						              #set($actions = $!{socialopenList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+						              <!-- 存在自己的流程 -->
+						          	  #if($Scount > $foo)
+						              	  #set($serviceProcess = $!{socialopenArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+						          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+						          	  #elseif($Scount == $foo)
+						          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,7)">完成节点</span></li>
+						          	  #elseif($Scount < $foo)
+						          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,7)">完成节点</span></li>
+						          	  #end
+						          #end
+						        </ul>
+						      </div>
+						    </div>
+						  </div>
+					 </div>
+				  #else
+				     <div class="hide">
+						  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						    <div class="flow1_main">
+						        <div style="text-align: center; color: #b3bec6;font-size: 20px;padding-top: 100px;background:url('../images/no_ico.png') no-repeat  center; ">
+						            <p class="no_text">此服务暂无流程〜</p>
+						        </div>
+						    </div>
+						  </div>
+					 </div>
+				  #end
+			  #end
+			  
+			  #if($!{serverName8List})
+				  <!-- 公积金开户节点列表 -->
+				  #if($!{fundopenList.size()} > 0)
+				     <div class="hide">
+						  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+							<input type="hidden" value="$!{fundopen_coid}"  name="childorderid" />
+							<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+							<input type="hidden" value="$!{fundopenArray.size()}" name="jiediancount" />
+						    <div class="flow1_main">
+						      <div class="ystep8"></div>
+						      <div class="flow1_box">
+						        <ul>
+						          #set($Aindex = $!{fundopenList.size()} - 1) <!-- 总节点数量 -->
+						          #set($Scount = $!{fundopenArray.size()})  <!-- 自己的节点数量 -->
+						          #foreach($foo in [0..$!{Aindex}])
+						              #set($actions = $!{fundopenList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+						              <!-- 存在自己的流程 -->
+						          	  #if($Scount > $foo)
+						              	  #set($serviceProcess = $!{fundopenArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+						          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+						          	  #elseif($Scount == $foo)
+						          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,8)">完成节点</span></li>
+						          	  #elseif($Scount < $foo)
+						          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,8)">完成节点</span></li>
+						          	  #end
+						          #end
+						        </ul>
+						      </div>
+						    </div>
+						  </div>
+					 </div>
+				  #else
+				     <div class="hide">
+						  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						    <div class="flow1_main">
+						        <div style="text-align: center; color: #b3bec6;font-size: 20px;padding-top: 100px;background:url('../images/no_ico.png') no-repeat  center; ">
+						            <p class="no_text">此服务暂无流程〜</p>
+						        </div>
+						    </div>
+						  </div>
+					 </div>
+				  #end
+			  #end
+			  
+			  	 <!-- 代理记帐节点列表 -->
+			  #if($!{bookkeppList.size()} > 0)
+			  	  <div class="hide">
+				  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{bookkepp_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+				    <div class="flow1_main">
+				      <div class="ystep9"></div>
+				      <div class="flow1_box">
+				        <ul>
+				        	<!-- 服务周期为3个月时 -->
+				        	#if($!{propertid} == 3)
+				        		#if($!{serviceProcessCount} > 0)
+						          	#if($!{currentQ} == 0)
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第1期</span><br><span class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+							          	<li><span>第2期</span></li>
+							          	<li><span>第3期</span></li>
+							        #elseif($!{currentQ} ==  1)
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+							          	<li><span>第2期</span><br><span class="done_btn" actionid="1134"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+							          	<li><span>第3期</span></li>
+							        #elseif($!{currentQ} ==  2)
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+							          	<li><span>第2期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+							          	<li><span>第3期</span><br><span class="done_btn" actionid="1135"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+							        #elseif($!{currentQ} ==  3)
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+							          	<li><span>第2期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+							          	<li><span>第3期</span><br>$!{overMVOList.get(2).optime}<br>$!{overMVOList.get(2).optionName}</li>
+						          	#end
+				        		#else
+						          	<li><span>开始服务</span><br><span class="done_btn" actionid="1132"  onclick="cycleServiceProceSumit(this)">开始服务</span></li>
+						          	<li><span>第1期</span><br><span style="display: none;" class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+						          	<li><span>第2期</span></li>
+						          	<li><span>第3期</span></li>
+				        		#end
+				        	#else
+				        	  	<!-- 为超过三期的贷记的情况时 -->
+				        		#if($!{serviceProcessCount} > 0)
+				        			#if($!{overMVOList.size()} > 0)
+				        				#if($!{currentQ} == 1)
+							          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+								          	<li><span>第1期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+								          	<li><span>第2期</span><br><span class="done_btn" actionid="1134"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+								          	<li><span>第3期</span></li>
+				        				#else
+				        					#if($!{overM} == 0)
+				        						#set($qi_2 = $!{dangqinQ} - 1)
+				        						#set($qi_1 = $!{dangqinQ} - 2)
+								          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+									          	<li><span>第$!{qi_1}期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+									          	<li><span>第$!{qi_2}期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+									          	<li><span>第$!{dangqinQ}期</span><br>$!{overMVOList.get(2).optime}<br>$!{overMVOList.get(2).optionName}</li>
+				        					#else
+				        						#if($!{overM} == 1)
+					        						#set($qi_1 = $!{dangqinQ} - 1)
+					        						#set($qi_3 = $!{dangqinQ} + 1)
+									          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+										          	<li><span>第$!{qi_1}期</span><br>$!{overMVOList.get(1).optime}<br>$!{overMVOList.get(1).optionName}</li>
+										          	<li><span>第$!{dangqinQ}期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+										          	<li><span>第$!{qi_3}期</span><br><span class="done_btn" actionid="1135"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+				        						#else
+					        						#set($qi_2 = $!{dangqinQ} + 1)
+					        						#set($qi_3 = $!{dangqinQ} + 2)
+									          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+										          	<li><span>第$!{dangqinQ}期</span><br>$!{overMVOList.get(0).optime}<br>$!{overMVOList.get(0).optionName}</li>
+										          	<li><span>第$!{qi_2}期</span><br><span class="done_btn" actionid="1134"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+										          	<li><span>第$!{qi_3}期</span></li>
+				        						#end
+				        					#end
+				        				#end
+				        			#else
+						          		<li><span>开始服务</span><br>$!{startVO.optime}<br>$!{startVO.optionName}</li>
+							          	<li><span>第1期</span><br><span class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+							          	<li><span>第2期</span></li>
+							          	<li><span>第3期</span></li>
+				        			#end
+				        		#else
+						          	<li><span>开始服务</span><br><span class="done_btn" actionid="1132"  onclick="cycleServiceProceSumit(this)">开始服务</span></li>
+						          	<li><span>第1期</span><br><span style="display: none;" class="done_btn" actionid="1133"  onclick="cycleServiceProceSumit(this)">完成节点</span></li>
+						          	<li><span>第2期</span></li>
+						          	<li><span>第3期</span></li>
+				        		#end
+				        	#end
+				        </ul>
+				      </div>
+				    </div>
+				  </div>
+				  </div>
+			  #end
+			  
+			  <!-- 商标注册节点列表 -->
+			  #if($!{trademarkList.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{trademark_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{trademarkArray.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep10"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{trademarkList.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{trademarkArray.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{trademarkList.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{trademarkArray.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,10)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,10)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 更换新版营业执照 -->
+			  #if($!{companyChange1List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange1_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange1Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep11"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange1List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange1Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange1List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange1Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,11)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,11)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 经营范围变更 -->
+			  #if($!{companyChange2List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange2_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange2Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep12"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange2List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange2Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange2List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange2Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,12)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,12)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 董监高信息变更 -->
+			  #if($!{companyChange3List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange3_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange3Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep13"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange3List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange3Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange3List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange3Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,13)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,13)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 法定代表人/营业期限等信息变更 -->
+			  #if($!{companyChange4List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange4_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange4Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep14"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange4List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange4Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange4List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange4Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,14)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,14)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 公司名称变更 -->
+			  #if($!{companyChange5List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange5_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange5Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep15"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange5List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange5Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange5List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange5Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,15)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,15)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 注册资本变更 -->
+			  #if($!{companyChange6List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange6_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange6Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep16"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange6List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange6Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange6List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange6Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,16)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,16)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 注册地址变更 -->
+			  #if($!{companyChange7List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange7_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange7Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep17"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange7List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange7Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange7List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange7Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,17)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,17)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+			  <!-- 企业股权转让变更 -->
+			  #if($!{companyChange8List.size()} > 0)
+			     <div class="hide">
+					  <div class="order_flow1" align="center" name="lctdiv"><!-- 流程图 -->
+						<input type="hidden" value="$!{companyChange8_coid}"  name="childorderid" />
+						<input type="hidden" value="$!{order.orderid}"  name="orderid" />
+						<input type="hidden" value="$!{companyChange8Array.size()}" name="jiediancount" />
+					    <div class="flow1_main">
+					      <div class="ystep18"></div>
+					      <div class="flow1_box">
+					        <ul>
+					          #set($Aindex = $!{companyChange8List.size()} - 1) <!-- 总节点数量 -->
+					          #set($Scount = $!{companyChange8Array.size()})  <!-- 自己的节点数量 -->
+					          #foreach($foo in [0..$!{Aindex}])
+					              #set($actions = $!{companyChange8List.get($foo)}) <!-- 取出当前总节点的节点信息 -->
+					              <!-- 存在自己的流程 -->
+					          	  #if($Scount > $foo)
+					              	  #set($serviceProcess = $!{companyChange8Array.get($foo)})  <!-- 取出自己节点的节点信息 -->
+					          	  	  <li><span class="done">$!{actions.actiondesc}</span><br>$!{serviceProcess.optime}<br>$!{serviceProcess.optionName}</li>
+					          	  #elseif($Scount == $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,18)">完成节点</span></li>
+					          	  #elseif($Scount < $foo)
+					          	  	  <li><span>$!{actions.actiondesc}</span><br><span style="display: none;" class="done_btn" actionid="$!{actions.actionid}"  onclick="serviceProceSumit(this,18)">完成节点</span></li>
+					          	  #end
+					          #end
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+				 </div>
+			  #end
+        </div>
+      </div>
+  </div>
+  #end
+	  
+	  
+	<!-------------- 此处为动态的数据 START -------------------------->
+	  <div class="order_d_box">
+	    <div class="d_box1">
+	      <p class="d_title">订单详情</p>
+	      <div class="d_con_box">
+	        <p>订单金额：<span class="red">￥$!{order.totalmoney}</span></p>
+		      <!-- <p>优惠券：<span class="red">-￥200.00</span></p> -->
+	        #if($!{userCoupon})
+	        	<p>$!{userCoupon.couponsname}：<span class="red">-￥$!{userCoupon.price}</span></p>
+	        #end
+	        <p>应收金额：<span class="red">￥$!{order.paymoneycount}</span></p>
+	        <p>支付状态：
+	        	<span class="green">
+	        		#if($!{order.paystate} == 0)
+	        			未支付
+	        		#end
+	        		#if($!{order.paystate} == 1)
+	        			部分支付
+	        		#end 
+	        		#if($!{order.paystate} == 2)
+	        			已完款
+	        		#end
+	        		#if($!{order.paystate} == 3)
+	        			平台支付
+	        		#end
+	        		#if($!{order.paystate} == 4)
+	        			平台完款
+	        		#end
+	        	</span>
+	        </p>
+	      </div>
+	    </div>
+	    <div class="d_box2" id="d_box2">
+	      <table>
+	        <tr>
+	          <th width="12%">服务名称</th>
+	          <th width="25%">服务内容</th>
+	          <th width="12%">状态</th>
+	          <th width="12%">价格</th>
+	          <th width="15%">操作</th>
+	          <th width="33%">日志</th>
+	        </tr>
+	        #foreach($childOrder in $!{childOrderList})
+	        <tr>
+	          <td>$!{childOrder.serverName} <input type="hidden" name="coid" value="$!{childOrder.coid}" />
+	          <input type="hidden" name="parentorderid" value="$!{order.orderid}" /></td>
+	          <td>$!{childOrder.serverContent}</td>
+	          <td><span class="green">$!{childOrder.state}</span></td>
+	          <td>￥$!{childOrder.price}</td>
+	          <td>
+	            #if($!{childOrder.logInfo} == "" )
+	          		<span class="d_Btn" onclick="orderChildOver(this)" >完成</span>
+	          		#if($!{childOrder.serverName} == "代理地址")
+	          			<br/><br/><span class="d_Btn" onclick="uncallsendmessage($!{order.orderid},'address')" >代理地址短信</span>
+	          		#end
+	          		#if($!{childOrder.serverName} == "银行开户")
+	          			<br/><br/><span class="d_Btn" onclick="uncallsendmessage($!{order.orderid},'bankopen')" >银行开户短信</span>
+	          		#end
+	            #else
+	          		<span>完成</span>
+	            #end
+	          </td>
+	          <td><span name="loginfo">$!{childOrder.logInfo}</span></td>
+	        </tr>
+	        #end
+	      </table>  
+	    </div>
+	  </div>
+	<script type="text/javascript">
+
+	$(function(){
+		  //流程修改添加代码duxf
+		  $('#tab_list ul li').click(function(){
+		    $(this).addClass('selected').siblings().removeClass('selected');
+		    var index = $('#tab_list ul li').index(this);
+		    $('div.tab_box > div').eq(index).show().siblings().hide();
+		  }); 
+	});
+	
+	/**名称核准初始化节点**/
+	#if($!{unclearnameList.size()} > 0)
+	//根据jQuery选择器找到需要加载ystep的容器
+	//loadStep 方法可以初始化ystep
+	$(".ystep1").loadStep({size: "large",color: "blue",steps: $!{step_unclearname} });
+	
+	if($!{unclearnameArray.size()} == $!{unclearnameList.size()}){
+		$(".ystep1").setStep($!{unclearnameArray.size()});
+	}else{
+		$(".ystep1").setStep($!{unclearnameArray.size()} + 1 );
+	}
+	#end
+	
+	/**公司注册初始化节点**/
+	#if($!{regcompanyList.size()} > 0)
+	//根据jQuery选择器找到需要加载ystep的容器
+	//loadStep 方法可以初始化ystep
+	$(".ystep2").loadStep({size: "large",color: "blue",steps: $!{step_regcompany} });
+	
+	if($!{regcompanyArray.size()} == $!{regcompanyList.size()}){
+		$(".ystep2").setStep($!{regcompanyArray.size()});
+	}else{
+		$(".ystep2").setStep($!{regcompanyArray.size()} + 1 );
+	}
+	#end
+	
+	/**代理地址初始化节点**/
+	#if($!{addressList.size()} > 0)
+	//根据jQuery选择器找到需要加载ystep的容器
+	//loadStep 方法可以初始化ystep
+	$(".ystep3").loadStep({size: "large",color: "blue",steps: $!{step_address} });
+	
+	if($!{addressArray.size()} == $!{addressList.size()}){
+		$(".ystep3").setStep($!{addressArray.size()});
+	}else{
+		$(".ystep3").setStep($!{addressArray.size()} + 1 );
+	}
+	#end
+	
+	/**地税报到初始化节点**/
+	#if($!{localtaxList.size()} > 0)
+	//根据jQuery选择器找到需要加载ystep的容器
+	//loadStep 方法可以初始化ystep
+	$(".ystep4").loadStep({size: "large",color: "blue",steps: $!{step_localtax} });
+	
+	if($!{localtaxArray.size()} == $!{localtaxList.size()}){
+		$(".ystep4").setStep($!{localtaxArray.size()});
+	}else{
+		$(".ystep4").setStep($!{localtaxArray.size()} + 1 );
+	}
+	#end
+	
+	/**银行开户初始化节点**/
+	#if($!{bankaccountList.size()} > 0)
+	//根据jQuery选择器找到需要加载ystep的容器
+	//loadStep 方法可以初始化ystep
+	$(".ystep5").loadStep({size: "large",color: "blue",steps: $!{step_bankaccount} });
+	
+	if($!{bankaccountArray.size()} == $!{bankaccountList.size()}){
+		$(".ystep5").setStep($!{bankaccountArray.size()});
+	}else{
+		$(".ystep5").setStep($!{bankaccountArray.size()} + 1 );
+	}
+	#end
+	
+	/**国税报到初始化节点**/
+	#if($!{statetaxList.size()} > 0)
+	$(".ystep6").loadStep({size: "large",color: "blue",steps: $!{step_statetax} });
+	
+	if($!{statetaxArray.size()} == $!{statetaxList.size()}){
+		$(".ystep6").setStep($!{statetaxArray.size()});
+	}else{
+		$(".ystep6").setStep($!{statetaxArray.size()} + 1 );
+	}
+	#end
+	
+	/**社保开户初始化节点**/
+	#if($!{socialopenList.size()} > 0)
+	$(".ystep7").loadStep({size: "large",color: "blue",steps: $!{step_socialopen} });
+	
+	if($!{socialopenArray.size()} == $!{socialopenList.size()}){
+		$(".ystep7").setStep($!{socialopenArray.size()});
+	}else{
+		$(".ystep7").setStep($!{socialopenArray.size()} + 1 );
+	}
+	#end
+	
+	/**公积金开户初始化节点**/
+	#if($!{fundopenList.size()} > 0)
+	$(".ystep8").loadStep({size: "large",color: "blue",steps: $!{step_fundopen} });
+	
+	if($!{fundopenArray.size()} == $!{fundopenList.size()}){
+		$(".ystep8").setStep($!{fundopenArray.size()});
+	}else{
+		$(".ystep8").setStep($!{fundopenArray.size()} + 1 );
+	}
+	#end
+	
+	#if($!{bookkeppList.size()} > 0)
+	$(".ystep9").loadStep({size: "large",color: "blue",steps: [{},{},{},{}]});
+	if($!{serviceProcessCount} > 0){
+		if($!{overMVOList.size()} > 0){
+			if($!{currentQ} == 1){
+				$(".ystep9").setStep(3);
+			}else{
+				if($!{overM} == 0){
+					$(".ystep9").setStep(4);
+				}else if($!{overM} == 1){
+					$(".ystep9").setStep(4);
+				}else {
+					$(".ystep9").setStep(3);
+				}
+			}
+		}else{
+			$(".ystep9").setStep(2);
+		}
+	}else{
+		$(".ystep9").setStep(0);
+	}
+	#end
+	
+	/**商标注册初始化节点**/
+	#if($!{trademarkList.size()} > 0)
+	$(".ystep10").loadStep({size: "large",color: "blue",steps: $!{step_trademark} });
+	
+	if($!{trademarkArray.size()} == $!{trademarkList.size()}){
+		$(".ystep10").setStep($!{trademarkArray.size()});
+	}else{
+		$(".ystep10").setStep($!{trademarkArray.size()} + 1 );
+	}
+	#end
+	
+	/***公司变更:更换新版营业执照**/
+	#if($!{companyChange1List.size()} > 0)
+	$(".ystep11").loadStep({size: "large",color: "blue",steps: $!{step_companyChange1} });
+	
+	if($!{companyChange1Array.size()} == $!{companyChange1List.size()}){
+		$(".ystep11").setStep($!{companyChange1Array.size()});
+	}else{
+		$(".ystep11").setStep($!{companyChange1Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:经营范围变更**/
+	#if($!{companyChange2List.size()} > 0)
+	$(".ystep12").loadStep({size: "large",color: "blue",steps: $!{step_companyChange2} });
+	
+	if($!{companyChange2Array.size()} == $!{companyChange2List.size()}){
+		$(".ystep12").setStep($!{companyChange2Array.size()});
+	}else{
+		$(".ystep12").setStep($!{companyChange2Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:董监高信息变更**/
+	#if($!{companyChange3List.size()} > 0)
+	$(".ystep13").loadStep({size: "large",color: "blue",steps: $!{step_companyChange3} });
+	
+	if($!{companyChange3Array.size()} == $!{companyChange3List.size()}){
+		$(".ystep13").setStep($!{companyChange3Array.size()});
+	}else{
+		$(".ystep13").setStep($!{companyChange3Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:法定代表人/营业期限等信息变更**/
+	#if($!{companyChange4List.size()} > 0)
+	$(".ystep14").loadStep({size: "large",color: "blue",steps: $!{step_companyChange4} });
+	
+	if($!{companyChange4Array.size()} == $!{companyChange4List.size()}){
+		$(".ystep14").setStep($!{companyChange4Array.size()});
+	}else{
+		$(".ystep14").setStep($!{companyChange4Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:公司名称变更**/
+	#if($!{companyChange5List.size()} > 0)
+	$(".ystep15").loadStep({size: "large",color: "blue",steps: $!{step_companyChange5} });
+	
+	if($!{companyChange5Array.size()} == $!{companyChange5List.size()}){
+		$(".ystep15").setStep($!{companyChange5Array.size()});
+	}else{
+		$(".ystep15").setStep($!{companyChange5Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:注册资本变更**/
+	#if($!{companyChange6List.size()} > 0)
+	$(".ystep16").loadStep({size: "large",color: "blue",steps: $!{step_companyChange6} });
+	
+	if($!{companyChange6Array.size()} == $!{companyChange6List.size()}){
+		$(".ystep16").setStep($!{companyChange6Array.size()});
+	}else{
+		$(".ystep16").setStep($!{companyChange6Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:注册地址变更**/
+	#if($!{companyChange7List.size()} > 0)
+	$(".ystep17").loadStep({size: "large",color: "blue",steps: $!{step_companyChange7} });
+	
+	if($!{companyChange7Array.size()} == $!{companyChange7List.size()}){
+		$(".ystep17").setStep($!{companyChange7Array.size()});
+	}else{
+		$(".ystep17").setStep($!{companyChange7Array.size()} + 1 );
+	}
+	#end
+	/***公司变更:企业股权转让变更**/
+	#if($!{companyChange8List.size()} > 0)
+	$(".ystep18").loadStep({size: "large",color: "blue",steps: $!{step_companyChange8} });
+	
+	if($!{companyChange8Array.size()} == $!{companyChange8List.size()}){
+		$(".ystep18").setStep($!{companyChange8Array.size()});
+	}else{
+		$(".ystep18").setStep($!{companyChange8Array.size()} + 1 );
+	}
+	#end
+		
+	
+	
+	
+	//点击代理记帐节点时 args 当前对象
+	function cycleServiceProceSumit(args){
+		$(args).hide();
+		if(confirm("确认此操作吗？")){
+			var actionid = $(args).attr("actionid");
+			var childorderid = $(args).parent().parent().parent().parent().parent().find("input[name='childorderid']").val();  
+			var orderid = $(args).parent().parent().parent().parent().parent().find("input[name='orderid']").val(); 
+			//alert(childorderid+"======"+orderid);
+			var url = "/action/servicestep/"+orderid+"/"+childorderid+"/"+actionid;
+			$.ajax({url:url,
+				dataType:"json",
+				success:function(data){
+					if(data.res == "ok"){
+						setCycelMystep(args,data.infoUser,data.infoTime);
+					}else{
+						alert("更新失败！"+data.msg);
+						$(args).show();
+					}
+				}
+				}); 
+		}else{
+			$(args).show();
+		}
+	}
+
+
+	//设置代理记帐节点
+	function setCycelMystep(args,user,time){ 
+		var actionid = $(args).attr("actionid");
+		if(actionid == "1132"){
+			$(".ystep9").setStep(2);
+			var nextBody = $(args).parent().next();  //获得下一个节点的对象
+			nextBody.find(".done_btn").css("display","");  //点击完成节点后显示按钮
+		}else if(actionid == "1133"){
+			$(".ystep9").setStep(3);
+		}else if(actionid == "1134"){
+			$(".ystep9").setStep(4);
+		}else if(actionid == "1135"){
+			$(".ystep9").setStep(4);
+		}
+		
+		$(args).parent().find("span:first").addClass("done");
+		$(args).parent().append(time+"<br/>"+user);
+		$(args).parent().find(".done_btn").remove();
+		
+	}
+	
+	
+	/***
+	 * 点击完成节点按钮触发事件
+	 */
+	function serviceProceSumit(args,sNum){
+		$(args).hide();
+		if(confirm("确认此操作吗？")){
+			var actionid = $(args).attr("actionid");
+			var childorderid = $(args).parent().parent().parent().parent().parent().find("input[name='childorderid']").val();  
+			//alert(childorderid+"====");
+			var orderid = $(args).parent().parent().parent().parent().parent().find("input[name='orderid']").val(); 
+			var url = "/action/servicestep/"+orderid+"/"+childorderid+"/"+actionid;
+
+			//setMystep(args,"假的","2015-02-01 12:21:23",sNum);
+			 $.ajax({url:url,
+				dataType:"json",
+				success:function(data){
+					//alert(data.res);
+					if(data.res == "ok"){
+						setMystep(args,data.infoUser,data.infoTime,sNum);
+					}else{
+						alert("更新失败！"+data.msg);
+						$(args).show();
+					}
+				}
+				}); 
+		}else{
+			$(args).show();
+		}
+		
+	}
+	
+	
+	//设置节点
+	function setMystep(args,user,time,sNum){
+		//alert("设置那个节点"+sNum)
+	
+		var count = $(args).parent().parent().parent().parent().parent().find("input[name='jiediancount']").val();
+	    /* count =  parseInt(count) + 1; */
+		var tempcount = parseInt(count)  + 2;
+		var tempstep  = parseInt(count) + 1;
+		$(args).parent().parent().parent().parent().parent().find("input[name='jiediancount']").attr("value",tempstep);
+		
+		var nextBody = $(args).parent().next();  //获得下一个节点的对象
+		$(args).parent().find("span:first").addClass("done");
+		$(args).parent().append(time+"<br/>"+user);
+		$(args).parent().find(".done_btn").remove();
+		$(".ystep"+sNum).setStep(tempcount);
+		nextBody.find(".done_btn").css("display","");  //点击完成节点后显示按钮
+	}
+	
+	/***
+	 * 点击订单详情table中完成按钮触发事件
+	 */
+	
+	function orderChildOver(args){
+		if(confirm("确认此操作吗？")){
+			$(args).removeClass().removeAttr("onclick");
+			$(args).parent().parent().find("span.green").html("服务完成");
+			
+			var orderid = $(args).parent().parent().find("input[name='coid']").val();
+			var parentorderid = $(args).parent().parent().find("input[name='parentorderid']").val();
+			var url = "/action/servstate/"+parentorderid+"/"+orderid;
+			$.ajax({url:url,
+				dataType:"json",
+				success:function(data){
+					if(data.res == "ok"){
+						alert("更新成功！");
+						$(args).parent().parent().find("span[name='loginfo']").html(data.msg);
+					}else{
+						alert("更新失败！"+data.msg);
+					}
+				}});
+		}
+		
+		
+	}
+	
+	
+	//点击代理地址和银行开户发送短信
+	function uncallsendmessage(orderid,messagetype){
+		
+		if(messagetype=="address"){
+			msg = "小微温馨提示：应工商局要求，地址提供方镕辉佳特有限公司将于近日向公司法人致电并核对公司信息。请公司法人保持手机畅通并如实反馈公司信息，若法人未接电话或未如实反馈公司信息将导致注册地址无法使用且公司无法注册。";
+		}else if(messagetype=="bankopen"){
+			msg = "小微已为您提交银行开户申请，招商银行将于近日向公司法人致电进行公司信息核实，请保持手机畅通并如实反馈公司信息。若法人未接电话或未如实反馈公司信息，银行将不予开户。预计银行将于15个工作日完成资料审查。";
+		}
+		if(confirm("确定要发送以下信息给客户？【"+msg+"】")){
+			$.ajax({
+		        type: "POST", // 用POST方式传输  
+		        dataType: "json", // 数据格式:JSON  
+		        url: "/order/uncallsendmessage/"+orderid, // 目标地址   
+		        data: {"message":messagetype},
+		        success: function (data){
+		        	if(data.msg == "success"){
+		            	alert("发送成功!");	
+		        	}else{
+		        		alert("发送失败!")
+		        	}
+		        }  
+			});
+		}
+	};
+	
+	</script>
+	<!--------------- 此处为动态的数据 END ---------------------->
+
+  
+  
+ 
+             

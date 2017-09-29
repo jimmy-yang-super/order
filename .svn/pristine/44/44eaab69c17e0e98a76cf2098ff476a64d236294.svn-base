@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+$(function(){ 
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+
+/**
+ * 查询数据
+ */
+function queryData(){
+	document.getElementById('myForm').submit();
+}
+
+/*
+ * 查询企业库的人员
+ */
+function openEnterprisePeople(enterpriseId){
+    var url = "/webdata/openEnterprisePeopleList/" + enterpriseId;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+/*
+ * 查询企业库详情
+ */
+function openEnterpriseDetail(enterpriseId){
+    var url = "/webdata/openEnterpriseDetail/" + enterpriseId;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+/***
+ * 打开订单详情
+ */
+function openOrderDetil(orderid){
+    var url = "/webdata/openOrderDetil/" + orderid;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+/****
+ * 打开企业库操作纪录详情
+ */
+function openEnterpriseActionsDetail(orderid){
+    var url = "/webdata/monitor/task/detail/" + orderid;
+    window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+
+}
+
+/***
+ * 根据企业id得到订单列表
+ */
+function openOrderList(enterpriseId){
+	var url = "/webdata/orderlistbyenterpriseid/"+ enterpriseId;
+	window.open(url,'','top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
+}
+</script>
+
+</head>
+
+<body>
+	<form action="/webdata/query" method="post" id="myForm">
+	</br>
+	<div align="center">
+		<select id="queryType" name="queryType" style="width: 100px;">
+			<option value="1" #if($!{queryType}=='1')selected="selected"#end>手机号</option>
+			<option value="2" #if($!{queryType}=='2')selected="selected"#end>姓名</option>
+			<option value="3" #if($!{queryType}=='3')selected="selected"#end>公司名称</option>
+		</select> <input name="query" id="query" style="height: 25px; width: 250px;" value="$!{query}"  /> <input type="button" value="查询" onclick="queryData()" />
+	</div>
+	</form>
+<div class="user_box">
+	#if($!{enterpriseFlag} == "true")
+		#if($!{isSoLitter} == "true")
+			<br />
+			<h1 align="center">输入的查询条件太模糊!返回的数据较大请再多输入几个</h1>
+		#else
+		<h1>企业库信息</h1>
+		<div>
+			<div class="user_list">
+				<table id="tab" class="order">
+					<tr>
+						<th>企业库id</th>
+						<th>客户名称</th>
+						<th>客户电话</th>
+						<th>企业名称</th>
+						<th>负责人</th>
+						<th>负责人电话</th>
+						<th>操作详情</th>
+					</tr>
+					#foreach($enterprise in $!{enterpriseEntitys})
+					<tr>
+						<td>$!{enterprise.enterpriseId}</td>
+						<td>$!{enterprise.username}</td>
+						<td>$!{enterprise.userphone}</td>
+						<td><a href="javascript:void(0);" target="_blank" onclick="openEnterpriseDetail('$!{enterprise.enterpriseId}')">$!{enterprise.name}</a></td>
+						<td>$!{enterprise.aename}</td>
+						<td>$!{enterprise.aephone}</td>
+						<td><a href="javascript:void(0);" onclick="openOrderList('$!{enterprise.enterpriseId}')" target="_blank" >详情</a></td>
+					</tr>
+					#end
+				</table>
+			</div>
+		</div>	
+		<h2>老企业库数据</h2>
+		<div>
+			<div class="user_list">
+				<table id="tab" class="order">
+					<tr>
+						<th>企业库id</th>
+						<th>客户名称</th>
+						<th>客户电话</th>
+						<th>企业名称</th>
+						<th>负责人</th>
+						<th>负责人电话</th>
+					</tr>
+					#foreach($oldSorderB in $!{OldSorderBusinessLibarys})
+					<tr>
+						<td>$!{oldSorderB.busid}</td>
+						<td>$!{oldSorderB.username}</td>
+						<td>$!{oldSorderB.userphone}</td>
+						<td><a href="javascript:void(0);" target="_blank" onclick="openEnterpriseDetail('$!{oldSorderB.busid}')">$!{oldSorderB.companyname}</a></td>
+						<td>暂无</td>
+						<td>暂无</td>
+					</tr>
+					#end
+					#foreach($oldBusiness in $!{OldBusinessLibars})
+					<tr>
+						<td>$!{oldSorderB.busid}</td>
+						<td>$!{oldBusiness.username}</td>
+						<td>$!{oldBusiness.userphone}</td>
+						<td><a href="javascript:void(0);" target="_blank" onclick="openEnterpriseDetail('$!{oldBusiness.busid}')">$!{oldBusiness.companymc}</a></td>
+						<td>暂无</td>
+						<td>暂无</td>
+					</tr>
+					#end
+				</table>
+			</div>
+		</div>
+		#end	
+	#else 
+	<h1>客户信息</h1>
+	<div>
+		<div class="user_list">
+		<table id="tab" class="order">
+			<tr>
+				<th>用户id</th>
+				<th>用户姓名</th>
+				<th>OPENID</th>
+				<th>用户电话</th>
+				<th>添加时间</th>
+				<th>渠道</th>
+				<th>城市</th>
+			</tr>				
+			<tr>
+				<td>$!{loginEntity.userid}</td>
+				<td>$!{loginEntity.username}</td>
+				<td>$!{loginEntity.openid}</td>
+				<td>$!{loginEntity.userphone}</td>
+				<td>$!{loginEntity.addtimerValue}</td>
+				<td>$!{loginEntity.channelname}</td>
+				<td>$!{loginEntity.cityname}</td>
+			</tr>
+		</table>
+		</div>
+		<!-- 订单信息 -->
+		<div class="user_list">
+		<table id="tab" class="order">
+			<tr>
+				<th>订单id</th>
+				<th>用户姓名</th>
+				<th>公司名称</th>
+				<th>客服</th>
+				<th>咨询顾问</th>
+				<th>服务顾问</th>
+				<th>当前操作人员</th>
+				<th>订单状态</th>
+				<th>支付状态</th>
+				<th>订单金额</th>
+				<th>签单时间</th>
+				<th>操作详情</th>
+			</tr>
+			#foreach($usorder in $!sorderEntitys)
+			<tr>
+				<td><a href="javascript:void(0);" onclick="openOrderDetil('$!{usorder.orderid}')" target="_blank" >$!{usorder.orderid}</a></td>
+				<td>$!{usorder.username}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseDetail('$!{usorder.busid}')" target="_blank">$!{usorder.companyname}</a></td>
+				<td>$!{usorder.kefuname}</td>
+				<td>$!{usorder.empname}</td>
+				<td>$!{usorder.fwgwempname}</td>
+				<td>$!{usorder.currentempname}</td>
+				<td>$!{usorder.orderstateValue}</td>
+				<td>$!{usorder.paystateValue}</td>
+				<td>$!{usorder.totalmoney}</td>
+				<td>$!{usorder.signtimeValue}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseActionsDetail('$!{usorder.orderid}')" target="_blank" >详情</a></td>
+			</tr>
+			#end
+			#if(!$!sorderEntitys)
+				<tr>
+					<td colspan="10" align="center">无数据</td>	
+				</tr>
+			#end
+		</table>
+		</div>
+		<div class="user_list">
+		<table id="tab" class="order">
+			<tr>
+				<th>企业ID</th>
+				<th>公司名称</th>
+				<th>城市</th>
+				<th>区域</th>
+			</tr>
+			#foreach($enter in $!enterpriseEntitys)
+			<tr>
+				<td>$!{enter.enterpriseId}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseDetail('$!{enter.enterpriseId}')" target="_blank" >$!{enter.name}</a></td>
+				<td>$!{enter.cityname}</td>
+				<td>$!{enter.areaname}</td>
+			</tr>
+			#end
+			#if(!$!enterpriseEntitys)
+				<tr>
+					<td colspan="3"　align="center">无数据</td>
+				</tr>
+			#end
+		</table>
+		</div>
+	</div>
+	
+	<h1>用户信息</h1>
+	<div>
+		<div class="user_list">
+		<table id="tab" class="order">
+			<tr>
+				<th>姓名</th>
+				<th>手机号</th>
+			</tr>
+			#foreach($emp in $!employsEntitys)
+			<tr>
+				<td>$!{emp.realname}</td>
+				<td>$!{emp.phonenumber}</td>
+			</tr>
+			#end
+			#if(!$!employsEntitys)
+				<tr>
+					<td colspan="2" align="center">无数据</td>
+				</tr>
+			#end
+		</table>
+		</div>
+		
+		<!-- 订单信息 -->
+		<div class="user_list">
+		<table id="tab" class="order">
+			<tr>
+				<th>订单id</th>
+				<th>用户姓名</th>
+				<th>公司名称</th>
+				<th>客服</th>
+				<th>咨询顾问</th>
+				<th>服务顾问</th>
+				<th>当前操作人员</th>
+				<th>订单状态</th>
+				<th>支付状态</th>
+				<th>订单金额</th>
+				<th>签单时间</th>
+				<th>操作详情</th>
+			</tr>
+			#foreach($empusorder in $!empsorderEntitys)
+			<tr>
+				<td><a href="javascript:void(0);" onclick="openOrderDetil('$!{empusorder.orderid}')" target="_blank" >$!{empusorder.orderid}</a></td>
+				<td>$!{empusorder.username}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseDetail('$!{empusorder.enterpriseId}')" target="_blank">$!{empusorder.companyname}</a></td>
+				<td>$!{empusorder.kefuname}</td>
+				<td>$!{empusorder.empname}</td>
+				<td>$!{empusorder.fwgwempname}</td>
+				<td>$!{empusorder.currentempname}</td>
+				<td>$!{empusorder.orderstateValue}</td>
+				<td>$!{empusorder.paystateValue}</td>
+				<td>$!{empusorder.totalmoney}</td>
+				<td>$!{empusorder.signtimeValue}</td>
+				<td><a href="javascript:void(0);" onclick="openEnterpriseActionsDetail('$!{empusorder.orderid}')" target="_blank" >详情</a></td>
+			</tr>
+			#end
+			#if(!$!empsorderEntitys)
+				<tr>
+					<td colspan="10" align="center">无数据</td>
+				</tr>
+			#end
+		</table>
+		</div>
+	</div>
+	#end
+</div>
+</body>
+</html>

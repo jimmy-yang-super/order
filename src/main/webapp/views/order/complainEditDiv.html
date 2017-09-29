@@ -1,0 +1,51 @@
+                 
+ 				 
+
+				<div class="cus_edit">
+                    <ul>
+                      <li class="li2" style="width: 200px;">投诉渠道<br>
+                      		<!-- 微信菜单禁用选择功能 -->
+                      		#if("999" == $!{model.qudao})
+                      		<select id="J_sel_qudao" disabled="disabled">
+							<option value="999">微信菜单</option>
+							</select>
+							#else
+							<!-- 微信菜单禁用选择功能 -->
+							
+							<!-- 非微信菜单list  -->
+							<select id="J_sel_qudao" >
+							 #foreach($t in $!qudao.keySet())
+							    
+							     #if($t!='999')<!-- 非微信菜单屏蔽微信菜单  -->
+							    <option  value="$t" 
+							        #if($t == $!{model.qudao})
+								      selected="selected"
+								    #end
+							    >$!{qudao.get($t)}
+							    </option>
+							    #end
+				            #end
+                      		</select>
+							<!-- 非微信菜单list -->
+							#end
+							   
+				            
+		             </li>
+                      <li class="li4"  style="width: 200px;">投诉类型<br>
+								<select id="J_sel_type">
+							    #foreach($q in $!seltype.keySet())
+							    <option value="$q"
+								    #if($q == $!{model.type})
+								    selected="selected"
+								    #end
+							    >$!{seltype.get($q)}</option>
+				            	#end
+							
+								</select> 
+					</li>
+                      <li class="li4">负责人<br><input type="text" id="J_fzr" value="$!{model.resperson}"></li>
+                      <li class="li8"><p id="J_edit_btn">确定</p></li>
+                    </ul>
+                  </div>
+                  
+

@@ -1,0 +1,142 @@
+@charset "utf-8";
+/* CSS Document */
+* {
+	margin: 0;
+	padding: 0;
+}
+.clear {
+	clear: both;
+}
+ul, ol {
+	list-style: none;
+}
+img {
+	margin: 0;
+	border: 0;
+}
+input, textarea {
+	border: 0;
+}
+
+body {
+	font-family: "微软雅黑", Arial, SimSun, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #585757;
+	background-color:#edf3f8;
+	margin:0 auto;
+}
+#addarticle_box{
+	height:810px;
+	margin:24px 40px 0 40px;
+	border:1px #dddddd solid;
+	border-radius:6px;
+	background-color:#FFF;
+	min-width:720px;
+}
+.add{
+	background-color:#f1f1f1;
+	border-bottom:1px #e7e7e7 solid;
+}
+.add>p{
+	font-family:"冬青黑体简体中文 W3";
+	font-size:16px;
+	color:#000000;
+	padding-left:40px;
+	line-height:46px;
+}
+.content{
+	height:692px;
+	border-bottom:1px #e7e7e7 solid;
+}	
+.content_l{
+	float:left;
+}
+.content_l_inner{
+	height:656px;
+	margin:0 auto;
+	width:22%;
+	min-width:290px;
+	padding:36px 40px 0px 40px;
+	border-right:1px #e5e5e5 solid;
+}
+.content_r{
+	float:right;
+	height:678px;
+	min-width:40%;
+	width:56%;
+	padding-top:14px;
+	margin-right:5%;
+}
+.content_r_inner{
+	margin:0 auto;
+	width:100%;	
+}
+.content_r p{
+	padding-bottom:10px;
+}
+.addcover{
+	padding-bottom:10px;
+}
+.information label {
+	display: block;
+	line-height: 34px;
+	padding-top:8px;
+	font-family:"方正兰亭纤黑_GBK";
+	font-size:14px;
+	color:#000000;
+}
+.information input{
+	width:288px;
+	border:1px #cccccc solid;
+	border-radius:4px;
+	height:36px;
+	color:#cccccc;
+	font-family:"方正兰亭纤黑_GBK";
+	font-size:14px;
+	padding-left:10px;
+	maxlength:32;
+}
+.information textarea{
+	height:120px;
+	width:288px;
+	border:1px #cccccc solid;
+	border-radius:4px;
+	color:#000000;
+	font-family:"方正兰亭纤黑_GBK";
+	font-size:14px;
+	padding-left:16px;
+	maxlength:16;
+}
+.btn{
+	float:right;
+	width:300px;
+	height:70px;
+	margin-right:40px;
+	padding-top:12px;
+}
+.submit,.preview{
+	width:88px;
+	height:45px;
+	border-radius:4px;
+	font-family:"方正兰亭纤黑_GBK";
+	font-size:18px;
+	color:#FFF;
+	padding-left:52px;
+	line-height:45px;
+}
+.submit{
+	float:left;
+	background-color:#5ba8d7;
+	margin-right:20px;
+
+}
+.preview{
+	float:right;
+	background-color:#cccccc;
+}
+.content_r>p{
+	color:#000000;
+	font-family:"方正兰亭纤黑_GBK";
+	font-size:14px;
+	line-height:50px;
+}

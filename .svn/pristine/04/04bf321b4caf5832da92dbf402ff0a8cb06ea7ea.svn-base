@@ -1,0 +1,65 @@
+#if($pagecount > 0)
+	<div class="page_turn" id="pageNo">
+	#set($pre = $!{pageIndex} - 1)
+	#set($next = $!{pageIndex} + 1)
+	#if($pageIndex == 1)
+		<a href="$!{currenturl}/1" goto="1">首页</a>
+		<a href="$!{currenturl}/$!{pageIndex}" goto="2">上一页</a>
+		#else
+		<a href="$!{currenturl}/1">首页</a>
+		<a href="$!{currenturl}/$!{pre}">上一页</a>
+		#end
+		#if($pagecount < 10)
+			#foreach($foo in [1..$!{pagecount}])
+				#if($foo == $!pageIndex)
+				<a class="current">$!foo</a>
+				#else
+				<a href="$!{currenturl}/$foo">$foo</a>
+				#end
+			#end
+		#else
+			#if($pageIndex > 7)
+				<a href="$!{currenturl}/1">1</a>
+				<a href="$!{currenturl}/2">2</a>
+				<a href="$!{currenturl}/3">3</a>
+				<a href="javascript:;" class="nb">…</a>
+				#set($prindex = $pageIndex - 2)
+				#if($pagecount > $pageIndex + 2)
+					#set($endindex = $pageIndex +2)
+				#else
+					#set($endindex = $pagecount)
+				#end
+				#foreach($p in [$prindex..$endindex])
+					#if($p == $!pageIndex)
+					<a class="current" href="$!{currenturl}/$!p">$!p</a>
+					#else
+					<a href="$!{currenturl}/$!p">$!p</a>
+					#end
+				#end		
+			#else
+				#foreach($foo in [1..7])
+				#if($foo == $!pageIndex)
+				<a class="current">$!foo</a>
+				#else
+				<a href="$!{currenturl}/$!foo">$foo</a>
+				#end
+				#end
+				<a href="javascript:;" class="nb">…</a>
+				#set($p2index = $pagecount - 2)
+				#set($p1index = $pagecount - 1)
+				<a href="$!{currenturl}/$!{p2index}">$!{p2index}</a>
+				<a href="$!{currenturl}/$!{p1index}">$!{p1index}</a>
+				<a href="$!{currenturl}/$!{pagecount}">$!{pagecount}</a>
+				
+			#end
+			
+		#end
+		#if($pageIndex == $pagecount)
+		<a href="javascript:;"  goto="3">下一页</a>
+		<a href="javascript:;"  goto="4">末页</a>
+		#else
+		<a href="$!{currenturl}/$next" >下一页</a>
+		<a href="$!{currenturl}/$pagecount">末页</a>
+		#end
+	</div>
+	#end

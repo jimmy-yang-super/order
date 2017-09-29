@@ -1,0 +1,109 @@
+<div class="ck_box" id="zhichudiv" style="display:none"><!-- 支出弹出层 -->
+     <form id="zhichuform" action="/action/zcorder" method="post">
+     
+      <table>
+        <tbody><tr>
+          <th>官费项目:</th>
+          <td>
+           <div class="nice-select" name="nice-selectsk" style="margin-left:0px;">
+          <input type="text" class="w_text_s"  id="zckxtext" value="国税官费"/>
+           <ul style="display: none;" id="feetypeul">
+          <li data-value="1" class="" mony="120" name="feetypeli">国税官费</li>
+          <li data-value="2" class="" mony="280" name="feetypeli">地税官费</li>
+          <li data-value="3" class="" mony="280" name="feetypeli">社保官费</li>
+          <li data-value="4" class="" mony="280" name="feetypeli">公积金官费</li>
+          <li data-value="5" class="" mony="0" name="feetypeli">印花税</li>
+          <li data-value="6" class="" mony="0" name="feetypeli">地址费</li>
+          <li data-value="7" class="" mony="0" name="feetypeli">刻章</li>
+          <li data-value="8" class="" mony="0" name="feetypeli">罚款</li>
+          <li data-value="9" class="" mony="0" name="feetypeli">个人所得税</li>
+          <li data-value="10" class="" mony="0" name="feetypeli">知识产权</li>
+          <li data-value="11" class="" mony="0" name="feetypeli">退款</li>
+          <li data-value="13" class="" mony="0" name="feetypeli">国税CA</li>
+          <li data-value="99" class="" mony="0" name="feetypeli">其他</li>
+          <input type="hidden" name="feetype" id="zcfeetype" value="1"/>
+        </ul>
+        </div>
+          </td>
+          <td><input type="text" style="display:none" name="orderid" id="zcorderid" value=""/></td>
+        </tr>
+        <tr>
+          <th>官费金额:</th>
+          <td><input type="text" class="w_text_s" name="zhichu" id="zcftext" value="120"/>
+          </td>
+        </tr>
+        <tr>
+          <th>备注:</th>
+          <td><input type="text" class="w_text_l" name="content" id="zccontent"></td>
+        </tr>
+      </tbody></table>
+      <div class="btn_box">
+        <span class="qr_btn" name="zcsubmitbutton">确认</span>
+        <span class="qx_btn" name="zccancelbutton">取消</span>
+      </div>
+      </form>
+    </div>
+    <script>
+    
+    $("span[name='zccancelbutton']").click(function(){
+    	cenghide();
+    	$("#zhichudiv").hide();
+    });
+    var i=0;
+    $("span[name='zcsubmitbutton']").click(function(){
+    	if(i==0){
+    		i++;
+	    	var url = "/action/zcorder";
+	    	var dt = $("#zhichuform").serialize();
+	    	$.ajax({url:url,
+	    		type:"post",
+	    		data:$("#zhichuform").serialize(),
+	    		dataType:"json",
+	    		success:function(data){
+	    			if(data.res == "ok"){
+	    				alert("支出操作成功！");
+	    				window.location.reload();
+	    			}else{
+	    				alert(data.msg);
+	    			}
+	    		}});
+    	}else{
+    		alert("请不要点击太频繁!");
+    	}
+    });
+    $("#zckxtext").click(function(){
+    	$("#feetypeul").show();
+    });
+    $("li[name='feetypeli']").each(function(){
+    	var o = $(this);
+    	o.click(function(){
+    		$("#feetypeul").hide();
+    		$("#zckxtext").val(o.text());
+    		$("#zcfeetype").attr("value",o.attr("data-value"));
+    		$("#zcftext").attr("value",o.attr("mony"));
+    	});
+    });
+    $('[name="nice-selectsk"]').click(function(e){
+    	  $('[name="nice-selectsk"]').find('ul').hide();
+    	  $(this).find('ul').show();
+    	  e.stopPropagation();
+    	});
+    	$('[name="nice-selectsk"] li').hover(function(e){
+    	  $(this).toggleClass('on');
+    	  e.stopPropagation();
+    	});
+    	$('[name="nice-selectsk"] li').click(function(e){
+    	  var val = $(this).text();
+    	  var dataVal = $(this).attr("data-value");
+    	  $("#paychannelshowinput").val(val);
+    	  $("#skpaychannelinput").val(dataVal);
+    	  $('[name="nice-selectsk"] ul').hide();
+    	  e.stopPropagation();
+    	  // alert("中文值是："+val);
+    	  // alert("数字值是："+dataVal);
+    	  //alert($(this).parents('[name="nice-selectsk"]').find('input').val());
+    	});
+    	$(document).click(function(){
+    	  $('[name="nice-selectsk"] ul').hide();
+    	});
+    </script>

@@ -1,0 +1,86 @@
+               
+                #if($!{cmtFlag}!= 'no')
+                 <input type="hidden" id="J_star" value="$!{star}"/>
+                <div class="hf_box"><!-- 弹出框1 -->
+                    <ul>
+                      <li class="hf_info">
+                        <p class="tit_btn">客户评价</p>
+                        <div class="star_box">
+                          <p class="star_tit1">$!{cmt.addTime}</p>
+                          <div id="xzw_starSys">
+                            <div id="xzw_starBox">
+                              <ul class="star" id="star">
+                                <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                              </ul>
+                              <div class="current-rating" id="showb"></div>
+                            </div>
+                            <div class="description"></div>
+                          </div>
+                        </div>
+                        <div class="clear"></div>
+                        <p class="comm_con">$!{cmt.comment}</p>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                 #else
+                  
+                    <div class="hf_box"><!-- 弹出框3 -->
+                    <ul>
+                      <li class="hf_info">
+                        <p class="tit_btn">客户评价</p>
+                        <p class="comm_none">客户未评价</p>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                 #end 
+                  
+                  
+                   #if($!{veFlag} == 'no')
+                  <div class="num_box2">
+                    <div class="com_box1">
+                      <ul>
+                        <p class="title">满意度：</p>
+                        <li class="flow1_change"><p>满意</p></li>
+                        <li class="flow1_change"><p>一般</p></li>
+                        <li class="flow1_change"><p>不满</p></li>
+                        <div class="clear"></div>
+                      </ul>
+                    </div>
+                    <div class="com_box2">
+                      <p class="title">回访记录：</p>
+                      <p class="area_box"><textarea id="JJ_content"></textarea></p>
+                      <div class="clear"></div>
+                    </div>
+                    <div class="com_box3">确认</div>
+                    <input type="hidden" id="JJ_orderid" value="$!{orderid}"/>
+                    <input type="hidden" id="JJ_level" value=""/>
+                  </div>
+                  
+                  #else
+                  <div class="hf_box"><!-- 弹出框2 -->
+                    <ul>
+                      <li class="hf_info">
+                        <p class="tit_btn1">客服回访</p>
+                        <div class="comm_info">
+                          <p>$!{ve.addTime}</p>
+                          <p>记录人：<span>$!{username}</span></p>
+                          <p>满意度：<span>$!{ve.level}</span></p>
+                        </div>
+                        <p class="comm_t1">回访记录：</p>
+                        <p class="comm_con1">$!{ve.content}</p>
+                      </li>
+                    </ul>
+                  </div>
+                  #end
+                  <div class="clear"></div><!-- 弹出框1 结束-->
+
+                  <br>
+
+                  
+

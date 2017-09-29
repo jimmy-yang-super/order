@@ -1,0 +1,169 @@
+
+<!-- 名称核准 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>组织形式：</th>
+				<td>$!{organizationType}</td>
+				<th>公司名称：</th>
+				<td>$!{name}</td>
+			</tr>
+			<tr>
+				<th>备选字号1：</th>
+				<td>$!{readyCheckNames1}</td>
+				
+				<th>备选字号2：</th>
+				<td>$!{readyCheckNames2}</td>
+			</tr>
+			<tr>
+				<th>备选字号3：</th>
+				<td>$!{readyCheckNames3}</td>
+				
+				<th>备选字号4：</th>
+				<td>$!{readyCheckNames4}</td>
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >已核准</a> <a class="b2">退回</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	
+	/************ 已核准 *************************/
+	// 点击已核准
+	$(".b1").click(function(){
+		WF.showDiv('yiHeZhunDiv');
+	});
+	
+	// 已核准 - 确定
+	$("#yiHeZhunDiv .ok").click(function(){
+		if(!WF.validate("yiHeZhunDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 保存企业附件
+		WF.updateCompanyAttach("yiHeZhunDiv", "1001");
+		// 更新企业库
+		WF.updateCompanyInfo("yiHeZhunDiv", "", "1001");
+		// 调用流程接口
+		var taskData = "&heMingReason=1";
+		WF.submitTask("yiHeZhunDiv", taskData);
+		WF.taskFinish();
+	});
+	
+	// 已核准 - 取消
+	$("#yiHeZhunDiv .cancel").click(function(){
+		WF.closeDiv('yiHeZhunDiv');
+	});
+	
+	/************ 退回 *************************/
+	// 点击退回
+	$(".b2").click(function(){
+		WF.showDiv('tuiHuiDiv');
+	});
+	
+	// 退回 - 确定
+	$("#tuiHuiDiv .ok").click(function(){
+		if(!WF.validate("tuiHuiDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 更新企业库
+		WF.updateCompanyInfo("tuiHuiDiv", "", "1001");
+		// 调用流程接口
+		var taskData = "&heMingReason=0";
+		WF.submitTask("tuiHuiDiv", taskData);
+		WF.taskFinish();
+	});
+	
+	// 退回 - 取消
+	$("#tuiHuiDiv .cancel").click(function(){
+		WF.closeDiv('tuiHuiDiv');
+	});
+});
+
+</script>
+<!-- 弹出框 - 已核准 -->
+<div id="yiHeZhunDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">已核准</p>
+		<table class="t1">
+			<input id="checkNameStatus" type="hidden" value="1" name="inputInfoAll" />
+			<tr>
+				<th>公司名称：</th>
+				<td><input id="name" value="$!{name}" data-validate="min:8" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>名称预先核准文号：</th>
+				<td><input id="checkedNameCode" value="$!{checkedNameCode}" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>核名工商账号：</th>
+				<td><input id="checkNameAccount" value="$!{checkNameAccount}" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>密码：</th>
+				<td><input id="checkNamePassword" value="$!{checkNamePassword}" type="text" name="inputInfoAll" /></td>
+			</tr>
+			<tr>
+				<th>核名截图：</th>
+				<td>
+					<a class="upload_btn" href="javascript:void(0);">上传</a>
+					<input type="hidden" name="inputInfoAll" id="checkNamePic" data-info="inputInfoCompanyAttach" value="$!{checkNamePic}" />
+					<input id="fileupload" type="file" name="fileupload" fileId="checkNamePic" multiple />
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>
+
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="checkNameTuiHuiReason" value="$!{checkNameTuiHuiReasonKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('checkNameTuiHuiReason')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>退回描述：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="checkNameTuiHuiRemark" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

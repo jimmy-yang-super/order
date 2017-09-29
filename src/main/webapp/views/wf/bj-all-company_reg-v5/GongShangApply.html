@@ -1,0 +1,188 @@
+<!-- 提交工商申请 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+				<th >申请方式：</th>
+				<td >$!{applyMethod}</td>
+			</tr>
+			<tr>
+				<th >产权主体：</th>
+				<td >$!{chanQuanType}</td>
+				<th >预约工商申请日期：</th>
+				<td >$!{yuYueGongShangShenQingRiQi}</td>
+			</tr>
+			<tr>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${checkNamePic}" /></td>
+				#foreach($legalPerson in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPerson')})
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{legalPerson.get('idPicIds')}"  /></td>
+				#end
+			</tr>
+			<tr>
+				<th >工商申请资料状态</th>
+				<td >$!{DicUtils.getDicDataValue("archiveDataStatus", $GongShangApplyDataStatus, "未提取")}</td>
+				<th ></th>
+				<td ></td>
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >提交工商申请</a><a class="b2" >内部退回</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	
+	/************ 提交工商申请 *************************/
+	// 点击 - 提交工商申请
+	$(".b1").click(function(){
+		// 现场，材料归档后，才可完成；0-双向，提取档案后，才可完成
+		var GongShangApplyDataStatus = WF.getVariableByName("GongShangApplyDataStatus");
+		var applyMethod = "$!{applyMethodKey}";
+		if((applyMethod == "1" && GongShangApplyDataStatus == "2" )|| (applyMethod == "0" && GongShangApplyDataStatus == "1")){
+			// 材料已归档
+//			WF.showDiv('wanChengDiv');
+			
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 调用流程接口
+			var taskData = "&gongShangShenQingFlag=1&GongShangApplyDataStatus=0&zhengZhaoShenQingShuLiang=2";
+			WF.submitTask("wanChengDiv",taskData);
+			WF.taskFinish();
+		}else{
+			if(GongShangApplyDataStatus == "1"){
+				// 已提取
+				alert("档案组未确认相关材料已存放，请到档案组存放档案。");
+			}else if(GongShangApplyDataStatus == "2"){
+				alert("档案已归档，申请方式为：$!{applyMethod}，请联系产品张倩雯或者甘晓为！");
+				// 已归档
+//				console.log("已归档");
+			}else{
+				// 未提取
+				alert("档案组未确认相关材料已提取，请到档案组提取档案。");
+			}
+		}
+	});
+/* 	// 提交工商申请 - 确定
+	$("#wanChengDiv .ok").click(function(){
+		if(!WF.validate("wanChengDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		var taskData = "&gongShangShenQingFlag=1&GongShangApplyDataStatus=0";
+		WF.submitTask("wanChengDiv",taskData);
+	});
+	
+	// 提交工商申请 - 取消
+	$("#wanChengDiv .cancel").click(function(){
+		WF.closeDiv('wanChengDiv');
+	}); */
+	
+	/************ 内部退回 *************************/
+	// 点击 - 内部退回
+	$(".b2").click(function(){
+		// 未提取，可完成；归档档案后，可完成
+		var GongShangApplyDataStatus = WF.getVariableByName("GongShangApplyDataStatus");
+		if(GongShangApplyDataStatus == "1"){
+			// 已提取
+			alert("档案组未确认相关材料已存放，请到档案组存放档案。");
+		}else{
+			WF.showDiv('tuiHuiDiv');
+		}
+	});
+	
+	// 内部退回 - 确定
+	$("#tuiHuiDiv .ok").click(function(){
+		if(!WF.validate("tuiHuiDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		var taskData = "&gongShangShenQingFlag=0&GongShangApplyDataStatus=0&CollationDataTuiHuiAct=2";
+		WF.submitTask("tuiHuiDiv", taskData);
+		WF.taskFinish();
+	});
+	
+	// 内部退回 - 取消
+	$("#tuiHuiDiv .cancel").click(function(){
+		WF.closeDiv('tuiHuiDiv');
+	});
+});
+
+</script>
+<!-- 弹出框 - 完成 - 已不用 -->
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t1">
+			<tr>
+				<th>证照申领数量：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="zhengZhaoShenQingShuLiang" value="$!{zhengZhaoShenQingShuLiangKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('zhengZhaoShenQingShuLiang')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>
+
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="gongShangApplyTuiHuiReason" value="$!{gongShangApplyTuiHuiReasonKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('gongShangApplyTuiHuiReason')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>退回描述：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="gongShangApplyTuiHuiRemark" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

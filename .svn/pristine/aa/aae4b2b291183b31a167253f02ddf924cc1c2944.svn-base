@@ -1,0 +1,148 @@
+<div class="dd_box2" id="fwlistdiv"><!-- 选择律师层 -->
+      <div class="container">
+        <ul class="tabs_nei">
+            <div #if($city=="1")class="active"#end name="fwcitydiv" value="1"><a href="javascript:void(0);" >北京 </a></div>
+            <div #if($city=="2")class="active"#end name="fwcitydiv" value="2"><a href="javascript:void(0);" >深圳</a></div>
+        </ul>
+        <div class="clear"></div>
+        <div class="tab_container">
+            <div id="tab1" class="tab_content" #if($city=="1")style="display: block;"#else style="display: none;"#end name="fwlist" value="1">
+              <div class="c_lowyer1">
+                <div class="pai_box1">
+                  <ul>
+                  #foreach($ev in $fwlist)
+	                  #if($ev.cityid == 1)
+		                  	#if($ev.jdstate == 0)
+	                    	<li class="pai_change1" val="$!ev.empid" name="fwli">
+	                    		<p>$!ev.realname</p>
+	                    		<div>
+		                        <dl class="d1">
+		                          <dt title="今日接单">$!ev.paiDanTodayCount/$!ev.orderslimit</dt><dt title="跟进中">$!ev.serviceCount</dt><dt class="bn" title="签单率">$!ev.signingRate%</dt>
+		                        </dl>
+		                        <dl class="d2" title="$ev.isgoodat">
+		                        	#foreach($isGoogAt in $ev.isgoodatList)
+		                        	   <dt>$!isGoogAt</dt>
+		                        	#end
+		                        </dl>
+		                      </div>
+	                    	</li>
+	                    	#else
+	                    	<li class="pai_no pai_change1">
+	                    		<p class="red">$!{ev.realname}</p>
+	                    		<div>
+		                        <dl class="d1">
+		                          <dt title="今日接单">$!ev.paiDanTodayCount/$!ev.orderslimit</dt><dt title="跟进中">$!ev.serviceCount</dt><dt class="bn" title="签单率">$!ev.signingRate%</dt>
+		                        </dl>
+		                        <dl class="d2" title="$!ev.isgoodat">
+		                        	  暂停接单
+		                        </dl>
+		                      </div>
+	                    	</li>
+	                    	#end
+	                  #end
+					#end
+                  </ul>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </div>
+            <div id="tab2" class="tab_content" #if($city=="2")style="display: block;"#else style="display: none;"#end name="fwlist" value="2">
+            <div class="c_lowyer1">
+                <div class="pai_box1">
+                  <ul>
+                    #foreach($ev in $fwlist)
+	                  #if($ev.cityid == 2)
+		                  	#if($ev.jdstate == 0)
+	                    	<li class="pai_change1" val="$!ev.empid" name="fwli">
+	                    		<p>$!ev.realname</p>
+	                    		<div>
+		                        <dl class="d1">
+		                          <dt title="今日接单">$!ev.paiDanTodayCount/$!ev.orderslimit</dt><dt title="跟进中">$!ev.serviceCount</dt><dt class="bn" title="签单率">$!ev.signingRate%</dt>
+		                        </dl>
+		                        <dl class="d2" title="$ev.isgoodat">
+		                        	#foreach($isGoogAt in $ev.isgoodatList)
+		                        	   <dt>$!isGoogAt</dt>
+		                        	#end
+		                        </dl>
+		                      </div>
+	                    	</li>
+	                    	#else
+	                    	<li class="pai_no pai_change1">
+	                    		<p class="red">$!{ev.realname}</p>
+	                    		<div>
+		                        <dl class="d1">
+		                          <dt title="今日接单">$!ev.paiDanTodayCount/$!ev.orderslimit</dt><dt title="跟进中">$!ev.serviceCount</dt><dt class="bn" title="签单率">$!ev.signingRate%</dt>
+		                        </dl>
+		                        <dl class="d2" title="$!ev.isgoodat">
+		                        	  暂停接单
+		                        </dl>
+		                      </div>
+	                    	</li>
+	                    	#end
+	                  #end
+					#end
+                  </ul>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </div>
+            
+            <div class="dd_btn_box">
+              <span class="dd_qr_btn" id="zpbutton">确认</span>
+              <span class="dd_qx_btn" id="cancelbutton">取消</span>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+    var fwid = 0;
+    $("div[name='fwcitydiv']").each(function(){
+    	var o = $(this);
+    	o.click(function(){
+    		debugger;
+    		$("div[name='fwcitydiv']").removeClass("active");
+    		o.addClass("active");
+    		$("div[name='fwlist']").hide();
+    		var v = o.attr("value");
+    		$("div[name='fwlist'][value='"+v+"']").show();
+    		fwid = 0;
+    		$(".pai_box1").find("li[name='fwli']").removeClass("pai_on1").addClass("pai_change1");
+    	});
+    });
+    $("li[name='fwli']").each(function(){
+        $(this).click(function(){
+            $(".pai_box1").find("li[name='fwli']").removeClass("pai_on1").addClass("pai_change1");
+            $(this).addClass("pai_on1").removeClass("pai_change1");
+            fwid = $(this).attr("val");
+            
+        });
+    });
+    var i=0;
+    $("#zpbutton").click(function(){
+    	if(i==0){
+	    	i++;
+	    	//$(this).attr("disabled","disabled");
+	    	var url = "/action/zporder/"+fwid+"/"+zpfworderid;
+	    	if(fwid == 0){
+	    		alert("请选择咨询顾问！");
+	    		return;
+	    	}
+	        $.ajax({url:url,
+	        		dataType:"json",
+	        		success:function(data){
+	        			if(data.res == "ok"){
+	        				alert("指派成功！");
+	        				window.location.reload();
+	        			}else{
+	        				alert("指派失败！"+data.msg+",请稍后再试！");
+	        			}
+	        }});
+    	}else{
+    		alert("请不要点击太频繁!");
+    	}
+    });
+    $("#cancelbutton").click(function(){
+    	$("#fwlistdiv").hide();
+    	$(".ceng_box1").hide();
+    });
+    </script>

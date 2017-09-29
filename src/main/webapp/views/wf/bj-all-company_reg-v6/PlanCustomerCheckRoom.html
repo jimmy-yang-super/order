@@ -1,0 +1,73 @@
+<!-- 安排客户核验房本 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>地址类型：</th>
+				<td>$!{addressType}</td>
+				<th>产权主体：</th>
+				<td>$!{chanQuanType}</td>
+			</tr>
+			<tr>
+				<th>申请方式：</th>
+				<td>$!{applyMethod}</td>
+				<th >预约工商申请日期：</th>
+				<td >$!{yuYueGongShangShenQingRiQi}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		WF.showDiv('wanChengDiv');
+	});
+	
+	// 完成- 确定
+	$("#wanChengDiv .ok").click(function(){
+		if(!WF.validate("wanChengDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		WF.submitTask("wanChengDiv");
+		WF.taskFinish();
+	});
+	
+	// 完成- 取消
+	$("#wanChengDiv .cancel").click(function(){
+		WF.closeDiv('wanChengDiv');
+	});
+});
+
+</script>
+<!-- 弹出框 - 安排外勤 -->
+<div id="wanChengDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">完成</p>
+		<table class="t1">
+			<tr>
+				<th>预约核验日期：</th>
+				<td><input id="yuYueKeHuHeYanFangBenRiQi" type="text" name="inputInfoTask" class="fq_box1" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  /></td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

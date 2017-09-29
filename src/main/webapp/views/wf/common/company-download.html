@@ -1,0 +1,18 @@
+
+#foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+<tr>
+	<th>自然人股东姓名：</th>
+	<td>$!{naturalPartner.get('name')}</td>
+	<th>自然人股东身份证材料：</th>
+	<td><input type="hidden" name="taskInfoImg" value="$!{naturalPartner.get('idPicIds')}" /></td>
+</tr>
+#end
+
+#foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+<tr>
+	<th>法人股东姓名：</th>
+	<td>$!{legalPartner.get('name')}</td>
+	<th>法人股东材料：</th>
+	<td><input type="hidden" name="taskInfoImg" value="$!{legalPartner.get('businessLicense2')}" /></td>
+</tr>
+#end

@@ -1,0 +1,68 @@
+<!-- 确认支出CA费用 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >地址类型：</th>
+				<td >$!{addressType}</td>
+				
+				<th >地址合作商：</th>
+				<td >$!{addressPartner}</td>
+			</tr>
+			
+			
+			<tr>
+				<th>订单号：</th>
+				<td>$!{taskOrderId}</td>
+				<th>服务项：</th>
+				<td title="$!{serverName}">$!{serverNameShow}</td>
+			</tr>
+			<tr>
+				<th>应收金额：</th>
+				<td>￥$!{paymoneycount}</td>
+				<th>尾款：</th>
+				<td><span class="red"></span></td>
+			</tr>
+			<tr>
+				<th>支出金额：</th>
+				<td>0元</td>
+				<th>支出款项：</th>
+				<td>CA费用</td>
+			</tr>
+			<tr>
+				<th>支出人：</th>
+				<td>$!{nationalTaxFieldWorkerRenYuan}</td>
+				<th></th>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >确认支出</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+    var paymoneycount = "$!{paymoneycount}";
+    var prepaidamount = "$!{prepaidamount}";
+    var weikuan = parseInt(paymoneycount) - parseInt(prepaidamount);
+    $(".red").html("￥"+weikuan);
+    
+	/************ 确认支出 *************************/
+	// 点击 - 确认支出
+	$(".b1").click(function(){
+		WF.addPayOutProcess("111","&paychannel=1&paynumber=0&payfee=0&paytotal=0");
+		WF.submitTask();
+		WF.taskFinish();
+	});
+
+});
+</script>

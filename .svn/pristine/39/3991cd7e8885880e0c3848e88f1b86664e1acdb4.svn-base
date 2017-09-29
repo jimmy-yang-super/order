@@ -1,0 +1,72 @@
+<!-- 整理归档 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="200px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="200px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th >注册地址：</th>
+				<td >$!{iszhucdz}</td>
+				<th >产权主体：</th>
+				<td >$!{reginAddress.getChanqzt()}</td>
+			</tr>
+			<tr>
+				<th >营业执照正本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{yingyzzzb}" /></td>
+				<th >营业执照副本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td>
+			</tr>
+			<tr>
+				<th >税务登记证正本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{shuiwdjzb}" /></td>
+				<th >税务登记证副本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{shuiwdjfb}" /></td>
+			</tr>
+			<tr>
+				<th >组织机构代码证正本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{zuzjgdmzb}" /></td>
+				<th >组织机构代码证副本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{zuzjgdmfb}" /></td>
+			</tr>
+			<tr>
+				<th >统计证正本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{tongjzzb}" /></td>
+				<th >统计证副本：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{tongjzfb}" /></td>
+			</tr>
+			<tr>
+				<th >核名截图：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="${hemjt}" /></td>
+				<th >法人身份证材料：</th>
+				<td ><input type="hidden" name="taskInfoImg" value="$!{companyFaRenInfo.getFaddbrshzfyj()}" /></td>
+			</tr>
+			#parse("views/wf/common/company-download.html")
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		if(!WF.validate()){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		WF.submitTask();
+	});
+});
+
+</script>

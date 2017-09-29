@@ -1,0 +1,28 @@
+
+
+#foreach($num in [0..8])
+#set($index = $num + 1)
+<tr>
+	<th>股东$!{index}姓名 ：</th>
+	<td><input id="CheckNameInfo_guDong_Name$!{index}" #if($index != 1) data-validate="none" #end data-info="inputInfoCompanyKehu" type="text" #if($guDongList && $guDongList.size() > $num) value="$!{guDongList.get($num).getUsername()}" #end name="inputInfoTask" /></td>
+
+	<th>股东$!{index}身份证材料：</th>
+	<td>
+		<a class="upload_btn" href="javascript:void(0);">上传</a>
+		<input type="hidden" name="inputInfoTask" #if($index != 1) data-validate="none" #end data-info="inputInfoCompanyKehu" id="CheckNameInfo_guDong$!{index}" #if($guDongList && $guDongList.size() > $num) value="$!{guDongList.get($num).getGudsfzfyj()}" #end />
+		<input id="fileupload" type="file" fileId="CheckNameInfo_guDong$!{index}" name="fileupload" multiple />
+	</td>
+</tr>
+#end
+
+<tr>
+	<th>法人股东姓名：</th>
+	<td><input id="CheckNameInfo_faRen_Name" type="text" data-validate="none"  data-info="inputInfoCompanyKehu" #if($faRenGuDongList && $faRenGuDongList.size()>0) value="$!{faRenGuDongList.get(0).getUsername()}" #end name="inputInfoTask" /></td>
+
+	<th>法人股东材料：</th>
+	<td>
+		<a class="upload_btn" href="javascript:void(0);">上传</a>
+		<input type="hidden" name="inputInfoTask" data-validate="none" data-info="inputInfoCompanyKehu" #if($faRenGuDongList && $faRenGuDongList.size()>0) value="$!{faRenGuDongList.get(0).getFaddbrshzfyj()}" #end id="CheckNameInfo_faRen" />
+		<input id="fileupload" type="file" fileId="CheckNameInfo_faRen" name="fileupload" multiple />
+	</td>
+</tr>

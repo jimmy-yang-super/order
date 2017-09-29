@@ -1,0 +1,102 @@
+<!-- 取得全部证照 -->
+
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>地址类型：</th>
+				<td>$!{addressType}</td>
+				<th>产权主体：</th>
+				<td>$!{chanQuanType}</td>
+			</tr>
+			<tr>
+				<th>申请方式：</th>
+				<td>$!{applyMethod}</td>
+				<th >证照申领数量：</th>
+				<td >$!{zhengZhaoShenQingShuLiang}</td>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1" >完成</a><a class="b2" >退回</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+	/************ 完成 *************************/
+	// 点击 - 完成
+	$(".b1").click(function(){
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		WF.submitTask("111", "&quDeQuanBuZhengZhaoFlag=1&quDeQuanBuZhengZhaoTuiHuiReason=100&ReceiveAllLicenseDataStatus=0");
+		WF.taskFinish();
+	});
+	/************ 退回 *************************/
+	// 点击 - 退回
+	$(".b2").click(function(){
+		var ReceiveAllLicenseDataStatus = WF.getVariableByName("ReceiveAllLicenseDataStatus");
+		if(ReceiveAllLicenseDataStatus == "2"){
+			WF.showDiv('tuiHuiDiv');
+		}else{
+			alert("档案组未确认相关材料已存放，请到档案组存放档案。");
+		}
+	});
+	
+	// 退回 - 确定
+	$("#tuiHuiDiv .ok").click(function(){
+		if(!WF.validate("tuiHuiDiv")){
+			return;
+		}
+		// 解除 click 事件，防止二次点击
+		$(this).unbind("click");
+		
+		// 调用流程接口
+		WF.submitTask("tuiHuiDiv", "&quDeQuanBuZhengZhaoFlag=0&diZhiHeChaDanActivity=2&ReceiveAllLicenseDataStatus=0");
+		WF.taskFinish();
+	});
+	
+	// 退回 - 取消
+	$("#tuiHuiDiv .cancel").click(function(){
+		WF.closeDiv('tuiHuiDiv');
+	});
+});
+
+</script>
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<input type="hidden" name="inputInfoTask" id="quDeQuanBuZhengZhaoTuiHuiReason" value="$!{quDeQuanBuZhengZhaoTuiHuiReasonKey}" />
+					<div class="nice-select4" name="nice-select4">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($lvDicDataEntity in $!{DicUtils.getDicDataList('quDeQuanBuZhengZhaoTuiHuiReason')})
+							<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+							#end
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>退回描述：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="quDeQuanBuZhengZhaoTuiHuiRemark" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

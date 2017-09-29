@@ -1,0 +1,58 @@
+<div class="cd-popup" role="alert"> 
+		    <div class="cd-popup-container">
+		    	<h4>请付款</h4>
+		    	<div>
+		    	<img id="qrpaycodeimg" style="position:relative;left:50px" src="">
+		    	</div>
+		    	<!-- <p class="pay_tx">请您在新打开的页面上完成付款</p>
+		    	<ul class="pay_c">
+		    		<li>付款完成前请不要关闭此窗口</li>
+		    		<li>完成付款后请根据您的情况点击下面的按钮</li>
+		    	</ul>
+		    	<div class="pay_btn">
+		    		<a class="padding_r">已完成付款</a>
+		    		<a>付款遇到问题</a>
+		    	</div> -->
+				<p class="pay_back"> <a class="pay_back_return">&gt;&gt; 返回</a></p>
+
+		        <a href="javascript:void(0);" class="cd-popup-close img-replace">关闭</a>
+		    </div> 
+</div>
+<script type="text/javascript">
+var qpayinter;
+
+var querreq = function(){
+	 var url = "/order/querypay/"+qrpayorderid;
+	 $.ajax({url:url,
+		 dataType:'json',
+		 success:function(data){
+			 if(data.ret == 'ok'){
+				 window.location.reload();
+			 }
+		 }});
+};
+$('.cd-popup').on('click', function(event){
+		if( $(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') ) {
+			event.preventDefault();
+			$(this).removeClass('is-visible');
+			window.clearInterval(qpayinter);
+			cenghide();
+		}
+	});
+	$('.pay_back_return').on('click', function(event){
+		if( $(event.target).is('.cd-popup-close') || $(event.target).is('.pay_back_return') ) {
+			event.preventDefault();
+			$('.cd-popup').removeClass('is-visible');
+			window.clearInterval(qpayinter);
+			cenghide();
+		}
+	});
+	//close popup when clicking the esc keyboard button
+	$(document).keyup(function(event){
+ 	if(event.which=='27'){
+ 		$('.cd-popup').removeClass('is-visible');
+ 		window.clearInterval(qpayinter);
+ 		cenghide();
+	    }
+ });
+</script>

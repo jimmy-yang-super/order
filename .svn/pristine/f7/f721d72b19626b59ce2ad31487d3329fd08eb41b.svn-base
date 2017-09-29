@@ -1,0 +1,134 @@
+@charset "utf-8";
+/* CSS Document */
+* {
+	margin: 0;
+	padding: 0;
+}
+.clear {
+	clear: both;
+}
+ul, ol {
+	list-style: none;
+}
+img {
+	margin: 0;
+	border: 0;
+}
+body {
+	margin: 0 auto;
+}
+body {
+	font-family: "微软雅黑", Arial, SimSun, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #585757;
+	background-color:#edf3f8;
+}
+.wzgl_search_inner{
+	position:relative;
+	padding-top:40px;
+	width:500px;
+	margin:0 auto;
+}
+.search_title{
+	float:left;
+	font-family:"方正兰亭纤黑_GBK";
+	font-size:16px;
+	color:#000;
+	line-height:40px;
+}
+.search{
+	border: 0;
+	width:398px;
+	height:40px;
+	background-color:#edf3f8;
+	background-image:url(../images/wzgl_search_bg_03.png);
+	line-height: 28px;
+	font-size:14px;
+	color: #000;
+	padding-left:14px;
+	outline:none;
+}
+.search_btn{
+	position:absolute;
+	border:0;
+	outline:none;
+	top:50px;
+	right:20px;
+	width:19px;
+	height:19px;
+	background-color:rgba(240,240,240,0);
+	background-image:url(../images/search_btn_03.png);
+	background-position:top;
+}
+.search_btn:hover{
+	background-position:bottom;
+}
+.wzgl_box_inner{
+	height:985px;
+	padding-left:35px;
+	margin:0 auto;
+}
+
+.wz{
+	position:relative;
+	float:left;
+	width:310px;
+	height:276px;
+	margin-right:35px;
+	margin-top:32px;
+	background-color:#FFF;
+	border:1px #eee solid;
+}
+.current{
+	border:1px #80bee5 solid;
+	box-shadow:0 0 4px #cacfd3;
+}
+.wz_img{
+	padding:10px;
+}
+h3{
+	color:#333333;
+	font-family:"冬青黑体简体中文 W3";
+	font-size:18px;
+	line-height:34px;
+	padding-left:10px;
+	font-weight:normal;
+}
+.wz_time{
+	color:#999999;
+	font-family:"冬青黑体简体中文 W3";
+	font-size:12px;
+	padding-left:10px;
+}
+.edit{
+	display:none;
+	position:absolute;
+	bottom:0;
+	width:85px;
+	height:46px;
+	padding-top:28px;
+	padding-left:68px;
+	filter:Alpha(opacity=90);
+	background:#185a9b;
+	background-color:rgba(24,90,155,0.9);
+	border:1px #eee solid;
+}
+.delete{
+	display:none;
+	position:absolute;
+	bottom:0;
+	right:0;
+	width:84px;
+	height:46px;
+	padding-top:28px;
+	padding-left:70px;
+	filter:Alpha(opacity=90);
+	background:#185a9b;
+	background-color:rgba(24,90,155,0.9);
+	border:1px #eee solid;
+}	
+.edit:hover,.delete:hover{
+	filter:Alpha(opacity=90);
+	background:#ff6b6b;
+	background-color:rgba(255,107,107,0.9);
+}

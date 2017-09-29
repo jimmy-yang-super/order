@@ -1,0 +1,856 @@
+.wraper{
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    background-color: #edf3f8;
+}
+.borderBottom{
+    border-bottom: solid 1px #d5dadf;
+}
+.wraperTitle{
+    height: 49px;
+    line-height: 49px;
+    margin-bottom: 28px;
+}
+.wraperTitle li{
+    float: left;
+    margin-right: 1.2%;
+}
+.wraperTitle li a{
+    color: #000000;
+}
+.wraperTitle li a.colorBlue{
+    color: #59a6d6;
+}
+.bannerItem{
+    width: 100%;
+    background-color: #ffffff;
+}
+.nav{
+    width: 95.6%;
+    padding-left: 1.7%;
+    padding-right: 2.7%;
+    height: 45px;
+    line-height: 45px;
+    font-size: 16px;
+    color: #ffffff; background-color: #4f6471;
+}
+.nav a{
+    display: block;
+    color: #ffffff;
+    padding-left: 3%;
+    cursor: pointer;
+    background: url("../images/icon03Hover.png") no-repeat left center;
+}
+.navHover a{
+    background: url("../images/icon03.png") no-repeat left center;
+}
+.nav a input.save{
+    display: inline-block;
+    width: 5%;
+    height: 25px;
+    background: none;
+    border: none;
+    outline: none;
+    margin-top: 10px;
+    float: right;
+    font-size: 12px;
+    color: #ffffff;
+}
+.nav a input:hover,.nav a input.saveHover{
+    background-color: #334550;
+    color: #ffffff;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+.nav a.hover span{
+    background-color: #334550;
+}
+.b_i_companyName{
+    padding-top: 53px;
+    padding-bottom: 52px;
+    font-size: 14px;
+}
+.promptionTxt,.attentionTxt{
+    margin-left: 10%;
+    letter-spacing: 0.5px;
+}
+.promptionTxt{
+    margin-bottom: 12px;
+    padding-left: 2%;
+    width: 78%;
+    padding-top: 20px;
+    padding-bottom: 18px;
+    color: #bf9751;
+    font-size: 12px;
+    background-color: #fcf8e3;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+.promptionTxt b{
+    font-size: 14px;
+}
+.promptionTxtMargin p{
+    margin-bottom: 7px;
+    text-indent: 4%;
+}
+.promptionTxtMargin p.titleMargin{
+    margin-bottom: 18px;
+    text-indent: 0;
+}
+.attentionTxt{
+    margin-bottom: 16px;
+    width: 79.5%;
+    height: 43px;
+    line-height: 43px;
+    text-indent: 2%;
+    font-size: 12px;
+    color: #000000;
+    border: solid 3px #fab2b2;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+.b_i_companyName li{
+    min-height: 37px;
+    margin-bottom: 19px;
+    line-height: 37px;
+}
+.b_i_companyName li label,.b_i_ca_form>li>label,.b_i_operatingRangeItemTitle,.b_i_other ul li label{
+    float: left;
+    margin-right: 2.2%;
+    width: 12%;
+    text-align: right;
+    color: #000000;
+}
+.radioMargin{
+    line-height: 37px;
+}
+.radioMargin span{
+    cursor: pointer;
+    display: inline-block;
+    width: 120px;
+}
+li.radioMargin span input{height: 37px;float: left;}
+li.radioMargin span label{width: 97px;display: inline-block; padding-left: 10px}
+li.radioMargin span input{height: 37px;float: left;}
+li.radioMargin span label{width: 97px;display: inline-block; padding-left: 10px}
+/*.radioMargin input[type="radio"]{
+    margin-right: 5%;
+}*/
+.b_i_companyName ul li select,.b_i_companyName li input[type="text"],.b_i_ca_select select,.b_i_other ul li input,.addBtn input{
+    outline: none;
+    border: none;
+    background: none;
+    border: solid 1px #dedede;
+    height: 35px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    text-indent: 6px;
+}
+.radioMarginLeft{
+    margin-left: 4%;
+}
+.radioMarginLeft02{
+    margin-left: 3%;
+}
+.b_i_cn_attention{
+    font-size: 12px;
+    color: #bf9751;
+}
+.alternativeName input{
+    width: 300px;
+    margin-right: 1.5%;
+}
+.addIocn{
+    background: url("../images/addIcon.png") no-repeat left center;
+    padding: 11px;
+}
+.inputWidth01{
+    width: 28%;
+}
+.inputWidth02{
+    width: 24%;
+}
+.inputWidth03{
+    width: 19%;
+}
+.b_i_companyAddress{
+    padding-top: 58px;
+    padding-bottom: 42px;
+}
+.b_i_ca_form{
+    font-size: 14px;
+    color: #000000;
+}
+.b_i_ca_form>li{
+    margin-bottom: 12px;
+    line-height: 37px;
+}
+li.radioMargin1 span{height:37px;line-height: 37px;display: inline-block;}
+li.radioMargin1 span label{width: 50px;display: inline-block; padding-left: 10px}
+
+li.radioMargin2 span{height:37px;line-height: 37px;display: inline-block;}
+li.radioMargin2 span label{width: 50px;display: inline-block; padding-left: 10px}
+
+.b_i_ca_form>li.radioMarginBottom{
+    margin-bottom: 6px;
+}
+.b_i_ca_form>li.b_i_ca_select{
+    margin-bottom: 29px;
+}
+.b_i_ca_select select,.b_i_companyName ul li select{
+    width: 13%;
+    background: url("../images/selectIocn.png") no-repeat;
+    background-position: 96% 14px;
+    margin-right: 1.2%;
+}
+.b_i_companyName ul li select.b_i_cn_selectWidth{
+    width: 30%;
+}
+.adressWraper>div{
+    display: none;
+}
+.adressWraper1>div{
+    display: none;
+}
+.adressWraper2>div{
+    display: none;
+}
+
+.ownAdress,.agentAdress{
+    margin-left: 14%;
+    width: 78%;
+    padding-top: 27px;
+    padding-bottom: 26px;
+    background-color: #f2f7fa;
+    margin-bottom: 34px;
+}
+.ownAdress>ul>li span{
+    display: block;
+    float: left;
+    width: 45%;
+}
+.ownAdress>ul>li span.spanMrgin{
+    margin-right: 7%;
+}
+.ownAdress>ul>li span label{
+    float: left;
+    width: 36%;
+    line-height: 30px;
+    margin-right: 2.2%;
+    text-align: right;
+}
+.ownAdress>ul>li span input,.ownAdress>ul>li span select{
+    width: 60%;
+    height: 28px;
+    border: none;
+    background: none;
+    outline: none;
+    text-indent: 6px;
+    border: solid 1px #dedede;
+}
+.ownAdress>ul>li span select{
+    width: 60.5%;
+    height: 30px;
+    background: url("../images/selectIocn.png") no-repeat;
+    background-position: 96% 11px;
+    margin-right: 1.2%;
+    float: left;
+}
+.ownAdress>ul>li span input.inputWidth04{
+    width: 49%;
+}
+.ownAdress>ul>li span input.inputWidth05{
+    width: 42%;
+}
+.ownAdress>ul>li span input.inputWidth06{
+    width: 49%;
+}
+.ownAdress>ul>li span input.inputWidth07{
+    width: 24%;
+}
+.ownAdress>ul>li span label.laelWidth01{
+    width: 48%;
+}
+.ownAdress>ul>li span label.laelWidth02{
+    width: 20%;
+}
+.ownAdress>ul>li span.spanWidth01{
+    width: 61.5%;
+}
+.ownAdress>ul>li span.spanWidth02{
+    width: 35%;
+}
+.agentAdress{
+    padding-left: 4%;
+}
+.agentAdress li{
+    
+}
+.agentAdressTopMsg li{
+    float: left;
+    width: 30%;
+    line-height: 40px;
+    margin-right: 2%;
+}
+.agentAdressTopMsg li label{
+    float: left;
+    line-height: 40px;
+}
+.agentAdressTopMsg li select{
+    width: 60%;
+    height: 38px;
+    background-position: 96% 17px;
+}
+.agentAdressBottomMsg li span{
+    display: inline-block;
+    width: 48%;
+    margin-right: 2%;
+    text-align: left;
+}
+.roomNum{
+    line-height: 40px;
+}
+.roomNum input{
+    width: 14%;
+    height: 30px;
+    margin-left: 5px;
+    padding: 0 5px;
+    border: 1px solid #dddddd;
+}
+.inputWidth08,.contactCont li input{
+    width: 34%;
+    outline: none;
+    border: none;
+    background: none;
+    border: solid 1px #dedede;
+    height: 35px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    text-indent: 6px;
+}
+.b_i_ca_form>li.liMarginBottom{
+    margin-bottom: 21px;
+}
+.contactCont{
+    padding-left: 9.7%;
+}
+.contactCont li{
+    float: left;
+    width: 30%;
+    margin-left: 2.5%;
+}
+.contactCont li.marginNone{
+    margin-left: -3.5%;
+}
+.contactCont li.marginNone label{
+    margin-left: 3.8%;
+    width: 21%;
+    text-align: left;
+}
+.contactCont li label{
+    float: left;
+    margin-right: 3%;
+}
+.contactCont li.liWidth{
+    width: 27%;
+}
+.contactCont li input.inputWidth09{
+    width: 70%;
+}
+.contactCont li input.inputWidth10{
+    width: 65%;
+}
+.contactCont li input.inputWidth11{
+    width: 50%;
+}
+.b_i_operatingRangeItemWraper{
+    padding-top: 50px;
+    padding-bottom: 58px;
+}
+.b_i_operatingRangeItem{
+    font-size: 14px;
+    color: #000;
+}
+.b_i_operatingRangeItemTitle,.b_i_operatingRangeItemCont{
+    float: left;
+}
+.b_i_operatingRangeItemCont{
+    width: 80%;
+}
+.b_i_operatingRangeItemCont span{
+    display: inline-block;
+    float: left;
+    min-width: 100px;
+    white-space:nowrap;
+    margin-right: 1%;
+    margin-bottom: 20px;
+}
+.b_i_operatingRangeItemCont span input{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.b_i_or_choiceArea{
+    width: 76%;
+    height: auto;
+    background-color: #f2f7fa;
+    float:left;
+}
+.b_i_or_choiceArea ul li{
+    cursor: pointer;
+    float: left;
+    min-width: 8%;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 14px;
+    margin-left: 1%;
+    background: url("../images/closeBtn.png") no-repeat;
+    background-position: 97% 1px;
+    margin: 10px;
+    padding: 0 5px;
+}
+.b_i_or_choiceArea ul li.bgBlue{
+    background-color: #7eb5d8;
+}
+.b_i_or_choiceArea ul li.bgRed{
+    background-color: #ff8f8f;
+}
+.b_i_shareholder{
+    margin: 0 auto;
+    width: 90%;
+    height: auto;
+    background-color: #f2f7fa;
+    margin-top: 50px;
+}
+.delShareholderIcon{
+    position: absolute;
+    right: 0; top: 0px;
+    width: 31px;
+    height: 31px;
+    z-index: 99;
+    background: url("../images/icon07.png") no-repeat right top;
+}
+.bgPink{
+    background-color: #fff4ed;
+}
+.naturalShareholdersCont{
+    position: relative;
+    padding-left: 2%;
+    padding-top: 10px;
+    height: 80px;
+    border-bottom: solid 1px #ffffff;
+}
+.naturalShareholdersCont span,.corporateShareholdersCont span{
+    float: left;
+}
+.naturalShareholdersCont span label,.corporateShareholdersCont span label{
+    float: left;
+    color: #000;
+    font-size: 12px;
+    line-height: 30px;
+    margin-right: 3%;
+    text-align: right;
+}
+.naturalShareholdersCont span input,.corporateShareholdersCont span input,.naturalShareholdersCont span select,.employeeMsg ul li span input,.agentAdress li select,.agentAdress li input{
+    border: none;
+    background: none;
+    outline: none;
+    text-indent: 6px;
+    border: solid 1px #dedede;
+    background-color: #ffffff;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+}
+.naturalShareholdersCont span{
+    margin-bottom: 8px;
+    margin-right: 0.6%;
+}
+.naturalShareholdersCont span input,.naturalShareholdersCont span select{
+    height: 28px;
+}
+.naturalShareholdersCont span select,.agentAdress li select{
+    background: url("../images/selectIocn.png") no-repeat;
+    background-position: 96% 11px;
+    background-color: #ffffff;
+}
+.n_s_inputWidth01{
+    width: 16%;
+}
+.n_s_inputWidth02{
+    width: 16%;
+}
+.n_s_inputWidth03{
+    width: 19%;
+}
+.n_s_inputWidth04{
+    width: 30%;
+}
+.n_s_inputWidth05{
+    width: 10%;
+    margin-left: 4%;
+}
+.n_s_inputWidth01 input{
+    width: 50%;
+}
+.n_s_inputWidth01 label,.n_s_inputWidth02 label{
+    /* width: 30%; */
+}
+.n_s_inputWidth02 input,.n_s_inputWidth02 select{
+    width: 61%;
+}
+.n_s_inputWidth03 input,.n_s_inputWidth03 select{
+    width: 62%;
+}
+.n_s_inputWidth04 input{
+    width: 70%;
+}
+.n_s_inputWidth05 select{
+    width: 56%;
+}
+.corporateShareholdersCont{
+    clear: both;
+    position: relative;
+    padding-top: 10px;
+    height: 40px;
+    border-bottom: solid 1px #ffffff;
+}
+.corporateShareholdersCont span{
+    width: 30%;
+}
+.corporateShareholdersCont span label{
+  /*   width: 30%; */
+}
+.corporateShareholdersCont span input{
+    width: 64%;
+    height: 28px;
+}
+.addBtn{
+    margin: 0 auto;
+    width: 30%;
+    height: 39px;
+    padding-top: 11px;
+    border-top: solid 1px #ffffff;
+    margin-bottom: 20px;
+}
+.addBtn input{
+    float: left;
+    border-color: #5ba8d7;
+    width: 45%;
+    height: 26px;
+    font-size: 12px;
+    color: #5ba8d7;
+}
+.addBtn input.hover{
+    background-color: #5ba8d7;
+    color: #ffffff;
+}
+.addBtn input:first-child{
+    margin-right: 10%;
+}
+
+
+.b_i_legalPerson{
+    font-size: 14px;
+    color: #000;
+    padding-bottom: 38px;
+    padding-top: 8px;
+}
+.b_i_legalPerson>div{
+    margin-top: 30px;
+}
+.b_i_legalPerson div span{
+    float: left;
+}
+.b_i_legalPerson div span label{
+    float: left;
+    line-height: 32px;
+    margin-right: 1%;
+}
+.b_i_legalPerson div span input,.b_i_legalPerson div span select{
+    border: none;
+    background: none;
+    outline: none;
+    text-indent: 6px;
+    height: 30px;
+    border: solid 1px #dedede;
+    background-color: #ffffff;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+}
+.b_i_legalPerson div span select{
+    background: url("../images/selectIocn.png") no-repeat;
+    background-position: 96% 12px;
+    background-color: #ffffff;
+}
+.b_i_lps_03Right{
+    float: left;
+    width: 78%;
+    margin-right: 8%;
+    padding-top: 8px;
+    margin-left: 2%;
+    background-color: #f2f7fa;
+}
+.b_i_lps_marginBottom{
+    margin-bottom: 5px;
+    position: relative;
+}
+.b_i_lps_bordreBottom{
+    border-bottom: solid 1px #ffffff;
+}
+.b_i_lps_03Right span{
+    float: left;
+    margin-bottom: 8px;
+}
+.b_i_lps_width01{
+    width: 17%;
+}
+.b_i_lps_width06{
+    width: 23%;
+}
+.b_i_lps_width06 label{
+    width: 40%;
+    text-align: right
+}
+.b_i_lps_width06 input{
+    width: 50%;
+}
+.b_i_lps_width01 input,.b_i_lps_width01 select{
+    width: 50%;
+}
+.b_i_lps_width02{
+    width: 23%;
+}
+.b_i_lps_width02 input{
+    width: 68%;
+}
+.b_i_lps_width03{
+    width: 37%;
+}
+.b_i_lps_width03 input{
+    width: 60%;
+}
+.b_i_lps_width03 label{
+    width: 27%;
+    text-align: right;
+}
+.b_i_lps_width04{
+    width: 20%;
+}
+.b_i_lps_width05{
+    width: 26%;
+}
+.b_i_lps_width05 label{
+    width: 40%;
+    text-align: right;
+}
+.b_i_lps_width04 select,.b_i_lps_width05 input{
+    width: 54%;
+}
+.b_i_lps_width06 input,.b_i_lps_width05 input,.b_i_lps_width01 input,.b_i_lps_width02 input,.b_i_lps_width03 input,.b_i_lps_width04 select,.b_i_lps_width05input{
+    margin-left: 3%;
+}
+.b_i_lp_leftWidth{
+    float: left;
+    width: 12%;
+    text-align: right;
+}
+.b_i_lp_leftHeight01{
+    min-height: 100px;
+}
+.b_i_lp_leftHeight02{
+    min-height: 80px;
+}
+.b_i_lp_leftHeight03{
+    height: 50px;
+}
+.b_i_lp_choice{
+    height: 14px;
+    margin-bottom: 15px;
+}
+.b_i_lp_choice li{
+    float: left;
+    width: 5%;
+    margin-right: 3%;
+}
+.b_i_lp_choice li input{
+    margin-right: 22%;
+}
+.employeeMsg{
+    padding-top: 42px;
+    padding-bottom: 28px;
+    padding-left: 2%;
+}
+.employeeMsg ul li{
+    clear: both;
+    height: 37px;
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 16px;
+}
+.employeeMsg ul li.lisPadding{
+    padding-left: 1.6%;
+}
+.employeeMsg ul li span{
+    float: left;
+    width: 20%;
+    height: 49px;
+}
+.employeeMsg ul li span label{
+    float: left;
+    line-height: 37px;
+    margin-right: 3%;
+    text-align: right;
+}
+.employeeMsg ul li span.firstspanWidth{
+    width: 25%;
+}
+.employeeMsg ul li span input{
+    width: 50%;
+    height: 35px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+.b_i_other{
+    padding-top: 41px;
+    padding-bottom: 39px;
+    font-size: 14px;
+    color: #000000;
+}
+.b_i_other ul li{
+    float: left;
+    width: 30%;
+}
+.b_i_other ul li label{
+    line-height: 37px;
+    width: 39%;
+    text-align: right;
+}
+.b_i_other ul li label.laelWidth03{
+    width: 20%;
+}
+.b_i_other ul li input{
+    width: 56%;
+    height: 35px;
+    line-height: 35px;
+}
+
+.b_i_legalPersonstyle02,.b_i_legalPersonstyle03{overflow: hidden;}
+
+ul.dsh_box{overflow: hidden;border-bottom: 2px solid #fff;padding: 5px 0;position: relative;}
+ul.dsh_box li label{float: left;}
+.delShareholderIcon_1{
+    position: absolute;
+    right: 0; top: 0px;
+    width: 31px;
+    height: 31px;
+    z-index: 99;
+    background: url("../images/icon07.png") no-repeat right top;
+}
+.delShareholderIcon_2{
+    position: absolute;
+    right: 0; top: 0px;
+    width: 31px;
+    height: 31px;
+    z-index: 99;
+    background: url("../images/icon07.png") no-repeat right top;
+}
+
+.b_i_other table.t1{width: 90%;border-collapse: collapse;border: none;margin: 0 auto}
+.b_i_other table.t1 th{background: #a5c2d3;height: 40px;font-size: 14px;color: #ffffff;}
+.b_i_other table.t1 tr{border-bottom: 1px solid #e8ecf2}
+.b_i_other table.t1 td{ height: 40px;font-size: 12px;color: #000000; text-align: center;}
+.gw_odd{background-color: #f3f6fd;}
+.gw_even{background-color: #fafafa;}
+.gw_mouse{background-color: #fff7e3;} 
+
+.b_i_other div.box1{width: 90%;margin: 0 auto}
+.b_i_other div.box1 p.tit{font-size: 14px;color: #000;height: 30px;line-height: 30px}
+.b_i_other div.box1 p.add_box{height: 45px;line-height: 45px;background: #f2f7fa;padding: 0 20px;}
+.b_i_other div.box1 p.add_box span.name{display: inline-block;float: left;font-size: 12px;color: #000000;min-width: 250px;padding-right:20px}
+.b_i_other div.box1 p.add_box span.add_btn{ padding: 2px 20px; cursor: pointer;  border: 1px solid #5ba8d7; color: #5ba8d7; background: #fff;-moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;}
+
+/* .b_i_other div.box2{width: 90%;margin: 0 auto;min-height: 150px;background: #f2f7fa;border-top: 1px solid #fff;}
+.b_i_other div.box2 table{height: 150px;}
+.b_i_other div.box2 table td.name{font-size: 12px;color: #000000;width: 15%;height: 150px;padding-left: 20px}
+.b_i_other div.box2 table td.rang{width: 30%}
+.b_i_other div.box2 table td.pic{width: 15%}
+.b_i_other div.box2 table td.pic div{width: 150px;height: 100px;background: #fff;margin-left: 50px;color: #b2b2b2;font-size: 12px;text-align: center;}
+.b_i_other div.box2 table td.pic div p.pic_box{position: relative;}
+.b_i_other div.box2 table td.pic div a.del_btn{position: absolute;top: 0;right: 0;width: 30px;height: 30px}
+.b_i_other div.box2 table td.pic div p.no_pic{line-height: 100px} */
+
+
+.b_i_other div.box2{width: 90%;margin: 0 auto;min-height: 150px;background: #f2f7fa;border-top: 1px solid #fff;}
+.b_i_other div.box2 table{height: 150px;}
+.b_i_other div.box2 table td.name{font-size: 12px;color: #000000;width: 15%;height: 150px;padding-left: 20px;width: 250px}
+.b_i_other div.box2 table td.rang{width: 30%}
+.b_i_other div.box2 table td.pic{width: 800px}
+.b_i_other div.box2 table td.pic div{width: 150px;height: 100px;background: #fff;margin-right: 30px; margin-bottom: 20px; color: #b2b2b2;font-size: 12px;text-align: center; float: left; }
+.b_i_other div.box2 table td.pic div p.pic_box{position: relative;}
+.b_i_other div.box2 table td.pic div a.del_btn{position: absolute;top: 0;right: 0;width: 30px;height: 30px}
+.b_i_other div.box2 table td.pic div p.no_pic{line-height: 100px}
+
+
+.b_i_other div.box2 table td.btn{width: 20%}
+.b_i_other div.box2 table td span.add_btn{ padding: 2px 20px; cursor: pointer; margin: 0 10px;  border: 1px solid #5ba8d7; color: #5ba8d7; background: #fff;-moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;}
+
+.b_i_other div.box2 table td.del{width: 10%}
+.b_i_other div.box2 table td.del a{float: right;vertical-align: top;}
+.b_i_other p.tit1{font-size: 14px;color: #000;height: 50px;line-height: 50px;width: 90%;margin: 0 auto}
+
+.b_i_companyName span.op_name span{margin-right: 20px}
+.b_i_companyName span.tag{display: inline-block;width: 35px;height: 18px;line-height: 18px; text-align: center; font-size: 14px; margin: 0 10px; color: #ff5555;border: 1px solid #ff5555}
+
+.bannerItem .show li{margin-bottom: 1px}
+
+.other_add {padding-bottom: 10px;margin-left: -5px}
+.other_add .in_text{width: 30%;height: 35px;border: 1px solid #ddd;margin-bottom: 10px;margin-left: -22px;border-radius: 4px;padding: 0 5px}
+.other_add .b_i_operatingRangeItemTitle p{height: 35px;line-height: 35px}
+.other_add .b_i_operatingRangeItemCont {height: 35px;line-height: 35px }
+.b_i_other ul.zh_box{overflow: hidden;margin-bottom: 10px}
+
+.add_id{ padding: 2px 20px;  cursor: pointer; margin: 0 10px;  border: 1px solid #5ba8d7; color: #5ba8d7; background: #fff;-moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;}
+.gd_name{width: 280px;display: inline-block;}
+.add_id{ padding: 2px 20px;  cursor: pointer; margin: 0 10px;  border: 1px solid #5ba8d7; color: #5ba8d7; background: #fff;-moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;}
+
+.btn_box{width: 300px;margin: 30px auto}
+.btn_box a{display: inline-block;width: 100px; color: #fff;font-size: 14px; text-align: center; height: 35px;line-height: 35px; margin: 0 10px;background: #57a7d9;-moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+
+.b_i_companyAddress span.op_name span{margin-right: 20px}
+.b_i_companyAddress span.tag{display: inline-block;width: 35px;height: 18px;line-height: 18px; text-align: center; font-size: 14px; margin: 0 10px; color: #ff5555;border: 1px solid #ff5555}
+.bannerItem .show li{margin-bottom: 1px}
+
+.zy_address{width: 80%;min-height: 140px;background: #f2f7fa;display: inline-block;}
+.zy_address table {margin: 10px;width: 100%}
+.zy_address table th{width: 15%;font-weight: normal;text-align: right;}
+.zy_address table td{width: 35%}
+
+.gd_show{width: 90%; margin-top: 40px; margin-bottom: 40px; margin-left: 5%; min-height: 50px;background: #f2f7fa;display: inline-block;}
+.gd_show table {margin: 10px;width: 100%;font-size: 14px;}
+.gd_show table th{ height: 40px; width: 6%; font-weight: normal;text-align: right;}
+.gd_show table td{width: 10%}
+.gd_show table td.long{width: 20%}
+.gd_show .line{border: 1px solid #fff}
+
+.dsh_show{width: 80%; margin-top: 10px;  min-height: 50px;background: #f2f7fa;display: inline-block;}
+.dsh_show table {margin: 10px;width: 100%;font-size: 14px;}
+.dsh_show table th{ height: 40px; width: 8%; font-weight: normal;text-align: right;}
+.dsh_show table td{width: 10%}
+.dsh_show .line{border: 1px solid #fff}
+
+.yg_bg{background: #fff}
+.other_show{line-height: 37px;line-height: 37px}
+
+.st_box p{height:30px;line-height:30px;font-size:14px;padding-right:2px}

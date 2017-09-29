@@ -1,0 +1,156 @@
+<!-- 银行开户材料准备 -->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>公司名称：</th>
+				<td>$!{companymc}</td>
+				<th>开户银行：</th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>客户姓名：</th>
+				<td>$!{loginEntity.username}</td>
+				<th>客户电话：</th>
+				<td>$!{loginEntity.userphone}</td>
+			</tr>
+			<tr>
+				<th>法人姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>法人电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>Ukey管理员1姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>Ukey管理员1电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>Ukey管理员2姓名：</th>
+				<td>$!{companyFaRenInfo.username}</td>
+				<th>Ukey管理员2电话：</th>
+				<td>$!{companyFaRenInfo.phone}</td>
+			</tr>
+			<tr>
+				<th>营业执照正本：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>营业执照副本：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>税务登记证正本：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>税务登记证副本：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>组织机构代码证正本：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>组织机构代码证副本：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>法人身份证件：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>章程：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>股东身份证件：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>Ukey管理员1身份证件：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+			<tr>
+				<th>Ukey管理员2身份证件：</th>
+				<td><input type="hidden" name="taskInfoImg" value="$!{yingyzzfb}" /></td><th></th><td></td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+		<a class="b2">退回</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/****完成****************************/
+	    // 点击 - 完成
+	    $(".b1").click(function() {
+	    	var bankAccountReadyDataArchive = WF.getVariableByName("bankAccountReadyDataArchive");
+	    	if(bankAccountReadyDataArchive == "2"){
+				WF.submitTask("temp","&bankAccountReadyDataArchive=0&bankAccountBack=0");
+	    	}else{
+	    		alert("档案组未确认相关材料已存放，请到档案组存放档案!");
+	    	}
+		});
+		
+		/******退回****************************/
+		//点击 退回
+		$(".b2").click(function(){
+			WF.showDiv("tuiHuiDiv");
+		});
+		
+		//点击 退回弹出框 确定
+		$("#tuiHuiDiv .ok").click(function(){
+			if(!WF.validate("tuiHuiDiv")){
+				return;
+			}
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			
+			// 调用流程接口
+			WF.submitTask("tuiHuiDiv","&bankAccountBack=1");
+		});
+		//点击 退回弹出框 取消
+		$("#tuiHuiDiv .cancel").click(function(){
+			WF.closeDiv('tuiHuiDiv');
+		});
+		
+	});
+</script>
+<!-- 弹出框 - 退回 -->
+<div id="tuiHuiDiv" class="white_content">
+	<div class="gw_cz_box1" >
+		<p class="title">退回信息</p>
+		<table class="t1">
+			<tr>
+				<th>退回原因：</th>
+				<td>
+					<textarea type="text" style="height: 100px; width: 190px;" name="inputInfoTask" id="bankAccountReadyTuiHuiReason" ></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="cz_btn">
+			<a class="cancel">取消</a> <a class="ok" >确定</a>
+		</div>
+	</div>
+</div>

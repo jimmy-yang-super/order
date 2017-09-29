@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理</title>
+<link rel="stylesheet" href="css/usermanager.css">
+<link rel="stylesheet" href="css/ystep.css">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script type="text/javascript">
+$(function(){
+  //设置奇数行背景色
+  $("#tab tr:odd").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+$(function(){
+    $(".com_box1 li").each(function(){
+        $(this).click(function(){
+            $(".com_box1 li").addClass("flow1_change").removeClass("checked1");
+            $(this).addClass("checked1").removeClass("flow1_change");
+        })
+    });
+    $("#t1").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    });
+    $("#t2").click(function(){
+        if($(this).hasClass("t1bg")){
+            $(this).removeClass("t1bg").addClass("tdbg");
+        }else{
+            $(this).addClass("t1bg").removeClass("tdbg");    
+        }
+    });
+});
+$(document).ready(function(){
+  $("#t1").click(function(){
+    $("#show_t1").toggle();
+  });
+  $("#t2").click(function(){
+    $("#show_t2").toggle();
+  });
+});
+// 点击名称变成可编辑框
+function ShowElement(element){
+  var oldhtml = element.innerHTML;   //获得元素之前的内容
+  var newobj = document.createElement('input');   //创建一个input元素
+  newobj.type = 'text';   //为newobj元素添加类型
+  //设置newobj失去焦点的事件
+  newobj.onblur = function(){
+    element.innerHTML = this.value ? this.value : oldhtml;   //当触发时判断newobj的值是否为空，为空则不修改，并返回oldhtml。
+  }
+  element.innerHTML = '';   //设置元素内容为空
+  element.appendChild(newobj);   //添加子元素
+  newobj.focus();   //获得焦点
+}
+
+</script>
+
+</head>
+
+<body>
+<div class="user_box">
+  <div class="user_search">
+    <div class="search_bg">
+
+      <div class="nice-select" name="nice-select">
+        <input type="text" value="公司名称" readonly>
+        <ul>
+          <li data-value="1">公司名称</li>
+          <li data-value="2">客户电话</li>
+          <li data-value="3">客户姓名</li>
+        </ul>
+      </div>
+      <input class="fq_box1" type="text">
+
+      <div class="nice-select" name="nice-select">
+        <input type="text" value="订单来源" readonly>
+        <ul>
+          <li data-value="1">全部</li>
+          <li data-value="2">微信</li>
+          <li data-value="3">官网</li>
+          <li data-value="4">后台</li>
+        </ul>
+      </div>
+
+      <p class="search_btn rang_left">查询</p>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="10%">订单ID</th>
+        <th width="7%">订单来源</th>
+        <th width="7%">客户资料</th>
+        <th width="7%">注册区域</th>
+        <th width="7%">商品类型</th>
+        <th width="7%">接待顾问</th>
+        <th width="7%">跟进次数</th>
+        <th width="6%">意向度</th>
+        <th width="7%">下单时间</th>
+        <th width="7%">订单状态</th>
+        <th width="20%">操作</th>
+        <th width="8%">详情</th>
+      </tr>
+      <tr>
+        <th colspan="12" id="time_line">2015-8-14</th>
+      </tr>
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+            
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr>
+      <tr style="border:none">
+        <td colspan="12" style="height:0px">
+            <div class="nav">
+              <div class="box">
+                <div class="cont" id="show_t1" style="display:none"><!-- 详情 -->
+                  <div class="num_box1">
+                    <ul>
+                      <li class="num_info b_color">
+                        <p>2015/04/03  12:16:30</p>
+                        <p><span>记录人：王维娜</span><span>意向度：高</span><span>备注：<b>无法接通</b></span></p>
+                        <div class="clear"></div>
+                      </li>
+                      <li class="num_info b_color">
+                        <p>2015/04/03  12:16:30</p>
+                        <p><span>记录人：王维娜</span><span>意向度：高</span><span>备注：<b>商标注册，还问代理记账，商标注册时间和价格</b></span></p>
+                        <div class="clear"></div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="num_box2">
+                    <div class="com_box1">
+                      <ul>
+                        <p class="title">意向度：</p>
+                        <li class="flow1_change"><p>低</p></li>
+                        <li class="flow1_change"><p>中</p></li>
+                        <li class="flow1_change"><p>高</p></li>
+                        <div class="clear"></div>
+                      </ul>
+                    </div>
+                    <div class="com_box2">
+                      <p class="title">新增记录：</p>
+                      <p class="area_box"><textarea></textarea></p>
+                      <div class="clear"></div>
+                    </div>
+                    <div class="com_box3">确认</div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <div class="cont" id="show_t2" style="display:none"><!-- 操作日志 -->
+
+                  <div class="order_tab" id="order_tab">
+                    
+                    <table >
+                        <tr>
+                          <th width="11%" class="green">公司注册</th>
+                          <th width="11%">代理地址</th>
+                          <th width="11%" class="green">地税报到</th>
+                          <th width="11%" class="green">银行开户</th>
+                          <th width="11%">国税报到</th>
+                          <th width="11%" class="green">社保开户</th>
+                          <th width="12%" class="green">公积金开户</th>
+                          <th width="11%">代理记账</th>
+                          <th width="11%">商标注册</th>
+                        </tr>
+                        <tr>
+                          <td><h3>已完成</h3><p>包丽薇<br>2015/05/04</p></td>
+                          <td><h3>未购买</h3></td>
+                          <td><h3 class="red">服务中</h3><p>包丽薇</td>
+                          <td><h3>已完成</h3><p>包丽薇<br>2015/05/04</p></td>
+                          <td><h3>未购买</h3><p>包丽薇<br>2015/05/04</p></td>
+                          <td><h3  class="red">服务中</h3><p>包丽薇</td>
+                          <td><h3  class="red">服务中</h3><p>包丽薇</td>
+                          <td><h3>未购买</h3></td>
+                          <td><h3>未购买</h3></td>
+                        </tr>
+                      </table> 
+                  </div>
+
+                  <div class="order_flow1"><!-- 流程图 -->
+                    <input type="hidden" value=${detailorder.status } id="o_status" /><!--后台传到页面的数据-->
+                    <div class="flow1_main" style="text-align:left">
+                      <div class="ystep1"></div>
+                      <div class="flow1_box">
+                        <ul>
+                          <li class="b1"><span class="done">核名提交审核</span><br>2015-03-03 08:32:25<br>李如玉</li>
+                          <li class="b2"><span class="done">公司核名柜台审核</span><br>2015-03-03 08:32:25<br>李如玉 <span class="ed_box" onclick="ShowElement(this)">北京纽斯洛网络科技有限公司</span></li>
+                          <li class="b3">营业执照办理<br>2015-03-03<br><span class="done_btn">完成节点</span>
+                          <p class="help_box" ><i class="angle1"><s></s></i>延期3天</p>
+                          </li>
+                          <li class="b4">公章刻制<br>2015-03-03</li>
+                          <li class="b5">组织机构代为办理<br>2015-03-03</li>
+                          <li class="b6">税务登记办理<br>2015-03-03</li>
+                          <li class="b7">寄送材料 收款完结<br>2015-03-03</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="order_d_box">
+                    <div class="d_box1">
+                      <p class="d_title">订单详情</p>
+                      <div class="d_con_box">
+                        <p>订单金额：<span class="red">￥4950</span></p>
+                        <p class="text_i">优惠券：<span class="red">￥4950</span></p>
+                        <p>应收金额：<span class="red">￥4950</span></p>
+                        <p>预付金额：<span class="green">￥4950</span></p>
+                        <p class="w_total">尾款：<span class="red">￥4950</span></p>
+                      </div>
+                    </div>
+                    <div class="d_box2" id="d_box2">
+                      <table >
+                        <tr>
+                          <th width="12%">服务名称</th>
+                          <th width="25%">服务内容</th>
+                          <th width="12%">状态</th>
+                          <th width="12%">价格</th>
+                          <th width="12%">操作</th>
+                          <th width="33%">日志</th>
+                        </tr>
+                        <tr>
+                          <td>公司注册</td>
+                          <td>这款优酷盒子在性能和配置方面相当给力，别的不说，就一个</td>
+                          <td><span class="green">服务中</span></td>
+                          <td>￥598</td>
+                          <td><span class="d_Btn">完成</span></td>
+                          <td>2015-04-05 12:15:35 李如玉</td>
+                        </tr>
+                        <tr>
+                          <td>公司注册</td>
+                          <td>这款优酷盒子在性能和配置方面相当给力，别的不说，就一个</td>
+                          <td><span class="green">服务中</span></td>
+                          <td>￥598</td>
+                          <td><span class="d_Btn">完成</span></td>
+                          <td>2015-04-05 12:15:35 李如玉</td>
+                        </tr>
+                        <tr>
+                          <td>公司注册</td>
+                          <td>这款优酷盒子在性能和配置方面相当给力，别的不说，就一个</td>
+                          <td><span class="green">服务中</span></td>
+                          <td>￥598</td>
+                          <td><span class="d_Btn">完成</span></td>
+                          <td>2015-04-05 12:15:35 李如玉</td>
+                        </tr>
+                      </table>  
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+        </td>
+      </tr> 
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr>
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr> 
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr> 
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr> 
+      <tr>
+        <th colspan="12" id="time_line">2015-8-14</th>
+      </tr>
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr> 
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr> 
+      <tr>
+        <td><span>30334297856769</span></td>
+        <td><span>58同城</span></td>
+        <td><span>李先生<br>13098723333</span></td>
+        <td><span>北京 门头沟区<br>(内资企业)</span></td>
+        <td><span>公司注册(通州)</span></td>
+        <td><span>庹婷杰</span></td>
+        <td><a id="t1">1次<img src="images/xjt.png"></a></td>
+        <td><span class="pay">高</span></td>
+        <td>2015/04/05</td>
+        <td>2015/04/05</td>
+        <td>
+            <span class="orderBtn">修改</span>
+            <span class="orderBtn">改派</span>
+            <span class="orderBtn">废弃</span>
+
+        </td>
+        <td><a id="t2">详情<img src="images/xjt.png"></a></td>
+      </tr>   
+    </table>
+  </div>
+  <div class="page_turn">
+      <a href="#?page=1">[首页]</a>
+      <a href="#?page=2">[上一页]</a>
+      <a href="#?page=1">1</a>
+      <a href="#?page=2">2</a>
+      <a href="#?page=3">3</a>
+      <a href="#?page=4">4</a>
+      <a class="current" href="#?page=5">5</a>
+      <a href="#?page=6">6</a>
+      <a href="#?page=7">7</a>
+      <a href="#?page=8">8</a>
+      <a href="#?page=2">[下一页]</a>
+      <a href="#?page=2">[末页]</a>
+  </div>
+
+  <div class="ceng_box">
+ 
+    <div class="sk_box"><!-- 确认收款 -->
+      <div class="sk_con">
+        提交签单申请?
+      </div>
+      <div class="btn_box">
+        <span class="qr_btn">确认</span>
+        <span class="qx_btn">取消</span>
+      </div>
+    </div><!-- 收款结束 -->
+
+  </div>
+
+</div>
+
+</body>
+<script>
+$('[name="nice-select"]').click(function(e){
+  $('[name="nice-select"]').find('ul').hide();
+  $(this).find('ul').show();
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').hover(function(e){
+  $(this).toggleClass('on');
+  e.stopPropagation();
+});
+$('[name="nice-select"] li').click(function(e){
+  var val = $(this).text();
+  var dataVal = $(this).attr("data-value");
+  $(this).parents('[name="nice-select"]').find('input').val(val);
+  $('[name="nice-select"] ul').hide();
+  e.stopPropagation();
+  // alert("中文值是："+val);
+  // alert("数字值是："+dataVal);
+  //alert($(this).parents('[name="nice-select"]').find('input').val());
+});
+$(document).click(function(){
+  $('[name="nice-select"] ul').hide();
+});
+</script>
+
+<script src="js/ystep.js"></script>
+<script>
+  //根据jQuery选择器找到需要加载ystep的容器
+  //loadStep 方法可以初始化ystep
+  $(".ystep1").loadStep({
+    //ystep的外观大小
+    //可选值：small,large
+    size: "large",
+    //ystep配色方案
+    //可选值：green,blue
+    color: "blue",
+    //ystep中包含的步骤
+    steps: [{
+      //步骤名称
+      title: "",
+    },{
+      title: "",
+    },{
+      title: "",
+    },{
+      title: "",
+    },{
+      title: "",
+    },{
+      title: "",
+    },{
+      title: "",
+    }]
+  });
+  
+  $(".ystep1").setStep(3);
+</script>
+</html>

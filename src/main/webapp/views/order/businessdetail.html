@@ -1,0 +1,740 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>企业信息详情</title>
+    <link rel="stylesheet" href="/css/reset.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/style_ht.css" type="text/css"/>
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/js/style.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){   
+		$("#theButton").click(
+			function (){
+		    var $txt = $("<input type='text' value='' size='20' style='margin:0 1.5% 10px 0' />");
+			   $("#div1").append($txt);
+		});
+
+        $(':checkbox[name=single]').each(function(){ 
+            $(this).click(function(){ 
+                if($(this).attr('checked')){ 
+                    $(':checkbox[name=single]').removeAttr('checked'); 
+                    $(this).attr('checked','checked'); 
+                } 
+            }); 
+        }); 
+
+        $("#add_dsh").click(function(){      
+            $('<ul class="dsh_box" id="dsh_box"><a  class="delShareholderIcon"></a><span class="b_i_lps_width05"><input type="text"/><label>董事会主席:</label></span><span class="b_i_lps_width01"><input type="text"/><label>手机号:</label></span><span class="b_i_lps_width04"><select><option value="">博士</option><option value="">研究生</option></select></span><span class="b_i_lps_width01"><select><option value="">群众</option><option value="">党员</option></select><label>党员面貌:</label></span><span class="b_i_lps_width04"><select><option value="">男</option><option value="">女</option></select><label>性别:</label></span><span class="b_i_lps_width03"><input type="text"/><label>身份证号:</label></span><span class="b_i_lps_width03"><input type="text"/><label>身份地址:</label></span></ul>').clone(true).appendTo("#dsh_area")   
+        });  
+
+        $("#add_jsh").click(function(){      
+            $('<ul class="dsh_box" id="dsh_box"><a  class="delShareholderIcon"></a><span class="b_i_lps_width05"><input type="text"/><label>董事会主席:</label></span><span class="b_i_lps_width01"><input type="text"/><label>手机号:</label></span><span class="b_i_lps_width04"><select><option value="">博士</option><option value="">研究生</option></select></span><span class="b_i_lps_width01"><select><option value="">群众</option><option value="">党员</option></select><label>党员面貌:</label></span><span class="b_i_lps_width04"><select><option value="">男</option><option value="">女</option></select><label>性别:</label></span><span class="b_i_lps_width03"><input type="text"/><label>身份证号:</label></span><span class="b_i_lps_width03"><input type="text"/><label>身份地址:</label></span></ul>').clone(true).appendTo("#jsh_area")   
+        }); 
+        
+        $(".delShareholderIcon").live('click',function(){
+           $(this).parent().remove();   
+        });
+        $("#disgsdz").show();
+     })
+
+
+    $(function(){
+        //设置奇数行背景色
+        $(".t1 tr:odd").find("td").addClass("gw_odd");
+        //设置偶数行背景色
+        $(".t1 tr:even").find("td").addClass("gw_even");
+        // 鼠标移到的颜色
+        $(".t1 tr").mouseover(function(){
+          $(this).find("td").addClass("gw_mouse");
+        });
+        // 鼠标移出的颜色
+        $(".t1 tr").mouseout(function(){
+          $(this).find("td").removeClass("gw_mouse");
+        });
+    });
+
+
+
+
+
+	</script>
+</head>
+
+<body>
+<div class="wraper clearfix">
+    <div class="wraperTitle borderBottom">
+        <ul>
+            <li><a >您目前的位置：</a></li>
+            <li><a  class="colorBlue">首页 > </a></li>
+            <li><a >企业信息</a></li>
+        </ul>
+    </div>
+    <div style="clear: both;height: 0px;font-size: 0px;line-height: 0"></div>
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a><input type="submit" class="save" value="" />公司名称</a></h3>
+            <div class="b_i_companyName"  id="disgsdz">
+            <ul class="show">
+                    <li><label>公司类型：</label><span>#if($businessLibaryEntity.companytype != '1')普通有限公司  #else 一人有限公司  #end</span></li>
+                    <li><label>公司名称：</label><span>$!{businessLibaryEntity.companymc} <!-- <span class="tag" >重要</span> --></span></li>
+                    <li><label>备选名称：</label><span>$!{beixmcsmt}</span></li>
+                    <li><label>注册资本：</label><span>#if($businessLibaryEntity.zuczb=='0') #else $!{businessLibaryEntity.zuczb} #end 万</span></li>
+                </ul>
+
+            </div>
+        </form>
+    </div>
+<div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a ><input type="submit" class="save" value="" />公司地址</a></h3>
+            <div class="b_i_companyAddress clearfix b_i_companyName">
+
+                 <ul class="show">
+                    <li><label>注册城市：</label><span>#if($businessLibaryEntity.cityId == '1')北京  #elseif($businessLibaryEntity.cityId == '2') 深圳 #else没有选择注册的城市 #end</span></li>
+                      #set ($mm="")
+                      #if($businessLibaryEntity.iszhucdz == '0')
+                      #set($mm ='自有地址:')
+                     #elseif($businessLibaryEntity.iszhucdz == '1')
+                        #set($mm ='孵化器地址:')
+                     #end
+                    <li><label>注册地址：</label><span>${mm}</span> </li>
+                    <li>
+                        <label>&nbsp;</label>
+                        <div class="zy_address" $!{str}>
+                            <table>
+                             #if($businessLibaryEntity.iszhucdz == '1')
+                                  <tr>
+                                    <th>地址合作商：</th><td>$!{reginAddressEntity.attribute1} </td>
+                                    <th>地址类型：</th><td>$!{reginAddressEntity.attribute2} </td>
+                                    <th></th><td> </td>
+                                  </tr>
+                             #end
+                                <tr>
+                                   #if($businessLibaryEntity.attribute2 == 'zthd' || $businessLibaryEntity.attribute2 == 'szrxcybl')
+                                    <th>$!{mm}</th><td>$!{zthddz} </td>
+                                   #elseif($businessLibaryEntity.attribute2 == 'bjyabxx'||$businessLibaryEntity.attribute2 =='rhjtnansi' || $businessLibaryEntity.attribute2 == 'fswygl')
+                                    <th>$!{mm}</th><td>$!{neadddiz} </td>
+                                   #else
+                                    <th>$!{mm}</th><td>$!{reginAddressEntity.ziydz} </td>
+                                   #end
+                                    <th>所属乡街：</th><td>$!{reginAddressEntity.suosjx} </td>
+                                    
+                                </tr>
+                                <tr><th>邮编：</th><td colspan="3">$!{reginAddressEntity.postcode} </td></tr>
+                                <tr>
+                                    <th>产权主体：</th><td>$!{reginAddressEntity.chanqzt}</td>
+                                    <th>产权人/产权单位：</th><td>$!{reginAddressEntity.chanqr}</td>
+                                    <th></th><td></td>
+                                </tr>
+                                <tr>
+                                    <th>房屋规划用途：</th><td>$!{reginAddressEntity.fangwzlyt}</td>
+                                    <th>住所获取方式：</th><td>$!{reginAddressEntity.fangwhqfs}</td>
+                                    <th></th><td></td>
+                                </tr>
+                                <tr>
+                                    <th>租赁/使用年限：</th><td>#if($!reginAddressEntity.zulsynx !='0')$!{reginAddressEntity.zulsynx}年#end</td>
+                                    <th>租赁/使用面积：</th><td>#if($!reginAddressEntity.zulsymj !='0')$!{reginAddressEntity.zulsymj}平方米#end</td>
+                                    <th></th><td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                   #if($businessLibaryEntity.iszhucdz == '1')
+                    <li><label>实际办公地址：</label><span>$!{reginAddressEntity.shijbgdz}</span></li>
+                   #end
+                    <li><label>快递地址：</label><span>$!{reginAddressEntity.kuaiddz}</span></li>
+                    <li><label>收件人：</label><span>$!{reginAddressEntity.shoujr}</span></li>
+                    <li><label>联系电话：</label><span>$!{reginAddressEntity.lianxdh}</span></li>
+                    <li><label>邮编：</label><span>$!{businessLibaryEntity.attribute1}</span></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    
+    
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a ><input type="submit" class="save" value="" />经营范围</a></h3>
+            <div class="b_i_operatingRangeItemWraper clearfix b_i_companyName">
+                <ul class="show">
+                    <li><label>主营业务：</label><span>$!{businessLibaryEntity.hangytd}</span></li>
+                    <li><label>业务方向：</label><span>$!{businessLibaryEntity.zhuyyw}</span></li>
+                    <li><label>经营范围：</label><span>$!{qitywt}</span></li>
+                    <li><label>补充经营范围：</label><span>$!{businessLibaryEntity.jingyfw}</span></li>
+                </ul>   
+            </div>
+        </form>
+    </div>
+    
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a ><input type="submit" class="save" value="" />股东</a></h3>
+            <div class="gd_show">
+             #if($isdisplayzr == 'true')
+                <table>
+                   #set ($i=1)
+                   #foreach($pe in $!zirrgud)  
+                    <tr>
+                        <th>股东$!{i}：</th><td>$!{pe.username}</td>
+                        <th>出资额：</th><td>$!{pe.attribute1}万</td>
+                        <th>身份证号：</th><td>$!{pe.idcard}</td>
+                        <th>身份证地址：</th><td class="long">$!{pe.idcardaddress}</td>
+                    </tr>
+                    <tr>
+                        <th>性别：</th><td>$!{pe.sex}</td>
+                        <th>手机：</th><td>$!{pe.phone}</td>
+                    </tr>
+                      #set($i=$i+1)
+                   #end
+                </table>
+               #end
+                <div class="line"></div>
+                #if($isdisplayfr == 'true')
+                <table>
+                    #set ($i=1)
+                   #foreach($pe in $!fargud)  
+                    <tr>
+                        <th>法人股东$!{i}：</th><td>$!{pe.username}</td>
+                        <th>营业执照号：</th><td>$!{pe.yingyzz}</td>
+                        <th>出资额：</th><td>#if($pe.chuze =='0.0') #else  $!{pe.chuze}  #end 万</td>
+                        <th></th><td class="long"></td>
+                    </tr>
+                     #set($i=$i+1)
+                    #end
+                </table>
+                #end
+            </div>
+        </form>
+    </div>
+    
+      <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a ><input type="submit" class="save" value="" />法定代表人及董监高</a></h3>
+            <div class="b_i_legalPerson clearfix b_i_companyName">
+
+
+                 <ul class="show">
+                    <li>
+                        <label>法定代表人</label>
+                        <div class="dsh_show">
+                            <table>
+                                <tr>
+                                    <th>法定代表人：</th><td>$!{faddbr.username}</td>
+                                    <th>手机号：</th><td>$!{faddbr.phone}</td>
+                                    <th>性别：</th><td>$!{faddbr.sex}</td>
+                                    <th>身份证号：</th><td>$!{faddbr.idcard}</td>
+                                    <th>身份地址：</th><td>$!{faddbr.idcardaddress}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <li><label>董事会：</label><span>
+                        #if($businessLibaryEntity.isdengsh =='1')
+                                                                     有
+                        #else
+                                                                     无
+                        #end
+                    </span></li>
+                    <li>
+                        <label>&nbsp;</label>
+                        <div class="dsh_show">
+                            <table>
+                                <tr>
+                                    <th>董事会主席：</th><td>$!{dshzx.username}</td>
+                                    <th>手机号：</th><td>$!{dshzx.phone}</td>
+                                    <th>性别：</th><td>$!{dshzx.sex}</td>
+                                    <th>身份证号：</th><td>$!{dshzx.idcard}</td>
+                                    <th>身份地址：</th><td>$!{dshzx.idcardaddress}</td>
+                                </tr>
+                            </table>
+                            <div class="line"></div>
+                            <table>
+                                 #if($isdisplayds == 'true')
+                                  #set ($i=1)
+                                 #foreach($pe in $!dongs_1)  
+                                <tr>
+                                    <th>董事$!{i}：</th><td>$!{pe.username}</td>
+                                    <th>手机号：</th><td>$!{pe.phone}</td>
+                                    <th>性别：</th><td>$!{pe.sex}</td>
+                                    <th>身份证号：</th><td>$!{pe.idcard}</td>
+                                    <th>身份地址：</th><td>$!{pe.idcardaddress}</td>
+                                </tr>
+                                  #set($i=$i+1)
+                                #end 
+                              #end
+                            </table>
+                        </div>
+                    </li>
+                    <li><label>监事会：</label><span> #if($businessLibaryEntity.isjiash =='1') 有 #else 无 #end</span></li>
+                    <li>
+                        <label>&nbsp;</label>
+                        <div class="dsh_show">
+                            <table>
+                                <tr>
+                                    <th>执行主席：</th><td>$!{jianszx.username}</td>
+                                    <th>手机号：</th><td>$!{jianszx.phone}</td>
+                                    <th>性别：</th><td>$!{jianszx.sex}</td>
+                                    <th>身份证号：</th><td>$!{jianszx.idcard}</td>
+                                    <th>身份地址：</th><td>$!{jianszx.idcardaddress}</td>
+                                </tr>
+                            </table>
+                            <div class="line"></div>
+                            <table>
+                              #set ($i=1)
+                              #foreach($pe in $!jianss)  
+                                <tr>
+                                    <th>监事$!{i}：</th><td>$!{pe.username}</td>
+                                    <th>手机号：</th><td>$!{pe.phone}</td>
+                                    <th>性别：</th><td>$!{pe.sex}</td>
+                                    <th>身份证号：</th><td>$!{pe.idcard}</td>
+                                    <th>身份地址：</th><td>$!{pe.idcardaddress}</td>
+                                </tr>
+                                 #set($i=$i+1)
+                                #end 
+                            </table>
+                        </div>
+                    </li>
+                    <li>
+                        <label>经理：</label>
+                        <div class="dsh_show">
+                            <table>
+                                <tr>
+                                    <th>执行主席：</th><td>$!{jingl.username}</td>
+                                    <th>手机号：</th><td>$!{jingl.phone}</td>
+                                    <th>性别：</th><td>$!{jingl.sex}</td>
+                                    <th>身份证号：</th><td>$!{jingl.idcard}</td>
+                                    <th>身份地址：</th><td>$!{jingl.idcardaddress}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <li>
+                        <label>财务负责人：</label>
+                        <div class="dsh_show">
+                            <table>
+                                <tr>
+                                    <th>姓名：</th><td>$!{caiwfzr.username}</td>
+                                    <th>手机号：</th><td>$!{caiwfzr.phone}</td>
+                                    <th>身份证号：</th><td colspan="3">$!{caiwfzr.idcard}</td>
+                                   <!--  <th>身份地址：</th><td>$!{caiwfzr.idcardaddress}</td> -->
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </form>
+    </div>
+    
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a ><input type="submit" class="save" value="" />公司员工信息</a></h3>
+            <div class="gd_show yg_bg">
+                <table>
+                    <tr>
+                        <th>企业联系人：</th><td>$!{qiyeryinfo.username}</td>
+                        <th>手机号：</th><td>$!{qiyeryinfo.phone}</td>
+                        <th>固定电话：</th><td>$!{qiyeryinfo.gudphone}</td>
+                        <th>邮箱地址：</th><td>$!{qiyeryinfo.email}</td>
+                        <th>邮编：</th><td>$!{qiyeryinfo.attribute2}</td>
+                    </tr>
+                    <tr>
+                        <th>职工总人数：</th><td>#if($businessLibaryEntity.zhigrs == '0') #else $!{businessLibaryEntity.zhigrs} #end</td>
+                        <th>本地人数：</th><td>#if($businessLibaryEntity.bendrs =='0') #else $!{businessLibaryEntity.bendrs} #end</td>
+                        <th>外地人数：</th><td>#if($businessLibaryEntity.waidrs=='0') #else $!{businessLibaryEntity.waidrs} #end</td>
+                        <th>女性人数：</th><td>#if($businessLibaryEntity.nvxrs=='0') #else $!{businessLibaryEntity.nvxrs} #end</td>
+                    </tr>
+                </table>
+                <div class="line"></div>
+                <table>
+                    <tr>
+                        <th>UKey管理员1：</th><td>$!{Ukey1.username}</td>
+                        <th>手机：</th><td>$!{Ukey1.phone}</td>
+                        <th></th><td></td>
+                        <th></th><td></td>
+                    </tr>
+                    <tr>
+                        <th>UKey管理员2：</th><td>$!{Ukey2.username}</td>
+                        <th>手机：</th><td>$!{Ukey2.phone}</td>
+                        <th></th><td></td>
+                        <th></th><td></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+    
+    <div class="bannerItem clearfix">
+        <form class="contentForm">
+            <h3 class="nav"><a ><input type="submit" class="save" value="" />其它信息</a></h3>
+            <div class="b_i_other clearfix">
+              <!--   <ul>
+                    <li><label>工商系统账号：</label><span class="other_show">$!{businessLibaryEntity.gongsxtcode}</span></li>
+                    <li><label>密码：</label><span class="other_show">$!{businessLibaryEntity.password}</span></li>
+                </ul> -->
+                <div class="clearfix other_add">
+                <!--   <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>申请方式：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                          #if($applyMethod =='0')
+                        <span>双向寄递</span>
+                            #else
+                         <span>现场递交</span>            
+                            #end
+                        </div>
+                    </div> -->
+                    <div class="b_i_operatingRangeItem clearfix">
+                        <div class="b_i_operatingRangeItemTitle">
+                            <p>名称预先核准文号：</p>
+                        </div>
+                        <div class="b_i_operatingRangeItemCont type">
+                           $!{businessLibaryEntity.mingcyxhz}
+                        </div>
+                    </div>
+                </div>
+                <ul class="zh_box">
+                    <li><label>核名工商账号：</label><span class="other_show">$!{businessLibaryEntity.hemgszh}</span></li>
+                    <li><label>密码：</label><span class="other_show">$!{businessLibaryEntity.hempassword}</span></li>
+                </ul>
+                <ul class="zh_box">
+                    <li><label>网登工商账号：</label><span class="other_show">$!{businessLibaryEntity.wangdgszh}</span></li>
+                    <li><label>密码：</label><span class="other_show">$!{businessLibaryEntity.wangdpassword}</span></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    
+       <div class="bannerItem clearfix">
+        <form class="contentForm">
+        <h3 class="nav"><a><input type="submit" class="save" value="" />附件资料</a></h3>
+		 <div class="b_i_other clearfix"  id="initfile">
+			#set ($i=1)
+            #foreach($pe in $!gudinfos)  
+                <div class="box1">
+                    <p class="tit">股东身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">股东姓名$!{i}：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">股东姓名$!{i}：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+              
+             #set ($i=1)
+            #foreach($pe in $!zirrgd)  
+                <div class="box1">
+                    <p class="tit">自然人股东身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">自然人股东姓名$!{i}：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">自然人股东姓名$!{i}：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+              
+              
+              
+            #set ($i=1)
+            #foreach($pe in $!farinfo)  
+                <div class="box1">
+                    <p class="tit">法人代表身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">法人代表姓名$!{i}：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">法人代表姓名$!{i}：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+              
+              
+            #if($dsmingc != '')
+            #set ($i=1)
+            #foreach($pe in $!dsinfos)  
+                <div class="box1">
+                    <p class="tit">$!{dsmingc}身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">$!{dsmingc}姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">$!{dsmingc}姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+            #end
+            
+               #set ($i=1)
+               #foreach($pe in $!dongs)  
+                <div class="box1">
+                    <p class="tit">董事身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">董事姓名$!{i}：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">董事姓名$!{i}：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+   	
+   	       #if($jsmingc !='')
+   	                  #set ($i=1)
+            #foreach($pe in $!jisinfos)  
+                <div class="box1">
+                    <p class="tit">$!{jsmingc}身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">$!{jsmingc}姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">$!{jsmingc}姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+   	       #end
+   	       
+   	        
+               #set ($i=1)
+               #foreach($pe in $!jsinf)  
+                <div class="box1">
+                    <p class="tit">监事身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">监事姓名$!{i}：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">监事姓名$!{i}：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+                #set($i=$i+1)
+              #end 
+   	       
+		   #foreach($pe in $!jl)  
+                <div class="box1">
+                    <p class="tit">经理身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">经理姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">经理姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+              #end 
+		
+			   #foreach($pe in $!cw)  
+                <div class="box1">
+                    <p class="tit">财务负责人身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">财务负责人姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">财务负责人姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+              #end 
+              
+                #foreach($pe in $!qy)  
+                <div class="box1">
+                    <p class="tit">企业联系人身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">企业联系人姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">企业联系人姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+              #end 
+	
+	          #foreach($pe in $!uk1)  
+                <div class="box1">
+                    <p class="tit">Ukey管理员1身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">Ukey管理员1姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">Ukey管理员1姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+              #end 
+              
+	          #foreach($pe in $!uk2)  
+                <div class="box1">
+                    <p class="tit">Ukey管理员2身份证复印件：</p>
+                    <p class="add_box">
+                        <span class="name">Ukey管理员2姓名：${pe.kehName}</span>
+                    </p>
+                </div>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">Ukey管理员2姓名：${pe.kehName}</td>
+                            <td class="pic" align ="left">
+                                #foreach($im in $!pe.imageIds)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                              </td>
+                        </tr>
+                    </table>
+                </div>
+              #end 
+		
+	         #foreach($pe in $!otherinfo)  
+                <p class="tit1"><span class="gd_name">$!{pe.mingc}</span></p>
+                <div class="box2">
+                    <table>
+                        <tr>
+                            <td class="name">$!{pe.mingc}</td>
+                            <td class="pic">
+                               #foreach($im in $!pe.imgurls)  
+                                <div>
+                                    <p class="pic_box"><img src="/file/download/$!{im}" width="150" height="100"></p>
+                                </div>
+                                #end
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+               #end 
+            </div>
+        </form>
+    </div>
+</div>
+#if($!businessLibaryEntity.busstatus == '1' && $!isedit == '1')
+<div class="btn_box">
+    <a href="/order/business/$!{businessLibaryEntity.busId}?againedit=1">再次编辑</a>
+</div>
+#end
+</body>
+ </html>

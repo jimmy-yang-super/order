@@ -1,0 +1,39 @@
+<div class="dd_box3" id="giveupdiv" style="display:none"><!-- 放弃层 -->
+      <div class="fq_con">
+        <p class="fq_t">你已经选择放弃该客户，请编辑放弃的原因：</p>
+        <div class="fq_area">
+          <textarea id="fqtextarea"></textarea>
+        </div>
+      </div>
+      <div class="dd_btn_box">
+        <span class="dd_qr_btn" name="fqordersumit">确认</span>
+        <span class="dd_qx_btn" name="cancelfq">取消</span>
+      </div>
+    </div>
+    <script type="text/javascript">
+    $("span[name='cancelfq']").click(function(){
+    	$("#bg").hide();
+		$("#giveupdiv").hide();
+    });
+    var i=0;
+    $("span[name='fqordersumit']").click(function(){
+    	if(i==0){
+    		i++;
+	    	var url = "/action/fqorder/"+fqorderid;
+	    	$.ajax({url:url,
+	    		type:"post",
+	    		data:{reason:"'"+$("#fqtextarea").val()+"'"},
+	    		dataType:"json",
+	    		success:function(data){
+	    			if(data.res == "ok"){
+	    				alert("订单已经放弃！");
+	    				window.location.reload();
+	    			}else{
+	    				alert("放弃失败！"+data.msg+"请稍后再试！");
+	    			}
+	    		}});
+    	}else{
+    		alert("请不要点击太频繁!");
+    	}
+    });
+    </script>

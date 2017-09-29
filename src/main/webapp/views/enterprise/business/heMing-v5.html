@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+#parse("views/enterprise/common/head.html")
+
+
+<body>
+<div class="main_box">
+	#parse("views/enterprise/common/top.html")
+	
+    <div class="main_con">
+        #parse("views/enterprise/common/busNav.html")
+        <div class="info_box">
+            <p>小微律政秉承客户第一的服务理念，为客户提供专业贴心的服务，请您认真填写以下信息。</p>
+            <p>公司名称信息填写后，服务顾问会进行审核并与您确认，然后会为你的公司进行企业名称核准服务。</p>
+            <p>企业名称的核准，最终以工商局核准的结果为准，审核周期通常3-5个工作日</p>
+        </div>
+        <div class="edit_box">
+            <div class="box1">
+                <p class="title">注册城市：</p>
+                <div class="con sel_box">
+					<input id="cityId" type="hidden" value="$!{cityId}" data-info="enterprise:main" />
+					<div class="nice-select" name="nice-select">
+						<input type="text" value="请选择..." readonly>
+						<ul>
+							#foreach($areasEntity in $!{DicUtils.getAreaDataList('0')})
+							<li data-value="$!{areasEntity.getAreaid()}">$!{areasEntity.getName()}</li>
+							#end
+						</ul>
+					</div>
+					
+					<input id="areaId" type="hidden" value="$!{areaId}" data-info="enterprise:main" />
+                    <div class="nice-select" name="nice-select">
+                        <input type="text" value="请选择..." readonly>
+                        <ul></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box1"> 
+            	<!-- <p class="title">名称是否已核准：</p>  -->
+                <p class="title"></p>
+                <div class="con">
+               		<!--
+                	<input id="checkNameStatus" type="hidden" value="$!{checkNameStatusKey}" data-info="enterprise:main" />
+                    <p class="check_name">
+                        <input type="radio" name="checkNameStatusSelect" id="checkNameStatusSelect1" value="1" checked="checked"><label >是</label>
+                        <input type="radio" name="checkNameStatusSelect" id="checkNameStatusSelect2" value="2" ><label >否</label>
+                    </p>
+                    -->
+                    <input id="checkNameStatus" type="hidden" value="1" data-info="enterprise:main" />
+                    <div class="e_info" id="checkedNameDiv" >
+                        <table>
+                            <tr>
+                                <th>公司名称：</th>
+                                <td><input type="text" id="name" value="$!{name}" placeholder="公司名称" data-validate="required:true;" data-info="enterprise:main" ></td>
+                            </tr>
+                            <tr>
+                                <th>核名账号：</th>
+                                <td><input type="text" id="checkNameAccount" value="$!{checkNameAccount}" placeholder="核名账号" data-validate="required:true;" data-info="enterprise:main" ></td>
+                            </tr>
+                            <tr>
+                                <th>核名密码：</th>
+                                <td><input type="text" id="checkNamePassword" value="$!{checkNamePassword}" placeholder="核名密码" data-validate="required:true;" data-info="enterprise:main" ></td>
+                            </tr>
+                        </table>
+                        #if($!{sourceType} == "AE" || $!{sourceType} == "WF")
+                      	<table>
+							<tr>
+								<th>核名截图：</th>
+								<td>
+									<input type="hidden" id="checkNamePic" placeholder="核名截图" value="$!{checkNamePic}" data-validate="required:true;" data-info="enterprise:main" />
+									<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="checkNamePicDiv" >上传证件</a>
+								</td>
+							</tr>
+						</table>
+						<div id="checkNamePicDiv" ></div>
+                        #end
+                        
+                        
+                        <p class="text">小微律政需要您核准企业名称时所用的申请人的身份证号，为您做后续的设立等服务时会用到该身份证号，请您放心，上述信息只会提供给专为您服务的小微律政员工，不会泄露给任何其他人。</p>
+                    </div>
+                </div>
+            </div>
+			<!-- 
+            <div class="box1 pos_box" id="checkNameDiv">
+                <div class="cue_box range">
+                    <span class="t1">为了您更规范的填写您的公司名称，请参考小微为您提供的企业名称填写示范。</span>
+                    <span class="t2">
+                        <div class="cue_ceng">
+                            <i class="angle"><s></s></i>
+                            <ul>
+                                <li>
+                                    <div class="name1">城市在前：</div>
+                                    <div class="t1">
+                                        <p class="red"><span class="s1">北京</span><span class="s2">行政区划</span></p>
+                                        <p class="blue"><span class="s1">时代</span><span class="s2">字号</span></p>
+                                        <p class="green"><span class="s1">信息咨询</span><span class="s2">行业特点</span></p>
+                                        <p class="yellow"><span class="s1">有限公司</span><span class="s2">组织形式</span></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="name2">城市在中：</div>
+                                    <div class="t2">
+                                        <p class="blue">时代</p>
+                                        <p class="red">（北京）</p>
+                                        <p class="green">信息咨询</p>
+                                        <p class="yellow">有限公司</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="name2">城市在后：</div>
+                                    <div class="t2">
+                                        <p class="blue">时代</p>
+                                        <p class="green">信息咨询</p>
+                                        <p class="red">（北京）</p>
+                                        <p class="yellow">有限公司</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+                <p class="title">公司名称：</p>
+                <div class="con">
+                    <div class="n_info">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label>字号：</label>
+                                    <input type="text" id="shopName" value="$!{shopName}" class="w_text_110" placeholder="字号" data-validate="chinese:true;required:true;" data-info="enterprise:main" >
+                                </td>
+                                <td>
+                                    <label>行业特点：</label>
+                                    <input id="industryCharacteristics" type="hidden" value="$!{industryCharacteristics}" data-select="none" data-select-write="true" placeholder="行业特点" data-validate="required:true;" data-info="enterprise:main" />
+									<div class="nice-select" name="nice-select">
+										<input type="text" id="industryCharacteristicsText" value="请选择..." />
+										<ul>
+											#foreach($lvEnterpriseDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('industryCharacteristics')})
+											<li data-value="$!{lvEnterpriseDicDataEntity.getDataValue()}">$!{lvEnterpriseDicDataEntity.getDataValue()}</li>
+											#end
+										</ul>
+									</div>
+                                </td>
+                                <td>
+                                    <label>组织形式：</label>
+                                    <input id="organizationType" type="hidden" value="$!{organizationType}" data-select="none" placeholder="组织形式" data-validate="required:true;" data-info="enterprise:main" />
+									<div class="nice-select" name="nice-select">
+										<input type="text" value="请选择..." readonly>
+										<ul>
+											#foreach($lvEnterpriseDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('organizationType')})
+											<li data-value="$!{lvEnterpriseDicDataEntity.getDataValue()}">$!{lvEnterpriseDicDataEntity.getDataValue()}</li>
+											#end
+										</ul>
+									</div>
+                                </td>
+                            </tr>
+                        </table>
+                        <p class="check_name">
+                            <label>名称中行政区划所在的位置：</label>
+                            <input id="regionLocationInName" type="hidden" value="$!{regionLocationInName}" data-info="enterprise:main" />
+                            <input type="radio" name="regionLocationInName" id="regionLocationInName1" value="1" ><label >前</label>
+                            <input type="radio" name="regionLocationInName" id="regionLocationInName2" value="2" ><label >中</label>
+                            <input type="radio" name="regionLocationInName" id="regionLocationInName3" value="3" ><label >后</label>
+                        </p>
+                        <p class="green_line">
+							根据您输入的信息生成的名称：<span>$!{name}</span>
+                        </p>
+                        <p class="s_code">
+                            <label>备选字号：</label>
+                            <input type="text" class="w_text_110" id="readyCheckNames1" value="$!{readyCheckNames1}" data-validate="chinese:true;" data-info="enterprise:main" > 
+                            <input type="text" class="w_text_110" id="readyCheckNames2" value="$!{readyCheckNames2}" data-validate="chinese:true;" data-info="enterprise:main" > 
+                            <input type="text" class="w_text_110" id="readyCheckNames3" value="$!{readyCheckNames3}" data-validate="chinese:true;" data-info="enterprise:main" > 
+                            <input type="text" class="w_text_110" id="readyCheckNames4" value="$!{readyCheckNames4}" data-validate="chinese:true;" data-info="enterprise:main" > 
+                            <br>
+                            <span class="remark">* 烦请您提供1-4个备选的名称，名称字号3-4个字会容易审核通过，提高名称核准通过的几率</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            -->
+            <span id="add_area"></span>
+            <!--  
+            <div class="box1" id="partnerDiv" >
+            	#foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                <p class="title">自然人股东：</p>
+                <div class="con" data-info="partnerInfo" data-roleType="naturalPartner" data-relationId="$!{naturalPartner.get('roleRelationId')}" >
+					<input type="hidden" id="id" value="$!{naturalPartner.get('id')}" data-info="partnerInfo:main" />
+                    <label>姓名：</label>
+                    <input type="text" id="name" class="w_text_130" placeholder="姓名" data-validate="chinese:true;required:true;" value="$!{naturalPartner.get('name')}" data-info="partnerInfo:main" />
+                    <label>联系电话：</label>
+                    <input type="text" id="phoneNum" class="w_text_130" placeholder="联系电话" data-validate="mobilePhone:true;required:false;" value="$!{naturalPartner.get('phoneNum')}" data-info="partnerInfo:main" />
+                    <label>身份证号码：</label>
+                    <input type="text" id="idNum" class="w_text_150" placeholder="身份证号码" data-validate="identity:true;required:true;" value="$!{naturalPartner.get('idNum')}" data-info="partnerInfo:main" />
+                    
+                    <a class="btn_del" href="javascript:void(0);" onclick="LV.delPartner(this)" >删除</a>
+                </div>
+                #end
+                
+                #foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                <p class="title">单位股东：</p>
+                <div class="con" data-info="partnerInfo" data-roleType="legalPartner" data-relationId="$!{legalPartner.get('roleRelationId')}" >
+					<input type="hidden" id="enterpriseId" value="$!{legalPartner.get('enterpriseId')}" data-info="partnerInfo:main" />
+                    <label>公司名称：</label>
+                    <input type="text" id="name" class="w_text_130" placeholder="公司名称" data-validate="chineseCode:true;required:true;" value="$!{legalPartner.get('name')}" data-info="partnerInfo:main" />
+                    <label>法定代表人：</label>
+                    <input type="text" id="legalPerson" class="w_text_130" placeholder="法定代表人" data-validate="chinese:true;required:true;" value="$!{legalPartner.get('legalPerson')}" data-info="partnerInfo:ext" />
+                    <label>营业执照号码：</label>
+                    <input type="text" id="businessLicenseNum" class="w_text_150" placeholder="营业执照号码" data-validate="number:true;required:true;" value="$!{legalPartner.get('businessLicenseNum')}" data-info="partnerInfo:main" />
+                    <a class="btn_del" href="javascript:void(0);" onclick="LV.delPartner(this)" >删除</a>
+                </div>
+                #end
+                
+                
+            </div>
+            -->
+			<!--  
+            <div class="box1" >
+                <p class="title"></p>
+                <div class="con">
+                    <div class="btn_box" style="width: 630px;" >
+                        <a class="btn" href="javascript:void(0);" onclick="addPersonPartner();">添加自然人股东</a>
+                        <a class="btn" href="javascript:void(0);" onclick="addComPartner();">添加单位股东</a>
+                    </div>
+                </div>
+            </div>
+            -->
+
+        </div>
+
+        <!-- 保存弹出框 -->
+         #parse("views/enterprise/common/alertConfirm.html")
+        <!-- 弹出框 -->
+
+    </div>
+</div>
+#parse("views/enterprise/common/swfupload.html")
+#parse("views/enterprise/common/foot.html")
+<script type="text/javascript" src="/js/enterprise/heMingV5.js"></script>
+</body>
+</html>

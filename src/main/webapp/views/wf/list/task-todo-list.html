@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>服务中列表</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<!-- 任务列表 -->
+<script type="text/javascript">
+
+$(function(){ 
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+  
+//  setTimeout('myOrderQuery()',10000); //指定10秒刷新一次 
+});
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+//点击查询
+function myOrderQuery(){
+	document.getElementById("myQueryForm").submit(); //提交表单
+}
+
+/***
+ * 点击详情
+ */
+function task_detail(args){
+	/* var obj = new Object();
+    obj.taskid=args; */
+    var url = "/wf/task/detail/"+args;
+    //"edge: Raised; center: Yes; help: Yes; resizable: Yes; status: Yes; dialogWidth=1100px;dialogHeight=655px"				   
+	window.open(url,'','height=750, width=1300, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+}
+
+</script>
+
+</head>
+
+<body>
+<div class="ceng_box1" style="display:none">
+
+</div>
+<div class="user_box">
+  
+  <div class="user_search">
+    <form action="/wf/task/fz_tasklist/1" id="myQueryForm" name="myQueryForm" method="post">
+  	<div class="search_bg qz_w">
+  		<input type="hidden" name="paramOneType" id="paramOneType" value="$!{paramOneType}" />
+  		<div class="nice-select" name="nice-select" id="query1">
+			<input type="text" value="档案编号" readonly>
+	        <ul>
+	          <li data-value="2">公司名称</li>
+	          <li data-value="1">档案编号</li>
+	        </ul> 
+	    </div>
+        <input class="fq_box1" type="text" name="paramOneValue" value="$!{paramOneValue}" />
+        
+        <input type="hidden" name="paramTwoType" id="paramTwoType" value="$!{paramTwoType}" />
+  		<div class="nice-select" name="nice-select" id="query1">
+			<input type="text" value="档案编号" readonly>
+	        <ul>
+	          <li data-value="1">任务名称</li>
+	        </ul> 
+	    </div>
+        <input class="fq_box1" type="text" name="paramTwoValue" value="$!{paramTwoValue}" />
+        
+        
+        
+        
+        <p class="search_btn rang_left" onclick="myOrderQuery()">查询</p>
+      	<div class="clear"></div>
+     </div>
+    </form>
+    <div class="clear"></div>
+  </div>
+
+  
+  
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="11%">服务名称</th>
+        <th width="11%">任务名称</th>
+        <th width="8%">档案编号</th>
+        <th width="9%">公司名称</th>
+        <th width="9%">任务状态</th>
+        <th width="9%">接受时间</th>
+        <th width="7%">应完成时间</th>
+        <th width="7%">操作</th>
+        <th width="7%">优先级</th>
+      </tr>
+      
+<!-- 动态数据展示------------------------------------------------------->      
+      #foreach($item in $!{lvtasklist})
+      <tr>
+        <td>$!{item.processDefinitionName}</td>
+        <td>$!{item.taskName}</td>
+        <td>$!{item.busid}</td>
+        <td>$!{item.companyName}</td>
+		<td>$!{item.taskFalg}</td>
+		<td>$!{item.accepTime}</td>
+        <td>$!{item.completeTime}</td>
+        <td><a id="t2" onclick="task_detail('$!{item.taskId}')">详情</a></td>
+        <td>$!{item.priority}</td>
+      </tr>
+      #end
+  <!-- 以上为动态循环---------------------------------------------- -->    
+      
+    </table> 
+  </div>
+
+  #parse("views/wf/common/pages.html")
+</div>
+</body>
+<script  type="text/javascript" src="/js/wf/task-list-queryParam.js"></script>
+</html>

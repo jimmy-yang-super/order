@@ -1,0 +1,514 @@
+				<div class="list1">
+					<p class="tit_box">
+						<span class="title">公司主要人员信息</span> <span class="line"></span>
+					</p>
+
+					<div class="box1">
+						<p class="title">公司管理架构：</p>
+						<div class="con">
+							<p class="check_name">
+								<input type="hidden" id="frameworkType" value="$!{frameworkType}" data-info="enterprise:main" />
+								<input type="radio" name="frameworkRadio" id="frameworkRadio1" value="1" /><label>简单架构</label>
+								<input type="radio" name="frameworkRadio" id="frameworkRadio2" value="2" /><label>上市架构</label>
+							</p>
+							<span class="remark2">* 简易架构适用于多数普通公司，由执行董事，经理和监事组成<br>上市架构适用于大型企业，未来的目标是上市，管理架构会比较复杂，由董事会，监事会，经理组成 </span>
+							
+							#set($roleInfo = $!{EnterpriseUtils.getRoleNameStrByByEnterprise("$!{enterpriseId}")})
+							
+							<!-- 上市架构 -->
+							<div class="radio_box" id="complexFrameworkDiv" >
+								<div class="rbox1" >
+									<span id="ds_area">
+										<div class="p1">
+											<p>董事长：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("directorManager").get("roleNameList")}</label>
+													<input type="hidden" placeholder="董事长" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("directorManager").get("roleIdList")}" value="$!{roleInfo.get("directorManager").get("roleIdList")}" />
+												</li>
+												<li><a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="directorManager" data-exclusionRoleType="secondDirectorManager;director;supervisorChairman;supervisor" >选择人员</a></li>
+											</ul>
+											<span class="check">
+												<input type="checkbox" id="dsz5" name="jianRenRoleType" data-jianRenRoleType="directorManager" >
+												<label for="dsz5">兼任法定代表人</label>
+											</span>
+										</div>
+										<div class="p1">
+											<p>副董事长：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("secondDirectorManager").get("roleNameList")}</label>
+													<input type="hidden" data-roleIdArray="$!{roleInfo.get("secondDirectorManager").get("roleIdList")}" value="$!{roleInfo.get("secondDirectorManager").get("roleIdList")}" />
+												</li>
+												<li><a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="secondDirectorManager" data-exclusionRoleType="directorManager;director;supervisorChairman;supervisor" >选择人员</a></li>
+											</ul>
+										</div>
+										<div class="p1">
+											<p>董事：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("director").get("roleNameList")}</label>
+													<input type="hidden" placeholder="董事" data-validate="required:true;" data-roleIdArray = "$!{roleInfo.get("director").get("roleIdList")}" value="$!{roleInfo.get("director").get("roleIdList")}" />
+												</li>
+												<li><a href="" class="xzry_btn pop_box3" data-selectModel="more" data-roleType="director" data-exclusionRoleType="directorManager;secondDirectorManager;supervisorChairman;supervisor" >选择人员</a></li>
+											</ul>
+										</div>
+									</span>
+								</div>
+								<div class="rbox1">
+									<div class="p1">
+										<p>经理：</p>
+										<ul>
+											<li>
+												<label>$!{roleInfo.get("manager").get("roleNameList")}</label>
+												<input type="hidden" placeholder="经理" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("manager").get("roleIdList")}" value="$!{roleInfo.get("manager").get("roleIdList")}" />
+											</li>
+											<li><a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="manager" data-exclusionRoleType="supervisorChairman;supervisor" >选择人员</a></li>
+										</ul>
+										<span class="check">
+											<input type="checkbox" id="jl5" name="jianRenRoleType" data-jianRenRoleType="manager" >
+											<label for="jl5">兼任法定代表人</label>
+										</span>
+									</div>
+								</div>
+								<div class="rbox1" id="" >
+									<span id="js_area">
+										<div class="p1">
+											<p>设立设立监事会：</p>
+											<ul>
+												<input type="hidden" id="isJianShiMeeting" value="$!{isJianShiMeeting}" data-info="enterprise:main" />
+												<li><input type="radio" name="isJianShiMeetingRadio" id="isJianShiMeeting1" value="1" ><label for="sfdsz1">是</label></li>
+												<li><input type="radio" name="isJianShiMeetingRadio" id="isJianShiMeeting2" value="2" ><label for="sfdsz2">否</label></li>
+											</ul>
+										</div>
+										<div class="p1">
+											<p>监事会主席：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("supervisorChairman").get("roleNameList")}</label>
+													<input type="hidden" placeholder="监事会主席" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("supervisorChairman").get("roleIdList")}" value="$!{roleInfo.get("supervisorChairman").get("roleIdList")}" />
+												</li>
+												<li><a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="supervisorChairman" data-exclusionRoleType="directorManager;secondDirectorManager;director;manager;supervisor" >选择人员</a></li>
+											</ul>
+										</div>
+										<div id= "isJianShiMeeting1Div" >
+											<div class="p1">
+												<p>监事：</p>
+												<ul>
+													<li>
+														<label>$!{roleInfo.get("supervisor").get("roleNameList")}</label>
+														<input type="hidden" placeholder="监事" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("supervisor").get("roleIdList")}" value="$!{roleInfo.get("supervisor").get("roleIdList")}" />
+													</li>
+													<li><a href="" class="xzry_btn pop_box3" data-selectModel="more" data-roleType="supervisor" data-exclusionRoleType="directorManager;secondDirectorManager;director;manager;supervisorChairman" >选择人员</a></li>
+												</ul>
+											</div>
+										</div>
+									</span>
+								</div>
+							</div>
+							
+							<div style="display: none;" id="legalPersonDiv" >
+								#set($roleList = $!{EnterpriseUtils.getRoleInfoListByEnterpriseIdAndRoleType("$!{enterpriseId}", 'legalPerson')})
+							    #if($roleList == [])
+									#set($roleList= ['1'])
+					        	#end
+					        	#foreach($legalPerson in $roleList)
+								<div class="p1" data-info="partnerInfo" data-roleType="legalPerson" data-relationId="$!{legalPerson.get('roleRelationId')}" >
+									<input type="hidden" id="id" value="$!{legalPerson.get('id')}" data-info="partnerInfo:main" />
+									<p>法人：</p>
+									<ul>
+										<li>
+											<label></label>
+											<input type="hidden" placeholder="法人" data-validate="required:true;" data-roleIdArray="$!{legalPerson.get('id')}" value="$!{legalPerson.get('id')}" />
+											<input type="hidden" id="legalPersonMappingRoleType" placeholder="法人" data-validate="required:true;" value="$!{legalPerson.get("legalPersonMappingRoleType")}" data-info="partnerInfo:ext" />
+										</li>
+										<li><a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="legalPerson" data-jianrenRoleType="" data-exclusionRoleType="finance;supervisor-S;supervisor;supervisorChairman" >选择人员</a></li>
+									</ul>
+								</div>
+								#end
+							</div>
+							<!-- 简易架构 -->
+							<div class="radio_box" id="simplyFrameworkDiv">
+								<div class="rbox1" >
+									<span id="ds_area">
+										<div class="p1">
+											<p>执行董事：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("directorManager-S").get("roleNameList")}</label>
+													<input type="hidden" placeholder="执行董事" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("directorManager-S").get("roleIdList")}" value="$!{roleInfo.get("directorManager-S").get("roleIdList")}" />
+												</li>
+												<li>
+													<a href="javascript:void(0);" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="directorManager-S" data-exclusionRoleType="supervisor-S" >选择人员</a>
+												</li>
+											</ul>
+											<span class="check">
+												<input type="checkbox" id="dsz6" name="jianRenRoleType" data-jianRenRoleType="directorManager-S" >
+												<label for="dsz5">兼任法定代表人</label>
+											</span>
+										</div>
+									</span>
+								</div>
+								<div class="rbox1">
+									<div class="p1">
+										<p>经理：</p>
+										<ul>
+											<li>
+												<label>$!{roleInfo.get("manager-S").get("roleNameList")}</label>
+												<input type="hidden" placeholder="经理" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("manager-S").get("roleIdList")}" value="$!{roleInfo.get("manager-S").get("roleIdList")}" />
+											</li>
+											<li><a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="manager-S" data-exclusionRoleType="supervisor-S" >选择人员</a></li>
+										</ul>
+										<span class="check">
+											<input type="checkbox" id="jl6" name="jianRenRoleType" data-jianRenRoleType="manager-S" >
+											<label for="jl5">兼任法定代表人</label>
+										</span>
+									</div>
+								</div>
+								<div class="rbox1" id="" >
+									<span id="js_area">
+										<div class="p1">
+											<p>监事：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("supervisor-S").get("roleNameList")}</label>
+													<input type="hidden" placeholder="监事" data-validate="required:true;" data-roleIdArray="$!{roleInfo.get("supervisor-S").get("roleIdList")}" value="$!{roleInfo.get("supervisor-S").get("roleIdList")}" />
+												</li>
+												<li>
+													<a href="" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="supervisor-S" data-exclusionRoleType="manager-S;directorManager-S" >选择人员</a>
+												</li>
+											</ul>
+										</div>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>	
+				</div>
+				<div class="list1" id="enterpriseReplenishInfo">
+					<p class="tit_box">
+						<span class="title">公司补充信息</span> <span class="line"></span>
+					</p>
+					<div class="box1">
+						<p class="title"></p>
+						<div class="con">
+							<div class="radio_box">
+								<div class="rbox1" >
+									<span id="ds_area">
+										<div class="p1">
+											<p>企业联系人：</p>
+											<ul>
+												<li>
+													<label>$!{roleInfo.get("contacts").get("roleNameList")}</label>
+													<input type="hidden" placeholder="企业联系人" data-validate="required:true;" data-roleIdArray='$!{roleInfo.get("contacts").get("roleIdList")}' value='$!{roleInfo.get("contacts").get("roleIdList")}' />
+
+												</li>
+												<li>
+													<a href="javascript:void(0);" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="contacts" >选择人员</a>
+												</li>
+											</ul>
+										</div>
+									</span>
+								</div>
+								<div class="rbox1" >
+									<span id="ds_area">
+										<div class="p1" >
+											<p>财务负责人：</p>
+											<input type="hidden" id="id" value="$!{roleInfo.get("finance").get("roleIdList")}" data-info="partnerInfo:main" />
+											<ul>
+												<li>		
+													<label>$!{roleInfo.get("finance").get("roleNameList")}</label>
+													<input type="hidden" placeholder="财务负责人" data-validate="required:true;" data-roleIdArray='$!{roleInfo.get("finance").get("roleIdList")}' value='$!{roleInfo.get("finance").get("roleIdList")}' />
+												</li>
+						                       	<li><a href="javascript:void(0);" class="xzry_btn pop_box3" data-selectModel="one" data-roleType="finance" data-exclusionRoleType="supervisorChairman;supervisor;legalPerson;supervisor-S;">选择人员</a></li>
+											</ul>
+										</div>
+									</span>
+								</div>
+								<div class="rbox1" >
+									<span id="ds_area">
+										<div class="p1">
+											<p style="padding-top: 5px;" >企业员工信息：</p>
+											<ul>
+						                        <li>
+						                        	<label>总人数</label>
+						                        	<input type="text" placeholder="总人数" data-validate="required:true;number:true;" class="w_text_60" id="staffTotalNum" value="$!{staffTotalNum}" data-info="enterprise:main" /><span style="color:red;">*</span>
+						                        </li>
+						                        <li>
+						                        	<label>本地人</label>
+						                        	<input type="text" placeholder="本地人" data-validate="required:true;number:true;" class="w_text_60" id="staffLocalNum" value="$!{staffLocalNum}" data-info="enterprise:main" /><span style="color:red;">*</span>
+						                        </li>
+						                        <li>
+						                        	<label>外地人</label>
+						                        	<input type="text" placeholder="外地人" data-validate="required:true;number:true;" class="w_text_60" id="staffOutNum" value="$!{staffOutNum}" data-info="enterprise:main" /><span style="color:red;">*</span>
+						                        </li>
+						                        <li>
+						                       	 	<label>女性员工人数</label>
+						                       	 	<input type="text" placeholder="女性员工人数" data-validate="required:true;number:true;" class="w_text_60" id="staffFemaleNum" value="$!{staffFemaleNum}" data-info="enterprise:main" /><span style="color:red;">*</span>
+						                       	 </li>											
+                       	 					</ul>
+										</div>
+									</span>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="list1">
+					<table style="margin-left:108px;">
+						<tr>
+							<th>
+							<label>备注：</label>
+							</th>
+							<td>
+							<textarea rows="5" cols="100" data-info="enterprise:main" id="enterpriseContent">$!{enterpriseContent}</textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+<script type="text/javascript">
+$(document).ready(function(){
+	// 公司架构选择
+	var frameworkType = $("#frameworkType").val();
+	if(frameworkType == undefined || frameworkType == "" || frameworkType == "0"){
+		frameworkType = "1";
+	}
+	initFrameworkChange(frameworkType);
+	$("[name='frameworkRadio']").change(function(e){
+		frameworkChange($(this).val());
+	});
+	
+    // 是否有监事会
+	var isJianShiMeeting = $("#isJianShiMeeting").val();
+	if(isJianShiMeeting == undefined || isJianShiMeeting == "" || isJianShiMeeting == "0"){
+		isJianShiMeeting = "2";
+	}
+	initIsJianShiMeetingChange(isJianShiMeeting);
+	$("[name='isJianShiMeetingRadio']").change(function(e){
+		isJianShiMeetingChange($(this).val());
+	});
+	
+	// 点击 - 选择人员 - 初始化
+	$(".rbox1 .xzry_btn.pop_box3").click(function(){
+		// 选择的角色
+		var roleType = $(this).attr("data-roleType");
+		// 选择模式：多个，单个
+		var selectModel = $(this).attr("data-selectModel");
+		// 排斥的角色
+		var exclusionRoleType = $(this).attr("data-exclusionRoleType");
+		var ele = $(this);
+		// 选择人员控件
+		LV.selectPerson(ele, roleType, exclusionRoleType, selectModel, function(roleName, roleIdArray){
+			if(roleIdArray != undefined && roleIdArray != ""){
+				roleIdArray = roleIdArray.trimEnd();
+			}
+			// 显示选择人员
+			var infoLi = $(ele).parent().prev();
+			$(infoLi).children("label").text(roleName);
+			$(infoLi).children("input[data-roleIdArray]").attr("data-roleIdArray", roleIdArray);
+			$(infoLi).children("input[data-roleIdArray]").val(roleIdArray);
+			$(infoLi).parent().prev("input[id='id']").val(roleIdArray);
+			$('.cd-box3').removeClass('is-visible');
+			
+			// 兼任法人
+			if(roleType == $("#legalPersonDiv a[data-jianrenRoleType]").attr("data-jianrenRoleType")){
+				$("#legalPersonDiv input[data-roleIdArray]").attr("data-roleIdArray", roleIdArray);
+				$("#legalPersonDiv input[data-roleIdArray]").val(roleIdArray);
+			}
+		});
+	});
+	
+	// 初始化兼任法人
+	$("input[name='jianRenRoleType'][data-jianRenRoleType]").each(function(index, ele){
+		$(ele).change(function(){
+			if($(this).prop("checked") == false){
+				$("#legalPersonDiv a[data-jianrenRoleType]").attr("data-jianrenRoleType", "");
+				$("#legalPersonMappingRoleType").val("");
+				$("#legalPersonDiv input[data-roleIdArray]").attr("data-roleIdArray", "");
+				$("#legalPersonDiv input[data-roleIdArray]").val("");
+				$("#legalPersonDiv input[id='id']").val("");
+				return;
+			}
+			var jianRenRoleType = $(this).attr("data-jianRenRoleType");
+			var frameworkType = $("#frameworkType").val();
+			var obj = "";
+			if(frameworkType == "1"){
+				obj = $("#simplyFrameworkDiv");
+			}else{
+				obj = $("#complexFrameworkDiv");
+			}
+			var roleIdArray = $(obj).find("a[data-roleType='" + jianRenRoleType + "']").parent().prev("li").children("input[data-roleIdArray]").attr("data-roleIdArray");
+			roleIdArray = roleIdArray.trimEnd(";");
+			// 排斥角色
+			if(LV.checkExclusionRole(roleIdArray, $("#legalPersonDiv a[data-exclusionRoleType]").attr("data-exclusionRoleType"))){
+				alert("法定代表人不能兼任财务责任人和监事");
+				$(ele).attr("checked", false);
+				return;
+			}
+			
+			$("input[name='jianRenRoleType'][data-jianRenRoleType]").not(this).attr("checked", false);
+			
+			$("#legalPersonDiv a[data-jianrenRoleType]").attr("data-jianrenRoleType", jianRenRoleType);
+			$("#legalPersonMappingRoleType").val(jianRenRoleType);
+			$("#legalPersonDiv input[data-roleIdArray]").attr("data-roleIdArray", roleIdArray);
+			$("#legalPersonDiv input[data-roleIdArray]").val(roleIdArray);
+			$("#legalPersonDiv input[id='id']").val(roleIdArray);
+			
+		});
+		
+		// 初始化
+		var jianRenRoleType = $(ele).attr("data-jianRenRoleType");
+		var legalPersonMappingRoleType =  $("#legalPersonMappingRoleType").val();
+		if(legalPersonMappingRoleType != undefined && legalPersonMappingRoleType != "" && legalPersonMappingRoleType == jianRenRoleType){
+			$(ele).attr("checked",true);
+		}
+	});
+})
+
+
+/**
+ * 公司架构
+ * @param val
+ */
+function frameworkChange(val, init){
+	if(val == "1"){
+		$("#simplyFrameworkDiv").show();
+		$("#complexFrameworkDiv").hide();
+	}else{
+		$("#simplyFrameworkDiv").hide();
+		$("#complexFrameworkDiv").show();
+	}
+	if(init == undefined){
+		$("a[data-selectModel]").each(function(index, ele){
+			$(ele).parent().prev().children("label").text("");
+			$(ele).parent().prev().children("input").attr("data-roleIdArray", "");
+			$(ele).parent().prev().children("input").val("");
+		});
+		
+		$("#legalPersonDiv a[data-jianrenRoleType]").attr("data-jianrenRoleType", "");
+		$("#legalPersonDiv input[data-roleIdArray]").attr("data-roleIdArray", "");
+		$("#legalPersonDiv input[data-roleIdArray]").val("");
+		$("input[name='jianRenRoleType'][data-jianRenRoleType]").attr("checked", false);
+	}
+	$("#frameworkType").val(val);
+	$("#frameworkRadio" + val).attr("checked", true);
+}
+
+
+/**
+ * 公司架构
+ * @param val
+ */
+function initFrameworkChange(val){
+	frameworkChange(val, true);
+}
+
+
+/**
+ * 是否有监事会
+ * @param val
+ */
+function isJianShiMeetingChange(val, init){
+	if(val == "1"){
+		$("#isJianShiMeeting1Div").show();
+		$("#isJianShiMeeting1").attr("checked", true);
+	}else{
+		$("#isJianShiMeeting1Div").hide();
+		$("#isJianShiMeeting2").attr("checked", true);
+	}
+	if(init == undefined){
+		$("#isJianShiMeeting1Div a[data-selectModel]").each(function(index, ele){
+			$(ele).parent().prev().children("label").text("");
+			$(ele).parent().prev().children("input").attr("data-roleIdArray", "");
+			$(ele).parent().prev().children("input").val("");
+		});
+	}
+	$("#isJianShiMeeting").val(val);
+}
+
+function initIsJianShiMeetingChange(val){
+	isJianShiMeetingChange(val, true);
+}
+
+/**
+ * 企业角色关系保存
+ */
+function roleRelationSave(){
+	var frameworkType = $("#frameworkType").val();
+	var obj = "";
+	var element = "";
+	if(frameworkType == "1"){
+		obj = $("#simplyFrameworkDiv");
+		element = $("#complexFrameworkDiv");
+	}else{
+		obj = $("#complexFrameworkDiv");
+		element = $("#simplyFrameworkDiv");
+	}
+	
+	$(element).find(".xzry_btn.pop_box3").each(function(index, ele){
+		var roleType = $(ele).attr("data-roleType");
+		var param = "&enterpriseId=" + enterpriseId + "&roleType=" + roleType;
+		$.ajax({
+			url:"/enterprise/business/roleRelationSave",
+			type:'post',    
+		    data:param,
+		    dataType:'json',
+		    async:false,
+			complete:function(data){
+				
+			}
+		});
+	});
+	
+	$("#" + obj.attr("id") + ",#enterpriseReplenishInfo").find(".p1").each(function(index, ele){
+		var roleType = $(ele).find("ul li a[data-roleType]").attr("data-roleType");
+		var roleIdArray = new Array();
+		var roleIds = $(ele).find("ul li input[data-roleIdArray]").attr("data-roleIdArray");
+		if(roleIds != undefined && roleIds != ""){
+			var roleIdList = roleIds.split(";");
+			for(var i=0;i<roleIdList.length;i++){
+				if(roleIdList[i] != undefined && roleIdList[i] != ""){
+					roleIdArray.push(roleIdList[i]);
+				}
+			}
+		}
+
+		var param = "&enterpriseId=" + enterpriseId + "&roleType=" + roleType + "&roleIdArray=" + JSON.stringify(roleIdArray);
+		$.ajax({
+			url:"/enterprise/business/roleRelationSave",
+			type:'post',    
+		    data:param,
+		    dataType:'json',
+		    async:false,
+			complete:function(data){
+				
+			}
+		});
+	});
+}
+/**
+ * 人数验证
+ */
+function enterprseNumVerity(){
+	var staffTotalNum = $("#staffTotalNum").val();
+	var staffLocalNum = $("#staffLocalNum").val();
+	var staffOutNum = $("#staffOutNum").val();
+	var staffFemaleNum = $("#staffFemaleNum").val();
+	if((parseInt(staffLocalNum) + parseInt(staffOutNum)) != parseInt(staffTotalNum)){
+		alert("外地人与本地人之和跟企业总人数不符");
+		return true;
+	}
+	if(parseInt(staffFemaleNum) > parseInt(staffTotalNum)){
+		alert("女性员工数大于企业总人数");
+		return true;
+	}
+	return false;
+}
+
+</script>
+		
+		
+		
+		

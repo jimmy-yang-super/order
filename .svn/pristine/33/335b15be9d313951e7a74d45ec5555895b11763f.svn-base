@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+#parse("views/enterprise/common/head.html")
+
+</head>
+
+<body>
+	<div class="main_box">
+		#parse("views/enterprise/common/top.html")
+		<div class="main_con">
+			<input id=enterpriseId type="hidden" value="$!{enterpriseId}" data-info="enterprise:main" />
+			#parse("views/enterprise/common/busNav.html")
+			<div class="info_box">
+				<p>小微律政秉承客户第一的服务理念，为客户提供专业贴心的服务，请您认真填写以下信息。</p>
+				<p>公司名称信息填写后，服务顾问会进行审核并与您确认，然后会为你的公司进行企业名称核准服务。</p>
+				<p>企业名称的核准，最终以工商局核准的结果为准，审核周期通常3-5个工作日</p>
+			</div>
+
+			<div class="tab_box edit_box">
+				<div class="list1" id="enterpriseBaseInfo" >
+					<p class="tit_box">
+						<span class="title">公司基本信息</span> <span class="line"></span>
+					</p>
+					<div class="box1">
+						<p class="title">公司名称：</p>
+						<div class="con input">
+							<input type="text" class="w_text_250" id="name" placeholder="公司名称" data-validate="required:true;" value="$!{name}" data-info="enterprise:main" >
+						</div>
+	
+						<p class="title">注册地址：</p>
+						<div class="con input">
+							#set($addressInfo = $!{EnterpriseUtils.getAddressDataByEnterpriseId("$!{enterpriseId}")})
+							<input type="text" class="w_text_250" id="addressFormat" placeholder="注册地址" data-validate="required:true;" value="$!{addressInfo.get("addressFormat")}" data-info="addressInfo:main" >
+						</div>
+					</div>
+					<div class="box1">
+						<p class="title">经营范围：</p>
+						<div class="con">
+							<table>
+								<tr>
+									<td>
+										<textarea cols="80" rows="5" id="operatingRange" placeholder="经营范围" data-validate="required:true;" data-info="enterprise:main" >$!{operatingRange}</textarea>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="box1">
+						<p class="title">营业执照副本扫描件：</p>
+						<div class="con">
+							<table>
+								<tr>
+									<td>
+										<input type="hidden"  id="businessLicense2" placeholder="营业执照副本扫描件" value="$!{businessLicense2}" data-validate="required:true;" data-info="enterprise:main" />
+										<a class="btn" name="fileupload_btn" href="javascript:void(0);" data-display="businessLicense2Div" >上传证件</a>
+									</td>
+								</tr>
+							</table>
+							<div id="businessLicense2Div" ></div>
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="list1">
+					<p class="tit_box">
+						<span class="title">公司股东信息</span> <span class="line"></span>
+					</p>
+					<div class="box1" id="partnerDiv" >
+						#foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+		                <p class="title">单位股东：</p>
+		                 <div class="con" data-info="partnerInfo" data-roleType="legalPartner" data-relationId="$!{legalPartner.get('roleRelationId')}" >
+							<input type="hidden" id="enterpriseId" value="$!{legalPartner.get('enterpriseId')}" data-info="partnerInfo:main" />
+							<table class="partner" >
+								<tr>
+									<td class="first" >
+										<label>公司名称：</label>
+										<input type="text" id="name" class="w_text_150" placeholder="公司名称" data-validate="required:true;" value="$!{legalPartner.get('name')}" data-info="partnerInfo:main" />
+									</td>
+									<td class="second">
+										<label>法定代表人：</label>
+			                    		<input type="text" id="legalPerson" class="w_text_150" placeholder="法定代表人" data-validate="required:true;" value="$!{legalPartner.get('legalPerson')}" data-info="partnerInfo:ext" />
+									</td>
+								</tr>
+								<tr>
+									<td class="first" >
+					                    <label>营业执照号码：</label>
+					                    <input type="text" id="businessLicenseNum" class="w_text_150" placeholder="营业执照号码" data-validate="required:true;" value="$!{legalPartner.get('businessLicenseNum')}" data-info="partnerInfo:main" />
+									</td>
+									<td class="second">
+					                    <label>出资额，万元：</label>
+										<input type="number" class="w_text_150" placeholder="出资额,万元" data-validate="required:true;number:true;" id="capitalSize" name="capitalSize" value="$!{legalPartner.get('capitalSize')}" data-info="partnerInfo:ext" />
+									</td>
+								</tr>
+							</table>
+			                <a class="btn_del" style="margin-top: 50px;" href="javascript:void(0);" onclick="delPartner(this)" >删除</a>
+							<input type="hidden" id=businessLicense1 value="$!{legalPartner.get('businessLicense1')}" data-info="partnerInfo:main" />
+							<a class="btn" style="margin-top: 50px;" name="fileupload_btn" href="javascript:void(0);" ></a>
+		                </div>
+		                #end
+						#foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+		                <p class="title">自然人股东：</p>
+		                <div class="con" data-info="partnerInfo" data-roleType="naturalPartner" data-relationId="$!{naturalPartner.get('roleRelationId')}" >
+							<input type="hidden" id="id" value="$!{naturalPartner.get('id')}" data-info="partnerInfo:main" />
+							<table class="partner" >
+								<tr>
+									<td class="first" >
+										<label>姓名：</label>
+										<input type="text" id="name" class="w_text_150" placeholder="姓名" data-validate="required:true;" value="$!{naturalPartner.get('name')}" data-info="partnerInfo:main" />
+									</td>
+									<td class="second">
+										<label>联系电话：</label>
+			                    		<input type="text" id="phoneNum" class="w_text_150" placeholder="联系电话" data-validate="required:true;telPhone:true;" value="$!{naturalPartner.get('phoneNum')}" data-info="partnerInfo:main" />
+									</td>
+								</tr>
+								<tr>
+									<td class="first" >
+					                    <label>身份证号码：</label>
+					                    <input type="text" id="idNum" class="w_text_150" placeholder="身份证号码" data-validate="required:true;identity:true;" value="$!{naturalPartner.get('idNum')}" data-info="partnerInfo:main" />
+									</td>
+									<td class="second">
+					                    <label>出资额，万元：</label>
+										<input type="number" class="w_text_150" placeholder="出资额,万元" data-validate="required:true;number:true;" id="capitalSize" name="capitalSize" value="$!{naturalPartner.get('capitalSize')}" data-info="partnerInfo:ext" />
+									</td>
+								</tr>
+							</table>
+			                <a class="btn_del" style="margin-top: 50px;" href="javascript:void(0);" onclick="delPartner(this)" >删除</a>
+							<input type="hidden" id="idPicIds" value="$!{naturalPartner.get('idPicIds')}" data-info="partnerInfo:main" />
+							<a class="btn" style="margin-top: 50px;" name="fileupload_btn" href="javascript:void(0);" ></a>
+		                </div>
+						#end
+					</div>
+					
+					
+					
+					<div class="box1" >
+		                <p class="title"></p>
+		                <div class="con">
+		                    <div class="btn_box" style="width: 730px;" >
+		                        <a class="btn" href="javascript:void(0);" onclick="addPersonPartner();">添加自然人股东</a>
+		                        <a class="btn" href="javascript:void(0);" onclick="addComPartner();">添加单位股东</a>
+		                    </div>
+		                </div>
+		            </div>
+		           	<div class="box1">
+						<p class="title">注册资本：</p>
+						<div class="con">
+							<input type="hidden" id="regCapital" value="$!{regCapital}" data-info="enterprise:main" />
+							<span class="red_num">#if($regCapital) $!{regCapital} #else 0 #end</span> 万元
+						</div>
+					</div>
+					
+				</div>
+				<!-- 公司主要人员 -->
+				#parse("views/enterprise/common/mainPersonSelect.html")
+			</div>
+		</div>
+		
+		<!-- 弹出框 -->
+		#parse("views/enterprise/common/alertSelectPerson.html")
+
+		<!-- 保存弹出框 -->
+		 #parse("views/enterprise/common/alertConfirm.html")
+		<!-- 弹出框 -->
+	</div>
+#parse("views/enterprise/common/swfupload.html")
+
+#parse("views/enterprise/common/foot.html")
+<script type="text/javascript" src="/js/enterprise/mainInfo.js"></script>
+</body>
+</html>

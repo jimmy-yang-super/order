@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>企业人员列表</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+$(function(){ 
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+
+</script>
+
+</head>
+
+<body>
+<div class="user_box">
+	<h1>企业库信息</h1>
+	<div>
+		<div class="user_list">
+			<table id="tab" class="order">
+				<tr>
+					<th>名称</th>
+					<th>电话</th>
+					<th>性别</th>
+					<th>身份证号码</th>
+				</tr>
+				#foreach($enterprisePersion in $!{enterprisePersionList})
+				<tr>
+					<td>$!{enterprisePersion.name}</td>
+					<td>$!{enterprisePersion.phoneNum}</td>
+					<td>$!{enterprisePersion.sex}</td>
+					<td>$!{enterprisePersion.idNum}</td>
+				</tr>
+				#end
+				
+				#if(!$!{enterpriseEntitys})
+				<tr>
+					<td colspan="4">暂无数据</td>
+				</tr>
+				#end
+			</table>
+		</div>
+	</div>	
+</div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>服务转发列表</title>
+<link rel="stylesheet" href="/css/usermanager.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<!-- 任务列表 -->
+<script type="text/javascript">
+
+$(function(){ 
+  //设置奇数行背景色
+  $("#tab tr").find("td").addClass("tr_odd");
+  //设置偶数行背景色
+  // $("#tab tr:even").find("td").addClass("tr_even");
+  // 鼠标移到的颜色
+  $("#tab tr").mouseover(function(){
+    $(this).find("td").addClass("mouse_color");
+  });
+  // 鼠标移出的颜色
+  $("#tab tr").mouseout(function(){
+    $(this).find("td").removeClass("mouse_color");
+  });
+});
+//-----------------------以下代码逻辑--------------------------------------------------------------------
+//点击查询
+function myOrderQuery(){
+	document.getElementById("myQueryForm").submit(); //提交表单
+}
+
+var iWidth=800;        //弹出窗口的宽度; 
+var iHeight=350;       //弹出窗口的高度; 
+
+var tempTaskId="0";    //任务的全局变量
+var tempOrderid="0";  //母单的全局变量
+var tempBusid  ="0";  //企业id的全局变量
+var tempOption ="false";
+//替换人员
+function task_replaceUser(roleId,taskId){
+	if(roleId != "" && roleId != null){
+		tempTaskId = taskId;
+		var url = "/common/userWin/"+roleId;
+        //获得窗口的垂直位置 
+        var iTop = (window.screen.availHeight - 30 - iHeight) / 2; 
+        //获得窗口的水平位置 
+        var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; 
+		window.open(url,'','height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ', toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no');
+	}else{
+		alert("当前任务角色ID为空");
+	}
+}
+
+//替换企业负责人查询所有AE人员
+function bussiness_replaceUser(orderid,busid,taskId){
+	if(orderid != "" && orderid != null && busid !="" && busid != null){
+		tempOrderid = orderid;
+		tempBusid   = busid;
+		tempOption  ="true";
+		tempTaskId  = taskId;
+		var url = "/common/aeroleWin";
+        //获得窗口的垂直位置 
+        var iTop = (window.screen.availHeight - 30 - iHeight) / 2; 
+        //获得窗口的水平位置 
+        var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; 
+		window.open(url,'','height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ', toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no');
+	}else{
+		alert("当前的任务不存在订单ID/企业ID");
+	}
+}
+
+//自身的业务逻辑 [selfServer名称为固定的暂时不能改变]
+function selfServer(userid){
+	if(userid != "0"){
+		var url = "/wf/task/replayUser/"+userid+"/"+tempTaskId;
+		if(tempOption == "true"){
+			if(tempOrderid !="0" && tempBusid !="0"){
+			 	url = "/wf/task/replayBussinessUser/"+userid+"/"+tempTaskId;
+			}
+		}
+		
+		$.ajax({url:url,
+			dataType:"json",
+			error:function(){
+				alert("操作失败!");
+				return;
+			},
+			success:function(data){
+				alert("操作成功！");
+				window.location.reload();
+			}
+		});
+		tempTaskId ="0";
+		tempOption ="false";
+		tempOrderid="0";
+		tempBusid  ="0";
+	}
+}
+
+</script>
+
+</head>
+
+<body>
+<div class="ceng_box1" style="display:none">
+
+</div>
+<div class="user_box">
+  
+  <div class="user_search">
+    <form action="/wf/task/forwardTasklist/1" id="myQueryForm" name="myQueryForm" method="post">
+  	<div class="search_bg qz_w">
+  		<input type="hidden" name="paramOneType" id="paramOneType" value="$!{paramOneType}" />
+  		<div class="nice-select" name="nice-select" id="query1">
+			<input type="text" value="档案编号" readonly>
+	        <ul>
+	          <li data-value="1">档案编号</li>
+	          <li data-value="2">公司名称</li>
+	        </ul> 
+	    </div>
+        <input class="fq_box1" type="text" name="paramOneValue" value="$!{paramOneValue}" />
+        
+        <input type="hidden" name="paramTwoType" id="paramTwoType" value="$!{paramTwoType}" />
+  		<div class="nice-select" name="nice-select" id="query1">
+			<input type="text" value="档案编号" readonly>
+	        <ul>
+	          <li data-value="1">任务名称</li>
+	        </ul> 
+	    </div>
+        <input class="fq_box1" type="text" name="paramTwoValue" value="$!{paramTwoValue}" />
+        
+        <p class="search_btn rang_left" onclick="myOrderQuery()">查询</p>
+      	<div class="clear"></div>
+     </div>
+    </form>
+    <div class="clear"></div>
+  </div>
+
+  
+  
+  <div class="user_list">
+    <table id="tab" class="order" >
+      <tr>
+        <th width="11%">服务名称</th>
+        <th width="11%">任务名称</th>
+        <th width="8%">档案编号</th>
+        <th width="9%">公司名称</th>
+        <th width="8%">当前操作人</th>
+        <th width="8%">任务处理状态</th>
+        <th width="9%">接受时间</th>
+        <th width="7%">应完成时间</th>
+        <th width="15%" colspan="2">操作</th>
+      </tr>
+      
+<!-- 动态数据展示------------------------------------------------------->      
+      #foreach($item in $!{lvtasklist})
+      <tr>
+      	<td>$!{item.processDefinitionName}</td>
+        <td>$!{item.taskName}</td>
+        <td>$!{item.busid}</td>
+        <td>$!{item.companyName}</td>
+        <td>$!{item.assigneeName}</td>
+        <td>$!{item.processSuspensionState}</td>
+		<td>$!{item.accepTime}</td>
+        <td>$!{item.completeTime}</td>
+        <td>
+        	<a id="t2" onclick="task_replaceUser('$!{item.candidateGroup}','$!{item.taskId}')">更换任务负责人</a>
+        </td>
+        <td>
+        	<a id="t2" onclick="bussiness_replaceUser('$!{item.orderId}','$!{item.busid}','$!{item.taskId}')">更换企业负责人</a>
+        </td>
+      </tr>
+      #end
+  <!-- 以上为动态循环---------------------------------------------- -->    
+      
+    </table> 
+  </div>
+
+  #parse("views/wf/common/pages.html")
+</div>
+</body>
+<script  type="text/javascript" src="/js/wf/task-list-queryParam.js"></script>
+</html>

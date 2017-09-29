@@ -1,0 +1,54 @@
+
+<!-- 银行开户办理完成-->
+<style>
+.gw_cz_box1 table.t1.t2 th{
+	width: 17%;
+	
+}
+.gw_cz_box1 table.t1.t2 td{
+	width: 32%;
+	
+}
+</style>
+<div class="zy_l_box">
+	<p class="title">当前执行的任务：$!{taskInfo.getName()}</p>
+	<div class="tab_box">
+		<table>
+			<tr>
+				<th width="100px">任务描述：</th>
+				<td width="300px">$!{taskInfo.getDescription()}</td>
+				<th width="100px">服务编号：</th>
+				<td width="300px">$!{taskInfo.getProcessInstanceId()}</td>
+			</tr>
+			<tr>
+				<th>公司名称：</th>
+				<td>$!{companymc}</td>
+				<th>开户银行：</th>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div class="zy_btn">
+		<a class="b1">完成</a>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		/****完成****************************/
+	    // 点击 - 完成
+	    $(".b1").click(function() {
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+	    	var bankAccountOverDataPick = WF.getVariableByName("bankAccountOverDataPick");
+	    	var bankAccountOverDataArchive = WF.getVariableByName("bankAccountOverDataArchive");
+	    	if(bankAccountOverDataPick == ""){
+	    		alert("档案组未确认相关材料已提取,请到档案组提取档案!");	    		
+	    	}else if(bankAccountOverDataPick == "1" && bankAccountOverDataArchive == ""){
+				alert("档案组未确认相关材料已存放,请到档案组存放档案!");
+	    	}else{
+	    		alert("请到档案组确认提档或归档任务");
+	    	}
+		}); 
+		
+	});
+</script>

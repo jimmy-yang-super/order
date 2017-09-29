@@ -1,0 +1,100 @@
+		<div class="cd-popup cd-box1" role="alert">
+			<div class="cd-popup-container">
+				<div class="jy_box">
+					<p class="search">
+						<label>请查找您想要的经营范围：</label>
+						<input type="text" class="w_text_280">
+						<a href="javascript:void(0);" class="btn" >搜索</a>
+					</p>
+					<div class="check_on">
+						<p class="t1">已选：</p>
+						<div class="child_area">
+							<div class="b_choiceArea">
+								<ul id="scopeBusiness" ></ul>
+							</div>
+						</div>
+					</div>
+					<div class="main">
+						<div class="left">
+							<ul class="type_left">
+							</ul>
+						</div>
+						<div class="right type" bindShowArea="scopeBusiness" namespace="businessType">
+							
+						</div>
+					</div>
+					<div class="save_box">
+						<a href="javascript:void(0);" class="next">确定</a>
+						<a href="javascript:void(0);" class="save">取消</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	// 点击选择经营范围
+	$("#operatingRangeSelectBtn").click(function(e){
+	
+		// 获取已选经营范围
+		var operatingRange = $("#operatingRange").val();
+		if(operatingRange != undefined && operatingRange != ""){
+			var operatingRangeList = operatingRange.split("、");
+			var str = "";
+			for(var i=0; i < operatingRangeList.length; i++){
+				var operatingRange = $.trim(operatingRangeList[i]);
+				if(operatingRange != undefined && operatingRange != ""){
+					str += '<li class="bgBlue" bindValue="' + operatingRangeList[i] + '" namespace="businessType" >' + operatingRangeList[i] + '</li>';
+				}
+			}
+			$('#scopeBusiness').html(str);
+		}
+		
+		// 经营范围一级类，初始化
+		var addressType = $("#addressType").val();
+		var operatingRange = LV.getOperatingRange(addressType, "0");
+		if(operatingRange == undefined || operatingRange == ""){
+			return;
+		}
+		var operatingRangeList = operatingRange.operatingRangeList;
+		var html = "";
+		if(operatingRangeList != undefined && operatingRangeList.length > 0){
+			for(var i = 0; i < operatingRangeList.length; i++ ){
+				html += "<li class=\"list\" data-id=\"" + operatingRangeList[i]["id"] +" \" >" + operatingRangeList[i]["name"] + "</li>"
+			}
+		}
+		$(".jy_box").find(".right.type").html("");
+		// 经营范围一级类，事件初始化
+		$(".jy_box .type_left").html(html);
+		$(".jy_box .type_left li").click(function(){
+	        $(this).siblings().addClass("list").removeClass("type_on");
+	        $(this).addClass("type_on").removeClass("list");
+	        var parentId = $(this).attr("data-id");
+			var operatingRange = LV.getOperatingRange(addressType, parentId);
+			operatingRangeShow(operatingRange);
+	    });
+//		operatingRangeShow(operatingRange);
+	});
+	
+	// 点击选择经营范围  查询
+	$(".jy_box .search .btn").click(function(){
+		var addressType = $("#addressType").val();
+		var searchKey = $(this).prev().val();
+		var operatingRange = LV.getOperatingRange(addressType, "", searchKey);
+		operatingRangeShow(operatingRange);
+	});
+	
+	// 选择经营范围 确定
+	$(".jy_box .save_box .next").click(function(){
+		var operatingRange = "";
+		var selecedObj = $("#scopeBusiness").find("li").each(function(index, ele){
+			var operating = $.trim($(ele).text());
+			if(operating != undefined && operating != ""){
+				operatingRange += operating + "、";
+			}
+		});
+		$("#operatingRange").val(operatingRange);
+		$(this).parents(".cd-box1").removeClass('is-visible');
+	});
+})
+
+</script>

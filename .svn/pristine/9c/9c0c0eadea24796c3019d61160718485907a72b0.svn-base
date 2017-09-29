@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>服务转发列表</title>
+<link rel="stylesheet" href="/css/usermanager.css" />
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var userid = "0"; //定义全局变量
+	$("#okbutton").click(function(){
+		if(userid != "0"){
+			// 解除 click 事件，防止二次点击
+			$(this).unbind("click");
+			window.opener.selfServer(userid);
+			window.close();
+		}else{
+			alert("请选择人员!");
+		}
+	}); 
+
+	$("#cancelbutton").click(function(){
+		window.close();
+	});
+	
+	$("li[name='userid']").each(function(){
+	    $(this).click(function(){
+	        $(".low_box1").find("li[name='userid']").removeClass("checked1");
+	        $(this).addClass("checked1").removeClass("flow1_change");
+	        userid = $(this).attr("val");
+	    })
+	});
+
+})
+</script>
+</head>
+<body> 
+<div class="dd_box2" id="fzlistdiv">
+	<!-- 选择律师层 -->
+	<div class="container">
+		<div class="clear"></div>
+		<div class="tab_container">
+			<div id="tab1" class="tab_content" style="display: block;">
+				<div class="c_lowyer1">
+					<div class="low_box1" name="fwlist" value="1">
+						<ul>
+							#foreach($ev in $userList) 
+							<li class="low_change1" val="$!ev.empid" name="userid"><p>$!{ev.realname}</p></li>
+							#end
+						</ul>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+
+			<div class="dd_btn_box">
+				<span class="dd_qr_btn" id="okbutton">确认</span> 
+				<span class="dd_qx_btn" id="cancelbutton">取消</span>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
